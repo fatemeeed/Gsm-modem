@@ -1,0 +1,62 @@
+@font-face {
+    font-family: 'IRANSans';
+    src: url('../fonts/IRANSans/IRANSansWeb.woff') format('woff'),
+        url('../fonts/IRANSans/IRANSansWeb_Bold.woff'),
+        url('../fonts/IRANSans/IRANSansWeb_Light.woff');
+}
+
+body {
+    font-family: 'IRANSans';
+    direction: rtl;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    box-sizing: border-box;
+
+}
+
+a {
+    text-decoration: none;
+}
+
+body {
+    direction: rtl;
+
+}
+
+.login-container{
+    /* width: 30%; */
+    position: fixed; /* or absolute */
+    top: 50%;
+    left: 50%;
+    /* bring your own prefixes */
+    transform: translate(-50%, -50%);
+    border: 2px solid #f3f3f3;
+    border-radius: 15px 80px 15px 15px;
+    /* padding: 50px; */
+    box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+   
+    
+
+
+}
+.login-container .login-header{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.login-container .login-header .header-logo img{
+    width: 80px;
+    
+}
+.login-container form{
+    margin-top: 20px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
