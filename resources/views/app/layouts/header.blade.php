@@ -11,9 +11,7 @@
         </div>
     </div>
     <div class="header-action">
-        <button class="btn btn-primary">
-            {{-- <span class="fas fa-upgrade"></span> --}}
-            بروزرسانی
-        </button>
+    <a class="btn btn-primary btn-sm" href="{{ route('app.update') }}">بروزرسانی</a>
+        
     </div>
 </header>

@@ -4,15 +4,17 @@ namespace App\Http\Controllers\Panel;
 
 use App\Models\Message;
 use App\Models\Setting;
+use App\Jobs\RecieveMessage;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Http\Services\Message\RecieveMessageService;
 use Illuminate\Support\Facades\Artisan;
+use App\Http\Services\Message\RecieveMessageService;
 
 class HomeController extends Controller
 {
     public function index()
     {
+		// RecieveMessage::dispatch()->now();
         return view('app.index');
     }
 
