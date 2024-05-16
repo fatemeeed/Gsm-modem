@@ -16,7 +16,6 @@ return new class extends Migration
             $table->string('from');
             $table->foreignId('datalogger_id')->constrained('dataloggers')->onDelete('cascade')->onUpdate('cascade');
             $table->text('content');
-            $table->string('date');
             $table->string('time');
             $table->tinyInteger('type');
             $table->tinyInteger('status');

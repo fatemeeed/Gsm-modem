@@ -47,23 +47,23 @@
                                 @foreach ($messages as $message)
                                     <tr>
                                         <th>{{ $loop->iteration }}</th>
-                                        <td>{{ $message->device->mobile_number }}</td>
+                                        <td>{{ $message->from }}</td>
                                         <td>{{ $message->date_time }}</td>
-                                        <td>{{ $message->device->name }}</td>
-                                        <td>{{ $message->message }}</td>
+                                        <td></td>
+                                        <td>{{ $message->content }}</td>
                                         <td>
 
                                         </td>
                                         <td class="width-16-rem text-center ">
 
 
-                                            <form action="{{ route('admin.content.category.destroy', $category) }}"
+                                            {{-- <form action="{{ route('admin.content.category.destroy', $category) }}"
                                                 class="d-inline">
                                                 @csrf
                                                 @method('delete')
                                                 <button class="btn btn-danger btn-sm" type="submit"><i
                                                         class="fa fa-trash-alt"></i> حذف</button>
-                                            </form>
+                                            </form> --}}
 
                                         </td>
                                     </tr>
