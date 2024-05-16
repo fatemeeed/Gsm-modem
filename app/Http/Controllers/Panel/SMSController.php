@@ -39,4 +39,11 @@ class SMSController extends Controller
         // $this->connect->send();
         return view('app.messages.index',compact('messages'));
     }
+
+    public function sendMessage()
+    {
+
+        return view('app.messages.create');
+
+    }
 }

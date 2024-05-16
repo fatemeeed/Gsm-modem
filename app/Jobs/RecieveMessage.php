@@ -29,14 +29,18 @@ class RecieveMessage implements ShouldQueue
      */
     public function handle(): void
     {
-        $config=Setting::first();
+       
+			
+		$config=Setting::first();
         $recieveMessage=new RecieveMessageService();
-        $recieveMessage->debug=true;
-        $recieveMessage->port=$config->port;
-        $recieveMessage->baud=$config->baud;
+        $recieveMessage->setDebug('true');
+        $recieveMessage->setPort($config->port);
+        $recieveMessage->setBaud($config->baud_rate);
+		
         $recieveMessage->init();
 
         $arrMessages=$recieveMessage->read();
+		
         $strJunk = array_shift($arrMessages);
 		
 		// set return array
@@ -62,9 +66,9 @@ class RecieveMessage implements ShouldQueue
 				$arrReturnMessage['Id']			= trim($arrMetta[0], "\"");
 				$arrReturnMessage['Status']		= trim($arrMetta[1], "\"");
 				$arrReturnMessage['From']		= trim($arrMetta[2], "\"");
-				$arrReturnMessage['Time']		= trim($arrMetta[4], "\"");
-				// $arrTime						= explode("+", $arrMetta[5], 2);
-				// $arrReturnMessage['Time']		= trim($arrTime[0], "\"");
+				$arrReturnMessage['Date']		= trim($arrMetta[4], "\"");
+				$arrTime						= explode("+", $arrMetta[5], 2);
+				$arrReturnMessage['Time']		= trim($arrTime[0], "\"");
 				$arrReturnMessage['Content']	= trim($strContent);
 				
 	
@@ -74,16 +78,14 @@ class RecieveMessage implements ShouldQueue
 
                 Message::create([
                     'from'    => $arrReturnMessage['From'],
-                    'date'    => $arrReturnMessage['Date'],
-                    'time'    => $arrReturnMessage['Time'],
+                    // 'date'    => $arrReturnMessage['Date'],
+                    'time'    => $arrReturnMessage['Date'].' '.$arrReturnMessage['Time'],
                     'content' => $arrReturnMessage['Content'],
-                    'type'    => '0'
+                    'type'    => '1'
                 ]);
 			}
 			
-			
 		}
-
 
     }
 }

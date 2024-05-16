@@ -23,7 +23,7 @@
                     </section>
 
                     <section class="d-flex justify-content-between align-items-center mt-4 mb-3 border-bottom pb-2">
-                        <a href="{{ route('admin.Message.send-message') }}"  class="disabled btn btn-info btn-sm text-light">
+                        <a href="{{ route('admin.Message.create-message') }}"  class=" btn btn-info btn-sm text-light">
                             ارسال پیام</a>
                         <div class="max-width-16-rem">
                             <input type="text" class="form-control form-control-sm form-text" placeholder="جستجو">
@@ -48,7 +48,7 @@
                                     <tr>
                                         <th>{{ $loop->iteration }}</th>
                                         <td>{{ $message->from }}</td>
-                                        <td>{{ $message->date_time }}</td>
+                                        <td>{{ jalaliDate($message->date_time, 'H:i:s Y-m-d') }}</td>
                                         <td></td>
                                         <td>{{ $message->content }}</td>
                                         <td>

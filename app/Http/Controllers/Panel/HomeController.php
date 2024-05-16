@@ -22,6 +22,7 @@ class HomeController extends Controller
     {
 
 		$config=Setting::first();
+		
         $recieveMessage=new RecieveMessageService();
         $recieveMessage->setDebug('true');
         $recieveMessage->setPort($config->port);
@@ -30,6 +31,7 @@ class HomeController extends Controller
         $recieveMessage->init();
 
         $arrMessages=$recieveMessage->read();
+
 		
         $strJunk = array_shift($arrMessages);
 		
@@ -44,8 +46,10 @@ class HomeController extends Controller
 			{
 				// split content from metta data
 				$arrMessage	= explode("\n", $arrMessage, 2);
+				
 				$strMetta	= trim($arrMessage[0]);
 				$arrMetta	= explode(",", $strMetta);
+				
 				$strContent	= trim($arrMessage[1]);
 				
 				
@@ -56,9 +60,9 @@ class HomeController extends Controller
 				$arrReturnMessage['Id']			= trim($arrMetta[0], "\"");
 				$arrReturnMessage['Status']		= trim($arrMetta[1], "\"");
 				$arrReturnMessage['From']		= trim($arrMetta[2], "\"");
-				$arrReturnMessage['Time']		= trim($arrMetta[4], "\"");
-				// $arrTime						= explode("+", $arrMetta[5], 2);
-				// $arrReturnMessage['Time']		= trim($arrTime[0], "\"");
+				$arrReturnMessage['Date']		= trim($arrMetta[4], "\"");
+				$arrTime						= explode("+", $arrMetta[5], 2);
+				$arrReturnMessage['Time']		= trim($arrTime[0], "\"");
 				$arrReturnMessage['Content']	= trim($strContent);
 				
 	
@@ -68,8 +72,7 @@ class HomeController extends Controller
 
                 Message::create([
                     'from'    => $arrReturnMessage['From'],
-                    // 'date'    => $arrReturnMessage['Date'],
-                    'time'    => $arrReturnMessage['Time'],
+                    'time'    => $arrReturnMessage['Date'].' '.$arrReturnMessage['Time'],
                     'content' => $arrReturnMessage['Content'],
                     'type'    => '1'
                 ]);
