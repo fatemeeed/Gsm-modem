@@ -23,7 +23,7 @@
                     </section>
 
                     <section class="d-flex justify-content-between align-items-center mt-4 mb-3 border-bottom pb-2">
-                        <a href="{{ route('admin.Message.send-message') }}"  class="disabled btn btn-info btn-sm text-light">
+                        <a href="{{ route('admin.Message.create-message') }}"  class=" btn btn-info btn-sm text-light">
                             ارسال پیام</a>
                         <div class="max-width-16-rem">
                             <input type="text" class="form-control form-control-sm form-text" placeholder="جستجو">
@@ -47,23 +47,23 @@
                                 @foreach ($messages as $message)
                                     <tr>
                                         <th>{{ $loop->iteration }}</th>
-                                        <td>{{ $message->device->mobile_number }}</td>
-                                        <td>{{ $message->date_time }}</td>
-                                        <td>{{ $message->device->name }}</td>
-                                        <td>{{ $message->message }}</td>
+                                        <td>{{ $message->from }}</td>
+                                        <td>{{ jalaliDate($message->date_time, 'H:i:s Y-m-d') }}</td>
+                                        <td></td>
+                                        <td>{{ $message->content }}</td>
                                         <td>
 
                                         </td>
                                         <td class="width-16-rem text-center ">
 
 
-                                            <form action="{{ route('admin.content.category.destroy', $category) }}"
+                                            {{-- <form action="{{ route('admin.content.category.destroy', $category) }}"
                                                 class="d-inline">
                                                 @csrf
                                                 @method('delete')
                                                 <button class="btn btn-danger btn-sm" type="submit"><i
                                                         class="fa fa-trash-alt"></i> حذف</button>
-                                            </form>
+                                            </form> --}}
 
                                         </td>
                                     </tr>

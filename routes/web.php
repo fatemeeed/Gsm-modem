@@ -53,7 +53,7 @@ Route::prefix('panel')->namespace('Panel')->group(function () {
 
         Route::get('/send-box', [SMSController::class , 'sendBox'])->name('app.Message.send-box');
         Route::get('/recieve-box', [SMSController::class , 'recieveBox'])->name('app.Message.recieve-box');
-        Route::get('/send-message', [SMSController::class, 'sendMessage'])->name('admin.Message.send-message');
+        Route::get('/create-message', [SMSController::class, 'createMessage'])->name('admin.Message.create-message');
         Route::get('/delete-message', [SMSController::class, 'deleteMessage'])->name('admin.Message.delete-message');
 
     });
