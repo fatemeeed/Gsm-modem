@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Interfaces\MessageInterface;
 use App\Http\Services\Message\Connect\ConnectService;
+use App\Models\Datalogger;
 use App\Models\Message;
 
 class SMSController extends Controller
@@ -25,7 +26,7 @@ class SMSController extends Controller
     // }
     public function sendBox()
     {
-        $messages=Message::where('type','0')->get();
+        $messages=Message::where('type','0')->simplePaginate(15)->withQueryString();
         // $this->connect->send();
         return view('app.messages.index',compact('messages'));
         
@@ -35,15 +36,16 @@ class SMSController extends Controller
     {
 
 
-        $messages=Message::where('type','1')->get();
+        $messages=Message::where('type','1')->simplePaginate(15)->withQueryString();
         // $this->connect->send();
         return view('app.messages.index',compact('messages'));
     }
 
-    public function sendMessage()
+    public function createMessage()
     {
-
-        return view('app.messages.create');
+  
+        $dataLoggers=Datalogger::all();
+        return view('app.messages.create',compact('dataLoggers'));
 
     }
 }

@@ -48,7 +48,7 @@
                                     <tr>
                                         <th>{{ $loop->iteration }}</th>
                                         <td>{{ $message->from }}</td>
-                                        <td>{{ jalaliDate($message->date_time, 'H:i:s Y-m-d') }}</td>
+                                        <td>{{ jalaliDate($message->time, 'Y/m/d H:i:s') }}</td>
                                         <td></td>
                                         <td>{{ $message->content }}</td>
                                         <td>
@@ -71,6 +71,8 @@
 
                             </tbody>
                         </table>
+
+                        {{ $messages->links() }}
                     </section>
 
                 </section>

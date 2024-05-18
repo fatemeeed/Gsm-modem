@@ -22,15 +22,59 @@
                              ارسال پیام جدید
                         </h5>
                     </section>
-
+    
                     <section class="d-flex justify-content-between align-items-center mt-4 mb-3 border-bottom pb-2">
-                        <a href="{{ route('admin.Message.index') }}"  class="disabled btn btn-info btn-sm text-light">
-                             بازگشت</a>
-                        
+                        <a href="{{ route('app.Message.send-box') }}" class="btn btn-info btn-sm text-light">بازگشت</a>
                     </section>
-
-                   
-
+    
+                    <section>
+                        <form action="{{ route('admin.Message.post-message') }}" method="post" id="form">
+                            @csrf
+                            <section class="row">
+                                <section class="col-12 col-md-6 my-2">
+                                    <div class="form-group">
+                                        <label for=""> دیتالاگر</label>
+                                        <select name="datalogger_id" id="datalogger_id" class="form-control form-control-sm">
+                                            <option value="">دیتالاگر را انتخاب کنید</option>
+                                            @foreach ($dataLoggers as $dataLogger)
+                                                <option value="{{ $dataLogger->id }}" @if (old('datalogger_id')== $dataLogger->id ) selected @endif > {{ $dataLogger->name }}</option>
+                                            @endforeach
+    
+    
+                                        </select>
+                                        @error('datalogger_id')
+                                            <span class="alert_required bg-danger text-white p-1 rounded" role="alert">
+                                                <strong>
+                                                    {{ $message }}
+                                                </strong>
+                                            </span>
+                                        @enderror
+                                    </div>
+    
+                                </section>
+    
+                                <section class="col-12 col-md-6 my-2">
+                                    <div class="form-group">
+                                        <label for="content">پیام </label>
+                                        <input type="text" class="form-control form-control-sm" name="content" id="content"
+                                            value="{{ old('content') }}">
+                                    </div>
+                                    @error('content')
+                                        <span class="alert_required bg-danger text-white p-1 rounded" role="alert">
+                                            <strong>
+                                                {{ $message }}
+                                            </strong>
+                                        </span>
+                                    @enderror
+                                </section>
+                                
+                                <section class="col-12 my-3">
+                                    <button class="btn btn-primary ">ثبت</button>
+                                </section>
+                            </section>
+                        </form>
+                    </section>
+    
                 </section>
             </section>
         </section>
