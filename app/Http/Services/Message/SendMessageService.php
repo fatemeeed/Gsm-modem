@@ -7,7 +7,7 @@ use App\Http\Services\Message\ConnectService;
 class SendMessageService extends ConnectService{
 
      
-    public function send($tel, $message) {
+    public  function send($tel, $message) {
 
         //Filter tel
         $tel = preg_replace("%[^0-9\+]%", '', $tel);
