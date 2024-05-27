@@ -15,7 +15,7 @@ class SendMessageService extends ConnectService{
         //Filter message text
         $message = preg_replace("%[^\040-\176\r\n\t]%", '', $message);
 
-        $this->debugmsg("Sending message \"{$message}\" to \"{$tel}\"");
+        // $this->debugmsg("Sending message \"{$message}\" to \"{$tel}\"");
 
         //Start sending of message
         fputs($this->fp, "AT+CMGS=\"{$tel}\"\r");
@@ -44,7 +44,7 @@ class SendMessageService extends ConnectService{
             return false;
         }
 
-        $this->debugmsg("Message sent");
+        // $this->debugmsg("Message sent");
 
         return true;
     }

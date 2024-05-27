@@ -34,7 +34,7 @@ class ConnectService
     //Setup COM port
     public function init() {
 
-        $this->debugmsg("Setting up port: \"{$this->port} @ \"{$this->baud}\" baud");
+        // $this->debugmsg("Setting up port: \"{$this->port} @ \"{$this->baud}\" baud");
 
         exec("MODE {$this->port}: BAUD={$this->baud} PARITY=N DATA=8 STOP=1", $output, $retval);
 

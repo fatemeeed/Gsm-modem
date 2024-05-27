@@ -52,29 +52,36 @@ class SMSController extends Controller
 
     public function postMessage(SMSRequest $request)
     {
-        $tel = Datalogger::where('id', $request->datalogger_id)->first();
+        $dataLogger = Datalogger::where('id', $request->datalogger_id)->first();
+        $mobile_number = $dataLogger->mobile_number;
 
-        DB::transaction(function () use ($tel,$request) {
+        DB::transaction(function () use ($mobile_number, $request) {
 
-            $message = new SendMessageService();
-            $result = $message->send($tel, $request->content);
+            $config = Setting::first();
+            $sendMessage = new SendMessageService();
+            $sendMessage->setDebug('false');
+            $sendMessage->setPort($config->port);
+            $sendMessage->setBaud($config->baud_rate);
 
-            $newMessage=Message::create(
-                [
-                    'from' => $tel,
-                    'datalogger_id' => $request->datalogger_id,
-                    'content' => $request->content,
-                    'type' => 0
-                ]
-            );
+            $sendMessage->init();
+            $result = $sendMessage->send($mobile_number, $request->content);
+            dd($result);
 
-            if ($newMessage) {
-                return redirect()->route('app.Message.send-box')->with('swal-success', 'پیام  با موفقیت ارسال شد');
+            if ($result) {
+                 Message::create(
+                    [
+                        'from' => $mobile_number,
+                        'datalogger_id' => $request->datalogger_id,
+                        'content' => $request->content,
+                        'type' => 0
+
+                    ]
+                );
+
+               
+                    return redirect()->route('app.Message.send-box')->with('swal-success', 'پیام  با موفقیت ارسال شد');
+               
             }
         });
-
-
-
-        
     }
 }
