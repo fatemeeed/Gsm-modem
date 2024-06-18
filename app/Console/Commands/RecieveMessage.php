@@ -2,12 +2,13 @@
 
 namespace App\Console\Commands;
 
-use App\Http\Services\Message\RecieveMessageService;
-use App\Jobs\ConnectModem;
-use App\Jobs\RecieveMessage as JobsRecieveMessage;
 use App\Models\Message;
 use App\Models\Setting;
+use App\Jobs\ConnectModem;
+use App\Models\Datalogger;
 use Illuminate\Console\Command;
+use App\Jobs\RecieveMessage as JobsRecieveMessage;
+use App\Http\Services\Message\RecieveMessageService;
 
 class RecieveMessage extends Command
 {
@@ -80,9 +81,11 @@ class RecieveMessage extends Command
 				
 				// add message to return array
 				$arrReturn[] = $arrReturnMessage;
+                $datalogger_id=Datalogger::where('mobile_number',$arrReturnMessage['From'])->first();
 
                 Message::create([
                     'from'    => $arrReturnMessage['From'],
+                    'datalogger_id' => $datalogger_id->id,
                     // 'date'    => $arrReturnMessage['Date'],
                     'time'    => $arrReturnMessage['Date'].' '.$arrReturnMessage['Time'],
                     'content' => $arrReturnMessage['Content'],
