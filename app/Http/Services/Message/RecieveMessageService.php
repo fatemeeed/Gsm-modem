@@ -13,7 +13,7 @@ class RecieveMessageService extends ConnectService{
        
     
         //Start sending of message
-        fputs($this->fp, "AT+CMGL=\"REC UNREAD\"\r");
+        fputs($this->fp, "AT+CMGL=\"ALL\"\r");
         //fputs($this->fp, "AT+CMGL=\"ALL\"\r");
 
     

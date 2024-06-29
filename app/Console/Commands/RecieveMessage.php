@@ -8,6 +8,7 @@ use App\Jobs\RecieveMessage as JobsRecieveMessage;
 use App\Models\Message;
 use App\Models\Setting;
 use Illuminate\Console\Command;
+use App\Models\Datalogger;
 
 class RecieveMessage extends Command
 {
@@ -80,10 +81,12 @@ class RecieveMessage extends Command
 				
 				// add message to return array
 				$arrReturn[] = $arrReturnMessage;
-
+				$arrReturnMessage['From'] = str_replace('+98', '0', $arrReturnMessage['From']);
+				$datalogger=Datalogger::where('mobile_number',$arrReturnMessage['From'])->first();
+				
                 Message::create([
                     'from'    => $arrReturnMessage['From'],
-                    // 'date'    => $arrReturnMessage['Date'],
+					'datalogger_id' => $datalogger->id ?? null,
                     'time'    => $arrReturnMessage['Date'].' '.$arrReturnMessage['Time'],
                     'content' => $arrReturnMessage['Content'],
                     'type'    => '1'

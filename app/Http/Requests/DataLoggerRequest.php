@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Rules\MobileNumber;
 use Illuminate\Foundation\Http\FormRequest;
 
 class DataLoggerRequest extends FormRequest
@@ -24,7 +25,7 @@ class DataLoggerRequest extends FormRequest
         return [
             'name' => 'required|min:3|max:50',
             'type' => 'required|in:0,1,2',
-            'mobile_number'=> 'required|numeric',
+            'mobile_number'=> ['required','numeric',new MobileNumber],
             'model' => 'required',
             'key_type' =>'required|in:1,2',
             'sensor_type' =>'required',

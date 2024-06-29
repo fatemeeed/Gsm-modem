@@ -10,4 +10,10 @@ class Message extends Model
     use HasFactory;
 
     protected $guarded=['id'];
+
+
+    public function datalogger()
+    {
+        return $this->belongsTo(Datalogger::class);
+    }
 }

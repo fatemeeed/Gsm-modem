@@ -48,12 +48,10 @@
                                     <tr>
                                         <th>{{ $loop->iteration }}</th>
                                         <td>{{ $message->from }}</td>
-                                        <td>{{ jalaliDate($message->time, 'Y/m/d H:i:s') }}</td>
-                                        <td></td>
+                                        <td>{{ jalaliDate($message->time) }}</td>
+                                        <td>{{ $message->datalogger->name ?? '' }}</td>
                                         <td>{{ $message->content }}</td>
-                                        <td>
-
-                                        </td>
+                                        
                                         <td class="width-16-rem text-center ">
 
 

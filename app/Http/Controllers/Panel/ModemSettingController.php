@@ -9,6 +9,7 @@ class ModemSettingController extends Controller
 {
     public function index()
     {
+        $settin
         return view('app.setting.index');
     }
 

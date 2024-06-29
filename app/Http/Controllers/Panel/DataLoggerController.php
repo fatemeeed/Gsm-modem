@@ -34,7 +34,7 @@ class DataLoggerController extends Controller
     public function store(DataLoggerRequest $request)
     {
         $inputs=$request->all();
-        
+
         $resualt=Datalogger::create($inputs);
         return redirect()->route('app.data-logger.index')->with('swal-success', 'تجهیز جدید با موفقیت ثبت شد');
 

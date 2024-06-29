@@ -9,6 +9,10 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Artisan;
 use App\Http\Services\Message\RecieveMessageService;
+use App\Models\Datalogger;
+use App\Http\Services\Message\DestroyMessage;
+
+
 
 class HomeController extends Controller
 {
@@ -69,17 +73,23 @@ class HomeController extends Controller
 				
 				// add message to return array
 				$arrReturn[] = $arrReturnMessage;
-
+				$arrReturnMessage['From'] = str_replace('+98', '0', $arrReturnMessage['From']);
+				$datalogger=Datalogger::where('mobile_number',$arrReturnMessage['From'])->first();
+				
                 Message::create([
                     'from'    => $arrReturnMessage['From'],
+					'datalogger_id' => $datalogger->id ?? null,
                     'time'    => $arrReturnMessage['Date'].' '.$arrReturnMessage['Time'],
                     'content' => $arrReturnMessage['Content'],
                     'type'    => '1'
                 ]);
+                
 			}
 			
 		}
-
+		
+		// $deleteMessage=new DestroyMessage();
+		// $deleteMessage->destroy();
         // Artisan::command('auto:recieveMessage');
         // $config=Setting::all();
         // $recieveMessage=new RecieveMessageService();
