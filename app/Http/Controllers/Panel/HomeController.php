@@ -7,16 +7,19 @@ use App\Models\Setting;
 use App\Jobs\RecieveMessage;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Http\Services\Message\DestroyMessage;
 use Illuminate\Support\Facades\Artisan;
 use App\Http\Services\Message\RecieveMessageService;
+use App\Models\CheckCode;
 use App\Models\Datalogger;
 
 class HomeController extends Controller
 {
     public function index()
     {
+		$dataloggers=Datalogger::all();
 		// RecieveMessage::dispatch()->now();
-        return view('app.index');
+        return view('app.index',compact('dataloggers'));
     }
 
 	public function update()
@@ -54,6 +57,7 @@ class HomeController extends Controller
 				$strContent	= trim($arrMessage[1]);
 				
 				
+				
 				// set the message array to go in the return array
 				$arrReturnMessage = Array();
 				
@@ -82,6 +86,9 @@ class HomeController extends Controller
 			}
 			
 		}
+
+		$deleteMessage=new DestroyMessage();
+		$deleteMessage->destroy();
 
         // Artisan::command('auto:recieveMessage');
         // $config=Setting::all();

@@ -2,13 +2,15 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
+use App\Models\Message;
 use PhpParser\Node\Stmt\Switch_;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Datalogger extends Model
 {
-    use HasFactory;
+    use HasFactory,SoftDeletes;
 
     protected $table='dataloggers';
 
@@ -37,5 +39,40 @@ class Datalogger extends Model
         }
 
         return $resualt;
+    }
+
+
+    public function checkCodes()
+    {
+        return $this->belongsToMany(CheckCode::class);
+    }
+
+    public function getDeviceSahpeAttribute()
+    {
+        switch ($this->type) {
+            case '0':
+                $resualt = 'pump';
+                break;
+            case '1':
+                $resualt = 'well';
+                break;
+            case '2':
+                $resualt = 'source';
+                break;
+
+           
+        }
+
+        return $resualt;
+    }
+
+    public function messages()
+    {
+        return $this->hasMany(Message::class);
+    }
+
+    public function lastMessageRecieve()
+    {
+         return $this->messages()->orderBy('created_at', 'desc')->first();
     }
 }

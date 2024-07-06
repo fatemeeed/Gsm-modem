@@ -39,7 +39,7 @@
                                     <th>تاریخ </th>
                                     <th>نام تجهیز </th>
                                     <th>پیام </th>
-                                    <th class="max-width-16-rem text-center"><i class="fa fa-cogs"></i> تنظیمات</th>
+                                    {{-- <th class="max-width-16-rem text-center"><i class="fa fa-cogs"></i> تنظیمات</th> --}}
                                 </tr>
                             </thead>
                             <tbody>
@@ -52,18 +52,18 @@
                                         <td>{{ $message->datalogger->name ?? ''}}</td>
                                         <td>{{ $message->content }}</td>
                                         
-                                        <td class="width-16-rem text-center ">
+                                        {{-- <td class="width-16-rem text-center ">
 
 
-                                            {{-- <form action="{{ route('admin.content.category.destroy', $category) }}"
+                                            <form action="{{ route('admin.content.category.destroy', $category) }}"
                                                 class="d-inline">
                                                 @csrf
                                                 @method('delete')
                                                 <button class="btn btn-danger btn-sm" type="submit"><i
                                                         class="fa fa-trash-alt"></i> حذف</button>
-                                            </form> --}}
+                                            </form>
 
-                                        </td>
+                                        </td> --}}
                                     </tr>
                                 @endforeach
 

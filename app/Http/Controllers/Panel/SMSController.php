@@ -40,6 +40,7 @@ class SMSController extends Controller
 
         $messages = Message::where('type', '1')->simplePaginate(15)->withQueryString();
         // $this->connect->send();
+        
         return view('app.messages.index', compact('messages'));
     }
 

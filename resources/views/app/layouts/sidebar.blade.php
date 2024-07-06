@@ -51,6 +51,18 @@
                     </a>
                 </li>
                 <li class="sidebar-menu-link-item">
+                    <a href="{{ route('app.check-code.index') }}">
+                        <span class="fas fa-cog"></span>
+                        <span> چک کد ها </span>
+                    </a>
+                </li>
+                <li class="sidebar-menu-link-item">
+                    <a href="{{ route('app.order-code.index') }}">
+                        <span class="fas fa-cog"></span>
+                        <span> کدهای فرمان </span>
+                    </a>
+                </li>
+                <li class="sidebar-menu-link-item">
                     <a href="{{ route('app.user.index') }}" >
                         <span class="fas fa-user"></span>
                         <span>کاربران</span>

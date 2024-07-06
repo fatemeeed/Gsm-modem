@@ -6,6 +6,8 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Panel\HomeController;
 use App\Http\Controllers\Panel\RoleController;
 use App\Http\Controllers\Panel\UserController;
+use App\Http\Controllers\Panel\CheckCodeController;
+use App\Http\Controllers\Panel\OrderCodeController;
 use App\Http\Controllers\Panel\DataLoggerController;
 use App\Http\Controllers\Panel\PermissionController;
 use App\Http\Controllers\Panel\ModemSettingController;
@@ -46,6 +48,8 @@ Route::prefix('panel')->namespace('Panel')->group(function () {
         Route::put('/update/{device}', [DataLoggerController::class, 'update'])->name('app.data-logger.update');
         Route::delete('/destroy/{device}', [DataLoggerController::class, 'destroy'])->name('app.data-logger.destroy');
         Route::get('/status/{device}', [DataLoggerController::class, 'status'])->name('app.data-logger.status');
+        Route::get('/check-Code/{device}', [DataLoggerController::class, 'checkCode'])->name('app.data-logger.check-code');
+        Route::post('/check-Code/store/{device}', [DataLoggerController::class, 'checkCodeStore'])->name('app.data-logger.check-code.store');
         
 
     });
@@ -67,6 +71,28 @@ Route::prefix('panel')->namespace('Panel')->group(function () {
         Route::get('/edit/{setting}', [ModemSettingController::class, 'edit'])->name('admin.setting.edit');
         Route::get('/update/{setting}', [ModemSettingController::class, 'update'])->name('admin.setting.update');
 
+    });
+
+    //checkCode
+    Route::prefix('check-code')->group(function () {
+
+        Route::get('/', [CheckCodeController::class, 'index'])->name('app.check-code.index');
+        Route::get('/create', [CheckCodeController::class, 'create'])->name('app.check-code.create');
+        Route::post('/store', [CheckCodeController::class, 'store'])->name('app.check-code.store');
+        Route::get('/edit/{checkCode}', [CheckCodeController::class, 'edit'])->name('app.check-code.edit');
+        Route::put('/update/{checkCode}', [CheckCodeController::class, 'update'])->name('app.check-code.update');
+        Route::delete('/destroy/{checkCode}', [CheckCodeController::class, 'destroy'])->name('app.check-code.destroy');
+    });
+
+    //OrderCode
+    Route::prefix('order-code')->group(function () {
+
+        Route::get('/', [OrderCodeController::class, 'index'])->name('app.order-code.index');
+        Route::get('/create', [OrderCodeController::class, 'create'])->name('app.order-code.create');
+        Route::post('/store', [OrderCodeController::class, 'store'])->name('app.order-code.store');
+        Route::get('/edit/{orderCode}', [OrderCodeController::class, 'edit'])->name('app.order-code.edit');
+        Route::put('/update/{orderCode}', [OrderCodeController::class, 'update'])->name('app.order-code.update');
+        Route::delete('/destroy/{orderCode}', [OrderCodeController::class, 'destroy'])->name('app.order-code.destroy');
     });
 
     Route::prefix('user')->group(function () {

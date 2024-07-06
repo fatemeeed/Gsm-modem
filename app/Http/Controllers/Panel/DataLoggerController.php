@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers\Panel;
 
-use App\Http\Controllers\Controller;
-use App\Http\Requests\DataLoggerRequest;
 use App\Models\City;
+use App\Models\CheckCode;
 use App\Models\Datalogger;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use App\Http\Requests\DataLoggerRequest;
 
 class DataLoggerController extends Controller
 {
@@ -15,8 +16,8 @@ class DataLoggerController extends Controller
      */
     public function index()
     {
-        $devices=Datalogger::all();
-        return view('app.data-logger.index',compact('devices'));
+        $devices = Datalogger::all();
+        return view('app.data-logger.index', compact('devices'));
     }
 
     /**
@@ -24,8 +25,8 @@ class DataLoggerController extends Controller
      */
     public function create()
     {
-        $cities=City::all();
-        return view('app.data-logger.create',compact('cities'));
+        $cities = City::all();
+        return view('app.data-logger.create', compact('cities'));
     }
 
     /**
@@ -33,11 +34,10 @@ class DataLoggerController extends Controller
      */
     public function store(DataLoggerRequest $request)
     {
-        $inputs=$request->all();
-        
-        $resualt=Datalogger::create($inputs);
-        return redirect()->route('app.data-logger.index')->with('swal-success', 'تجهیز جدید با موفقیت ثبت شد');
+        $inputs = $request->all();
 
+        $resualt = Datalogger::create($inputs);
+        return redirect()->route('app.data-logger.index')->with('swal-success', 'تجهیز جدید با موفقیت ثبت شد');
     }
 
     /**
@@ -53,8 +53,8 @@ class DataLoggerController extends Controller
      */
     public function edit(Datalogger $device)
     {
-        $cities=City::all();
-        return view('app.data-logger.edit',compact('cities','device'));
+        $cities = City::all();
+        return view('app.data-logger.edit', compact('cities', 'device'));
     }
 
     /**
@@ -62,11 +62,10 @@ class DataLoggerController extends Controller
      */
     public function update(DataLoggerRequest $request, Datalogger $device)
     {
-        $inputs=$request->all();
+        $inputs = $request->all();
 
         $device->update($inputs);
         return redirect()->route('app.data-logger.index')->with('swal-success', 'تجهیز  با موفقیت ویرایش شد');
-
     }
 
     /**
@@ -77,24 +76,38 @@ class DataLoggerController extends Controller
 
         $device->delete();
         return redirect()->route('app.data-logger.index')->with('swal-success', 'تجهیز  با موفقیت حذف شد');
-        
     }
 
-    public function status(Datalogger $device){
+    public function status(Datalogger $device)
+    {
 
+    
         $device->status = $device->status == 0 ? 1 : 0;
         $result = $device->save();
-        if($result){
-                if($device->status == 0){
-                    return response()->json(['status' => true, 'checked' => false]);
-                }
-                else{
-                    return response()->json(['status' => true, 'checked' => true]);
-                }
-        }
-        else{
+        if ($result) {
+            if ($device->status == 0) {
+                return response()->json(['status' => true, 'checked' => false]);
+            } else {
+                return response()->json(['status' => true, 'checked' => true]);
+            }
+        } else {
             return response()->json(['status' => false]);
         }
+    }
 
+    public function checkCode(Datalogger $device)
+    {
+        $checkCodes = CheckCode::all();
+        return view('app.data-logger.check-code', compact('device', 'checkCodes'));
+    }
+
+    public function checkCodeStore(Request $request, Datalogger $device)
+    {
+        $request->validate([
+            'checkCode' => 'required|exists:check_codes,id|array'
+        ]);
+
+        $device->checkCodes()->sync($request->checkCode);
+        return redirect()->route('app.data-logger.index')->with('swal-success', ' چک کد با موفقیت ویرایش شد');
     }
 }

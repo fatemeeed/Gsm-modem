@@ -1,4 +1,4 @@
-@extends('app.layouts.master')
+ @extends('app.layouts.master')
 @section('title')
     <title>تنظیمات مودم</title>
 @endsection
@@ -30,7 +30,7 @@
                     </section>
 
                     <section class="table-responsive">
-                        <table class="table table-striped table-hover">
+                        <table class="table table-striped table-hover font-size-14 table-bordered">
                             <thead>
                                 <tr>
                                     <th>#</th>
@@ -40,20 +40,24 @@
                                 </tr>
                             </thead>
                             <tbody>
+                                @foreach ($settings as $setting)
 
-                                    <tr>
-                                        <th></th>
-                                        <td></td>
-                                        <td></td>
-                                        <td class="width-16-rem text-center ">
-                                            {{-- <a href="{{ route('admin.content.category.edit', $category->id) }}"
-                                                class="btn btn-warning btn-sm"><i class="fa fa-edit"></i>
-                                                ویرایش</a>
+                                <tr>
+                                    <th>{{ $loop->iteration }}</th>
+                                    <td>{{ $setting->port }}</td>
+                                    <td>{{ $setting->baud_rate }}</td>
+                                    <td class="width-16-rem text-center ">
+                                        <a href="{{ route('admin.setting.edit', $setting->id) }}"
+                                            class="btn btn-warning btn-sm"><i class="fa fa-edit"></i>
+                                            ویرایش</a>
 
-                                           --}}
+    
+                                    </td>
+                                </tr>
+                                    
+                                @endforeach
 
-                                        </td>
-                                    </tr>
+                                    
                                 
                             </tbody>
                         </table>

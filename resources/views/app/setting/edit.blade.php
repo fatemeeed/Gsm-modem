@@ -1,4 +1,4 @@
-@extends('admin.layouts.master')
+@extends('app.layouts.master')
 
 @section('head-tag')
     <title> ویرایش تنظیمات مودم</title>
@@ -28,15 +28,15 @@
                 </section>
 
                 <section>
-                    <form action="" method="post" id="form">
+                    <form action="{{ route('admin.setting.update', $setting->id) }}" method="post" id="form">
                         @csrf
                         <section class="row">
 
                             <section class="col-12 col-md-6 my-2">
                                 <div class="form-group">
                                     <label for="name">port</label>
-                                    <input type="text" class="form-control form-control-sm" name="port" id="name"
-                                        value="{{ old('port') }}">
+                                    <input type="text" class="form-control form-control-sm" name="port"  id="port"
+                                        value="{{ old('port' , $setting->port) }}">
                                 </div>
                                 @error('port')
                                     <span class="alert_required bg-danger text-white p-1 rounded" role="alert">
@@ -49,8 +49,8 @@
                             <section class="col-12 col-md-6 my-2">
                                 <div class="form-group">
                                     <label for="name">baud rate </label>
-                                    <input type="text" class="form-control form-control-sm" name="baud_rate" id="baud_rate"
-                                        value="{{ old('baud_rate') }}">
+                                    <input type="text" class="form-control form-control-sm" name="baud_rate"  id="baud_rate"
+                                        value="{{ old('baud_rate',$setting->baud_rate ) }}">
                                 </div>
                                 @error('baud_rate')
                                     <span class="alert_required bg-danger text-white p-1 rounded" role="alert">
