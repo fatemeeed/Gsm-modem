@@ -80,11 +80,23 @@ class HomeController extends Controller
 				
 				// add message to return array
 				$arrReturn[] = $arrReturnMessage;
-				$datalogger_id=Datalogger::where('mobile_number',$arrReturnMessage['From'])->first();
+				
+				$datalogger=Datalogger::where('mobile_number',$arrReturnMessage['From'])->first();
+
+				if(empty($datalogger)){
+
+					$datalogger_id=null;
+
+				}
+				else{
+
+					$datalogger_id=$datalogger->id;
+
+				}
 
                 Message::create([
                     'from'    => $arrReturnMessage['From'],
-					'datalogger_id' => $datalogger_id->id,
+					'datalogger_id' => $datalogger_id,
                     'time'    => $arrReturnMessage['Date'].' '.$arrReturnMessage['Time'],
                     'content' => $arrReturnMessage['Content'],
                     'type'    => '1'
@@ -93,8 +105,8 @@ class HomeController extends Controller
 			
 		}
 
-		$deleteMessage=new DestroyMessage();
-		$deleteMessage->destroy();
+		// $deleteMessage=new DestroyMessage();
+		// $deleteMessage->destroy();
 
         // Artisan::command('auto:recieveMessage');
         // $config=Setting::all();
