@@ -4,7 +4,7 @@
         <div class="brand">
             <h4>
                 <span class="fab fa-pied-piper-square"></span>
-                DataLogger Analytics
+                تله متری چاه ها و منابع
             </h4>
         </div>
         <div class="sidebar-avatar">
@@ -13,7 +13,7 @@
             </div>
             <div class="avatar-info">
                 <div class="avatar-text">
-                    <h5> فاطمه دائیان</h5>
+                    <h5> {{ auth()->user()->fullName }} </h5>
                    
                 </div>
                 {{-- <span class="fas fa-chevron-down"></span> --}}
