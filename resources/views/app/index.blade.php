@@ -10,7 +10,7 @@
            
             @foreach ($datalogger->checkCodes as $checkCode)
 
-            {{  $datalogger->lastMessageRecieve()->content[$checkCode] }}
+            {{  $datalogger->lastMessageRecieve()->content[$checkCode] ?? '' }}
 
             
                 

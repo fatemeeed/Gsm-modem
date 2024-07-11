@@ -18,4 +18,12 @@ class ModemSettingController extends Controller
     {
         return view('app.setting.edit',compact('setting'));
     }
+
+    public function update(Request $request,Setting $setting)
+    {
+        $inputs=$request->all();
+        $resault=$setting->update($inputs);
+        return redirect()->route('app.setting.index')->with('swal-success', ' ویرایش با موفقیت ثبت شد');
+
+    }
 }
