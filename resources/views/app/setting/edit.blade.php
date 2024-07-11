@@ -1,6 +1,6 @@
 @extends('app.layouts.master')
 
-@section('head-tag')
+@section('title')
     <title> ویرایش تنظیمات مودم</title>
 @endsection
 
@@ -30,6 +30,7 @@
                 <section>
                     <form action="{{ route('admin.setting.update', $setting->id) }}" method="post" id="form">
                         @csrf
+                        @method('put')
                         <section class="row">
 
                             <section class="col-12 col-md-6 my-2">

@@ -69,7 +69,7 @@ Route::prefix('panel')->namespace('Panel')->group(function () {
 
         Route::get('/', [ModemSettingController::class , 'index'])->name('app.setting.index');
         Route::get('/edit/{setting}', [ModemSettingController::class, 'edit'])->name('admin.setting.edit');
-        Route::get('/update/{setting}', [ModemSettingController::class, 'update'])->name('admin.setting.update');
+        Route::put('/update/{setting}', [ModemSettingController::class, 'update'])->name('admin.setting.update');
 
     });
 
