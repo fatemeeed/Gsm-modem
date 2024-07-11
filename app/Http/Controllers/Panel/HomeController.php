@@ -56,6 +56,12 @@ class HomeController extends Controller
 				
 				$strContent	= trim($arrMessage[1]);
 				
+				$strtoarray=explode(" ",$strContent);
+				$messageArray = array();
+				for($i=0 ; count($strtoarray) ; $i=$i+2 ){
+					$messageArray[$strtoarray[$i]]=$strtoarray[$i+1];
+
+				}
 				
 				
 				// set the message array to go in the return array
@@ -68,7 +74,7 @@ class HomeController extends Controller
 				$arrReturnMessage['Date']		= trim($arrMetta[4], "\"");
 				$arrTime						= explode("+", $arrMetta[5], 2);
 				$arrReturnMessage['Time']		= trim($arrTime[0], "\"");
-				$arrReturnMessage['Content']	= trim($strContent);
+				$arrReturnMessage['Content']	= $messageArray;
 				
 	
 				

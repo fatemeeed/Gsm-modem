@@ -13,6 +13,10 @@ class Message extends Model
 
     protected $guarded=['id'];
 
+    protected $casts=[
+        'content' =>'array',
+    ];
+
     public function datalogger()
     {
         return $this->belongsTo(Datalogger::class);
