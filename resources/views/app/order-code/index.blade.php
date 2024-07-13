@@ -28,7 +28,7 @@
 
                 <section class="d-flex justify-content-between align-items-center mt-4 mb-3 border-bottom pb-2">
 
-                    <a class="btn btn-info btn-sm text-light" href="{{ route('app.check-code.create') }}">ایجاد دسترسی جدید</a>
+                    <a class="btn btn-info btn-sm text-light" href="{{ route('app.order-code.create') }}">ایجاد کد کنترل جدید</a>
 
                     <div class="max-width-16-rem">
 
@@ -46,27 +46,20 @@
                             <tr>
                                 <th>#</th>
                                 <th>نام کد</th>
-                                <th> تایم سیکل </th>
+                                <th>توضیحات کد</th>
                                 <th class="max-width-16-rem text-center"><i class="fa fa-cogs"></i> تنظیمات</th>
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach ($checkCodes as $checkCode)
+                            @foreach ($orders as $order)
                                 <tr>
                                     <th>{{ $loop->iteration }}</th>
-                                    <th>{{ $checkCode->name }}</th>
-                                    <th>
-                                        @if(empty($checkCode->dataLoggers()->get()->toArray()))
-                                            <span class="text-danger"> دیتالاگر تعریف نشده</span>
-                                        @else
-                                            @foreach ($checkCode->dataLoggers as $dataLogger)
-                                                {{ $dataLogger->name }}</br>
-                                            @endforeach
-                                        @endif
-                                    </th>
-                                    <td class="width-22-rem text-left">
+                                    <th>{{ $order->name }}</th>
+                                    <th>{{ $order->description }}</th>
+                                    
+                                    <td class=" text-left">
                                         
-                                        <a href="{{ route('app.check-code.edit', $checkCode->id) }}" class="btn btn-primary btn-sm"><i class="fa fa-edit"></i> ویرایش</a>
+                                        <a href="{{ route('app.order-code.edit', $order->id) }}" class="btn btn-primary btn-sm"><i class="fa fa-edit"></i> ویرایش</a>
                                         <button type="submit" class="btn btn-danger btn-sm"><i class="fa fa-trash-alt"></i>
                                             حذف</button>
                                     </td>

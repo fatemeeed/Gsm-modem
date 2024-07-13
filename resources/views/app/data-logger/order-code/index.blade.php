@@ -1,6 +1,6 @@
 @extends('app.layouts.master')
 @section('title')
-    <title>تجهیزات</title>
+    <title>کدهای کنترل</title>
     <link rel="stylesheet" href="{{ asset('assets/css/toggle-switch.css') }}">
 @endsection
 
@@ -8,7 +8,8 @@
     <nav aria-label="breadcrumb" dir="rtl">
         <ol class="breadcrumb">
             <li class="breadcrumb-item font-size-12"> <a href="#">خانه</a></li>
-            <li class="breadcrumb-item font-size-12 active" aria-current="page"> تجهیزات</li>
+            <li class="breadcrumb-item font-size-12"> <a href="#">تجهیزات</a></li>
+            <li class="breadcrumb-item font-size-12 active" aria-current="page"> کدهای کنترل</li>
         </ol>
     </nav>
 

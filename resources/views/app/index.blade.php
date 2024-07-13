@@ -5,17 +5,18 @@
 
 @section('content')
     @foreach ($dataloggers as $datalogger)
-
-    {{ var_dump($datalogger->lastRecieveMessage()) }}
         <section
-            class="{{ $datalogger->deviceSahpe ?? ' ' }}   @if ($datalogger->dataloggerLastStatus() && $datalogger->power) {{ $datalogger->dataloggerLastStatus() }} @endif   
+            class="shape {{ $datalogger->deviceSahpe ?? ' ' }}   @if ($datalogger->dataloggerLastStatus() && $datalogger->power) {{ $datalogger->dataloggerLastStatus() }} @endif   
             
         ">
-            <h6 class="d-flex text-center ">{{ $datalogger->name ?? ' ' }}</h6>
-
-
-
-
+            <h5 class="d-flex text-center ">{{ $datalogger->name ?? ' ' }}</h5>
+            <h6>
+                @if (empty($datalogger->dataloggerLastStatus()))
+                    {{ 'نامشخص ' }}
+                @else
+                    {{ $datalogger->dataloggerLastStatus() }}
+                @endif
+            </h6>
 
         </section>
     @endforeach

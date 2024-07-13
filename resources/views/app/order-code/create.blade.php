@@ -1,7 +1,7 @@
 @extends('app.layouts.master')
 
 @section('title')
-    <title>ایجاد چک کد </title>
+    <title>ایجاد کد کنترل </title>
 @endsection
 
 @section('content')
@@ -9,8 +9,8 @@
         <ol class="breadcrumb">
             <li class="breadcrumb-item font-size-12"><a href="#"> خانه </a></li>
             <li class="breadcrumb-item font-size-12"><a href="#"> کاربران </a></li>
-            <li class="breadcrumb-item font-size-12"><a href="#"> دسترسی ها </a></li>
-            <li class="breadcrumb-item font-size-12 active" aria-current="page"> ایجاد چک کد </li>
+            <li class="breadcrumb-item font-size-12"><a href="#"> کدهای کنترل  </a></li>
+            <li class="breadcrumb-item font-size-12 active" aria-current="page"> ایجاد کد جدید </li>
         </ol>
     </nav>
 
@@ -22,21 +22,21 @@
 
                 <section class="main-body-container-header">
 
-                    <h5>ایجاد چک کد </h5>
+                    <h5>ایجاد کد جدید </h5>
                     <p></p>
 
                 </section>
 
                 <section class="d-flex justify-content-between align-items-center mt-4 mb-3 border-bottom pb-2">
 
-                    <a class="btn btn-info btn-sm text-light" href="{{ route('app.check-code.index') }}">بازگشت </a>
+                    <a class="btn btn-info btn-sm text-light" href="{{ route('app.order-code.index') }}">بازگشت </a>
 
 
                 </section>
 
                 <section>
 
-                    <form action="{{ route('app.check-code.store') }}" method="post">
+                    <form action="{{ route('app.order-code.store') }}" method="post">
 
                         @csrf
 
@@ -44,7 +44,7 @@
 
                             <section class="col-12 col-md-5">
                                 <div class="form-group">
-                                    <label for=""> نام چک کد </label>
+                                    <label for=""> نام کد </label>
                                     <input class="form-control form-control-sm" type="text" name="name" id="name"
                                         value="{{ old('name') }}">
                                 </div>

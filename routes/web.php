@@ -48,8 +48,10 @@ Route::prefix('panel')->namespace('Panel')->group(function () {
         Route::put('/update/{device}', [DataLoggerController::class, 'update'])->name('app.data-logger.update');
         Route::delete('/destroy/{device}', [DataLoggerController::class, 'destroy'])->name('app.data-logger.destroy');
         Route::get('/status/{device}', [DataLoggerController::class, 'status'])->name('app.data-logger.status');
-        Route::get('/check-Code/{device}', [DataLoggerController::class, 'checkCode'])->name('app.data-logger.check-code');
-        Route::post('/check-Code/store/{device}', [DataLoggerController::class, 'checkCodeStore'])->name('app.data-logger.check-code.store');
+        // Route::get('/check-Code/{device}', [DataLoggerController::class, 'checkCode'])->name('app.data-logger.check-code');
+        // Route::post('/check-Code/store/{device}', [DataLoggerController::class, 'checkCodeStore'])->name('app.data-logger.check-code.store');
+        Route::get('/order-Code/{device}', [DataLoggerController::class, 'orderCode'])->name('app.data-logger.order-code');
+        Route::post('/order-Code/store/{device}', [DataLoggerController::class, 'orderCodeStore'])->name('app.data-logger.order-code.store');
         
 
     });

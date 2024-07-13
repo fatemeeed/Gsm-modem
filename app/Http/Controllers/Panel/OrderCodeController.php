@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers\Panel;
 
-use App\Http\Controllers\Controller;
 use App\Models\OrderCode;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use App\Http\Requests\OrderCodeRequest;
 
 class OrderCodeController extends Controller
 {
@@ -22,15 +23,19 @@ class OrderCodeController extends Controller
      */
     public function create()
     {
-        //
+        return view('app.order-code.create');
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(OrderCodeRequest $request)
     {
-        //
+        $inputs=$request->all();
+
+        $result=OrderCode::create($inputs);
+        return redirect()->route('app.order-code.index')->with('swal-success', ' کد جدید با موفقیت ایجاد شد');
+
     }
 
     /**
@@ -44,17 +49,20 @@ class OrderCodeController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit(OrderCode $orderCode)
     {
-        //
+        return view('app.order-code.edit',compact('orderCode'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(OrderCodeRequest $request, OrderCode $orderCode)
     {
-        //
+        $inputs=$request->all();
+        $orderCode->update($inputs);
+        return redirect()->route('app.order-code.index')->with('swal-success', ' کد با موفقیت ویرایش شد');
+
     }
 
     /**

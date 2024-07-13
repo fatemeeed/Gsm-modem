@@ -54,7 +54,7 @@ class Datalogger extends Model
                 $resualt = 'pump';
                 break;
             case '1':
-                $resualt = 'well';
+                $resualt = 'pit';
                 break;
             case '2':
                 $resualt = 'source';
@@ -73,7 +73,7 @@ class Datalogger extends Model
 
     public function lastRecieveMessage()
     {
-         return $this->messages()->orderBy('created_at', 'desc')->first();
+         return $this->messages()->latest('time')->first();
     }
 
     public function dataloggerLastStatus()

@@ -10,7 +10,8 @@ class OrderCode extends Model
 {
     use HasFactory,SoftDeletes;
 
-    protected $quarded=['id'];
+   
+    protected $guarded = ['id'];
 
     
 }

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Panel;
 
 use App\Models\City;
 use App\Models\CheckCode;
+use App\Models\OrderCode;
 use App\Models\Datalogger;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -112,19 +113,27 @@ class DataLoggerController extends Controller
         }
     }
 
-    public function checkCode(Datalogger $device)
-    {
-        $checkCodes = CheckCode::all();
-        return view('app.data-logger.check-code', compact('device', 'checkCodes'));
-    }
+    // public function checkCode(Datalogger $device)
+    // {
+    //     $checkCodes = CheckCode::all();
+    //     return view('app.data-logger.check-code', compact('device', 'checkCodes'));
+    // }
 
-    public function checkCodeStore(Request $request, Datalogger $device)
-    {
-        $request->validate([
-            'checkCode' => 'required|exists:check_codes,id|array'
-        ]);
+    // public function checkCodeStore(Request $request, Datalogger $device)
+    // {
+    //     $request->validate([
+    //         'checkCode' => 'required|exists:check_codes,id|array'
+    //     ]);
 
-        $device->checkCodes()->sync($request->checkCode);
-        return redirect()->route('app.data-logger.index')->with('swal-success', ' چک کد با موفقیت ویرایش شد');
+    //     $device->checkCodes()->sync($request->checkCode);
+    //     return redirect()->route('app.data-logger.index')->with('swal-success', ' چک کد با موفقیت ویرایش شد');
+    // }
+
+    public function orderCode(Datalogger $device)
+    {
+
+        $orderCodes = OrderCode::all();
+        return view('app.data-logger.order-code', compact('device', 'orderCodes'));
+
     }
 }
