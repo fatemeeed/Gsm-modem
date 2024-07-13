@@ -71,10 +71,19 @@ class Datalogger extends Model
         return $this->hasMany(Message::class);
     }
 
-    public function lastMessageRecieve()
+    public function lastRecieveMessage()
     {
          return $this->messages()->orderBy('created_at', 'desc')->first();
     }
+
+    public function dataloggerLastStatus()
+    {
+         return $this->lastRecieveMessage()->content[$this->powerCheckCode->name]  ?? '';
+    }
+
+
+
+    
 
     public function powerCheckCode()
     {

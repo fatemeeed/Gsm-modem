@@ -12,6 +12,6 @@
     </div>
     <div class="header-action">
     <a class="btn btn-primary btn-sm" href="{{ route('app.update') }}">بروزرسانی</a>
-        
     </div>
+    
 </header>
