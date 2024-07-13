@@ -19,8 +19,31 @@ class HomeController extends Controller
 	{
 		$dataloggers = Datalogger::all();
 		// RecieveMessage::dispatch()->now();
-        return view('app.index',compact('dataloggers'));
-    }
+
+		$str = "Power ON      
+AC1 ON        
+AC2 ON        
+AC3 OFF       
+AC4 OFF       
+DC1 OFF       
+DC2 OFF       
+Relay_1       ON
+Relay_2       OFF
+
+
+OK";
+		$str2 = preg_split('/[\s]+/', trim($str));
+
+		$length = count($str2);
+		for ($i = 0; $i < $length-1; $i += 2) {
+
+			$messageArray1[$str2[$i]] = $str2[$i + 1];
+		}
+
+
+
+		return view('app.index', compact('dataloggers','messageArray1'));
+	}
 
 	public function update()
 	{
@@ -80,23 +103,39 @@ class HomeController extends Controller
 				$arrReturnMessage['Date']		= trim($arrMetta[4], "\"");
 				$arrTime						= explode("+", $arrMetta[5], 2);
 				$arrReturnMessage['Time']		= trim($arrTime[0], "\"");
-				$arrReturnMessage['Content']	= $messageArray;
-				
-	
-				
+
+
+
+
 				// add message to return array
 				$arrReturn[] = $arrReturnMessage;
-				$datalogger_id=Datalogger::where('mobile_number',$arrReturnMessage['From'])->first();
 
-                Message::create([
-                    'from'    => $arrReturnMessage['From'],
-					'datalogger_id' => $datalogger_id->id,
-                    'time'    => $arrReturnMessage['Date'].' '.$arrReturnMessage['Time'],
-                    'content' => $arrReturnMessage['Content'],
-                    'type'    => '1'
-                ]);
+				$datalogger = Datalogger::where('mobile_number', $arrReturnMessage['From'])->first();
+
+				if ($datalogger) {
+
+					$strContent	= trim($arrMessage[1]);
+					$strtoarray = preg_split('/[\s]+/', trim($strContent));
+
+					$messageArray1 = [];
+					$length = count($strtoarray);
+
+					for ($i = 0; $i < $length-1; $i += 2) {
+
+						$messageArray1[$strtoarray[$i]] = $strtoarray[$i + 1];
+					}
+
+
+
+					Message::create([
+						'from'    => $datalogger->mobile_number,
+						'datalogger_id' => $datalogger->id,
+						'time'    => $arrReturnMessage['Date'] . ' ' . $arrReturnMessage['Time'],
+						'content' => $messageArray1,
+						'type'    => '1'
+					]);
+				}
 			}
-			
 		}
 
 		// $deleteMessage=new DestroyMessage();

@@ -76,11 +76,11 @@
                                             </label> --}}
 
                                             <label class="switch">
-                                                @if ($device->power)
+                                                @if ($device->power && $device->dataloggerLastStatus())
                                                     <input type="checkbox" id="{{ $device->id }}"
                                                         onchange="changeStatus({{ $device->id }})"
                                                         data-url="{{ route('app.data-logger.status', $device->id) }}"
-                                                        @if ($device->lastMessageRecieve()->content[$device->powerCheckCode->name] === 'ON') checked @endif>
+                                                        @if ($device->dataloggerLastStatus()=== 'ON') checked @endif>
 
 
 

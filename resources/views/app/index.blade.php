@@ -5,29 +5,18 @@
 
 @section('content')
     @foreach ($dataloggers as $datalogger)
-        <section class="{{ $datalogger->deviceSahpe }}">
-            <h6 class="d-flex text-center ">{{ $datalogger->name }}</h6>
 
+    {{ var_dump($datalogger->lastRecieveMessage()) }}
+        <section
+            class="{{ $datalogger->deviceSahpe ?? ' ' }}   @if ($datalogger->dataloggerLastStatus() && $datalogger->power) {{ $datalogger->dataloggerLastStatus() }} @endif   
             
-                  
+        ">
+            <h6 class="d-flex text-center ">{{ $datalogger->name ?? ' ' }}</h6>
 
-                
+
+
+
+
         </section>
-    @endforeach --}}
-</h6>
-<h5>
-    وضعیت چاه ها
-</h5>
-  @if(1==1) 
-    <div class="well-off" >
-       <div style="padding-top:60px;"> چاه شماره 1 <br> OFF</div>
-    </div>
-  
-  @else 
-    <div class="well-on" >
-        <div style="padding-top:60px;"> چاه شماره 1 <br> ON</div>
-     </div>
-    
-   @endif
-
+    @endforeach
 @endsection
