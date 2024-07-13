@@ -6,6 +6,7 @@ use App\Models\City;
 use App\Models\CheckCode;
 use App\Models\Datalogger;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\DataLoggerRequest;
 
@@ -54,7 +55,8 @@ class DataLoggerController extends Controller
     public function edit(Datalogger $device)
     {
         $cities = City::all();
-        return view('app.data-logger.edit', compact('cities', 'device'));
+        $checkCodes = CheckCode::all();
+        return view('app.data-logger.edit', compact('cities', 'device', 'checkCodes'));
     }
 
     /**
@@ -64,7 +66,22 @@ class DataLoggerController extends Controller
     {
         $inputs = $request->all();
 
-        $device->update($inputs);
+        DB::beginTransaction();
+
+        try {
+            $device->update($inputs);
+            $device->checkCodes()->sync($request->checkCode);
+
+            DB::commit();
+            // all good
+        } catch (\Exception $e) {
+            DB::rollback();
+            return redirect()->route('app.data-logger.edit')->with('alert-section-error', ' .ویرایش با خطا مواجه شد');
+            // something went wrong
+        }
+
+
+
         return redirect()->route('app.data-logger.index')->with('swal-success', 'تجهیز  با موفقیت ویرایش شد');
     }
 
@@ -81,7 +98,7 @@ class DataLoggerController extends Controller
     public function status(Datalogger $device)
     {
 
-    
+
         $device->status = $device->status == 0 ? 1 : 0;
         $result = $device->save();
         if ($result) {

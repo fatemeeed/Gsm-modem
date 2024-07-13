@@ -33,6 +33,8 @@ class DataLoggerRequest extends FormRequest
             'fount_height' => 'required|numeric',
             'fount_bulk' => 'required|numeric',
             'yearly_bulk' => 'required|numeric',
+            'checkCode' => 'exists:check_codes,id|array',
+            'power' => 'nullable|exists:check_codes,id',
         ];
     }
 

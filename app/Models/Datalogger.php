@@ -75,4 +75,9 @@ class Datalogger extends Model
     {
          return $this->messages()->orderBy('created_at', 'desc')->first();
     }
+
+    public function powerCheckCode()
+    {
+        return $this->belongsTo(CheckCode::class,'power');
+    }
 }

@@ -59,7 +59,7 @@
                 <li class="sidebar-menu-link-item">
                     <a href="{{ route('app.order-code.index') }}">
                         <span class="fas fa-cog"></span>
-                        <span> کدهای فرمان </span>
+                        <span> کدهای کنترل </span>
                     </a>
                 </li>
                 <li class="sidebar-menu-link-item">

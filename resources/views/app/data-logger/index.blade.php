@@ -1,6 +1,7 @@
 @extends('app.layouts.master')
 @section('title')
     <title>تجهیزات</title>
+    <link rel="stylesheet" href="{{ asset('assets/css/toggle-switch.css') }}">
 @endsection
 
 @section('content')
@@ -47,6 +48,7 @@
                                     <th>حجم برداشت سالانه </th>
                                     <th>وضعیت</th>
                                     <th> چک کد ها </th>
+                                    <th> power </th>
                                     <th class="max-width-16-rem text-center"><i class="fa fa-cogs"></i> تنظیمات</th>
                                 </tr>
                             </thead>
@@ -66,23 +68,49 @@
                                         <td>{{ $device->fount_bulk }}</td>
                                         <td>{{ $device->yearly_bulk }}</td>
                                         <td>
-                                            <label>
+                                            {{-- <label>
                                                 <input id="{{ $device->id }}"
                                                     onchange="changeStatus({{ $device->id }})"
-                                                    data-url="{{ route('app.data-logger.status', $device->id) }}" type="checkbox"
-                                                    @if ($device->status === 1) checked @endif>
+                                                    data-url="{{ route('app.data-logger.status', $device->id) }}"
+                                                    type="checkbox" @if ($device->status === 1) checked @endif>
+                                            </label> --}}
+
+                                            <label class="switch">
+                                                @if ($device->power)
+                                                    <input type="checkbox" id="{{ $device->id }}"
+                                                        onchange="changeStatus({{ $device->id }})"
+                                                        data-url="{{ route('app.data-logger.status', $device->id) }}"
+                                                        @if ($device->lastMessageRecieve()->content[$device->powerCheckCode->name] === 'ON') checked @endif>
+
+
+
+                                                    <span class="slider round"></span>
+                                                @else
+                                                    <span class="text-danger">نامشخص</span>
+                                                @endif
+
                                             </label>
                                         </td>
                                         <td>
                                             @forelse ($device->checkCodes as $checkCode)
                                                 {{ $checkCode->name }}
-    
+
                                             @empty
-    
-                                                <span class="text-danger">چک کدی ثبت نشده  </span>
+
+                                                <span class="text-danger">چک کدی ثبت نشده </span>
                                             @endforelse
                                         </td>
-                                        
+                                        <td>
+
+                                            @if ($device->powerCheckCode)
+                                                {{ $device->powerCheckCode->name }}
+                                            @else
+                                                <span class="text-danger"> نامشخص </span>
+                                            @endif
+
+
+                                        </td>
+
                                         <td class="width-13-rem text-right font-size-2 ">
                                             <div class="dropdown" dir="rtl">
                                                 <a href="" class="btn btn-success btn-sm btn-block dropdown-toggle"
@@ -93,9 +121,9 @@
 
                                                 </a>
                                                 <div class="dropdown-menu  text-right" aria-labelledby="dropdownMenuLink">
-                                                   
-                                                    <a class="dropdown-item" href="{{ route('app.data-logger.check-code', $device->id) }}"><i class="fa fa-key"></i> چک کد
-                                                    </a>
+
+                                                    {{-- <a class="dropdown-item" href="{{ route('app.data-logger.check-code', $device->id) }}"><i class="fa fa-key"></i> چک کد
+                                                    </a> --}}
                                                     <a href="{{ route('app.data-logger.edit', $device->id) }}"
                                                         class="dropdown-item"><i class="fa fa-edit"></i>
                                                         ویرایش</a>
@@ -105,7 +133,8 @@
                                                         @csrf
                                                         @method('delete')
                                                         <button class="dropdown-item" type="submit"><i
-                                                                class="fa fa-trash-alt"></i> حذف</button>
+                                                                class="fa fa-trash-alt"></i>
+                                                            حذف</button>
                                                     </form>
 
                                                 </div>
@@ -129,7 +158,6 @@
     </main>
 @endsection
 @section('script')
-    
     <script type="text/javascript">
         function changeStatus(id) {
             var element = $("#" + id)

@@ -1,7 +1,7 @@
 @extends('app.layouts.master')
 
 @section('title')
-    <title> چک کدها</title>
+    <title>کد های کنترل</title>
 @endsection
 
 @section('content')
@@ -9,7 +9,7 @@
         <ol class="breadcrumb">
             <li class="breadcrumb-item font-size-12"><a href="#"> خانه</a></li>
             <li class="breadcrumb-item font-size-12"><a href="#"> کاربران</a></li>
-            <li class="breadcrumb-item font-size-12 active" aria-current="page">  چک کد ها </li>
+            <li class="breadcrumb-item font-size-12 active" aria-current="page">  کدهای کنترل </li>
         </ol>
     </nav>
 
@@ -21,7 +21,7 @@
 
                 <section class="main-body-container-header">
 
-                    <h5> چک کد ها </h5>
+                    <h5>کدهای کنترل   </h5>
                     <p></p>
 
                 </section>
@@ -46,7 +46,7 @@
                             <tr>
                                 <th>#</th>
                                 <th>نام کد</th>
-                                <th> دیتالاگر ها </th>
+                                <th> تایم سیکل </th>
                                 <th class="max-width-16-rem text-center"><i class="fa fa-cogs"></i> تنظیمات</th>
                             </tr>
                         </thead>
