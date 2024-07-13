@@ -6,7 +6,7 @@
 @section('content')
 <br>
 <h6>
-    @foreach ($dataloggers as $datalogger)
+    {{-- @foreach ($dataloggers as $datalogger)
         <section class="{{ $datalogger->deviceSahpe }}">
             <h6 class="d-flex text-center ">{{ $datalogger->name }}</h6>
            
@@ -18,7 +18,7 @@
                 
             @endforeach
         </section>
-    @endforeach
+    @endforeach --}}
 </h6>
 <h5>
     وضعیت چاه ها
