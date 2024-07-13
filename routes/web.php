@@ -11,6 +11,7 @@ use App\Http\Controllers\Panel\OrderCodeController;
 use App\Http\Controllers\Panel\DataLoggerController;
 use App\Http\Controllers\Panel\PermissionController;
 use App\Http\Controllers\Panel\ModemSettingController;
+use App\Http\Controllers\Panel\DataLoggerOrderCodeController;
 
 /*
 |--------------------------------------------------------------------------
@@ -29,19 +30,17 @@ Route::namespace('Auth')->group(function () {
     Route::get('/', [LoginController::class, 'loginForm'])->name('auth.login');
     Route::post('/post-login', [LoginController::class, 'postLogin'])->name('auth.login.post');
     Route::get('/logout', [LoginController::class, 'logout'])->name('auth.logout');
-
-
 });
 
 Route::prefix('panel')->namespace('Panel')->group(function () {
-    Route::get('/', [HomeController::class , 'index'])->name('app.index');
+    Route::get('/', [HomeController::class, 'index'])->name('app.index');
 
-    Route::get('/update', [HomeController::class , 'update'])->name('app.update');
+    Route::get('/update', [HomeController::class, 'update'])->name('app.update');
 
     //dataLogger
     Route::prefix('dataLogger')->group(function () {
 
-        Route::get('/', [DataLoggerController::class , 'index'])->name('app.data-logger.index');
+        Route::get('/', [DataLoggerController::class, 'index'])->name('app.data-logger.index');
         Route::get('/create', [DataLoggerController::class, 'create'])->name('app.data-logger.create');
         Route::post('/store', [DataLoggerController::class, 'store'])->name('app.data-logger.store');
         Route::get('/edit/{device}', [DataLoggerController::class, 'edit'])->name('app.data-logger.edit');
@@ -50,29 +49,33 @@ Route::prefix('panel')->namespace('Panel')->group(function () {
         Route::get('/status/{device}', [DataLoggerController::class, 'status'])->name('app.data-logger.status');
         // Route::get('/check-Code/{device}', [DataLoggerController::class, 'checkCode'])->name('app.data-logger.check-code');
         // Route::post('/check-Code/store/{device}', [DataLoggerController::class, 'checkCodeStore'])->name('app.data-logger.check-code.store');
-        Route::get('/order-Code/{device}', [DataLoggerController::class, 'orderCode'])->name('app.data-logger.order-code');
-        Route::post('/order-Code/store/{device}', [DataLoggerController::class, 'orderCodeStore'])->name('app.data-logger.order-code.store');
-        
 
+        Route::prefix('order-code')->group(function () {
+            Route::get('/{device}', [DataLoggerOrderCodeController::class, 'index'])->name('app.data-logger.order-code');
+            Route::get('/create/{device}', [DataLoggerOrderCodeController::class, 'create'])->name('app.data-logger.order-code.create');
+            Route::post('/store/{device}', [DataLoggerOrderCodeController::class, 'store'])->name('app.data-logger.order-code.store');
+            Route::get('/edit/{device}/{orderCode}', [DataLoggerOrderCodeController::class, 'edit'])->name('app.data-logger.order-code.edit');
+            Route::put('/update/{device}/{orderCode}', [DataLoggerOrderCodeController::class, 'update'])->name('app.data-logger.order-code.update');
+            Route::delete('/delete/{device}/{orderCode}', [DataLoggerOrderCodeController::class, 'delete'])->name('app.data-logger.order-code.destroy');
+            Route::get('/status/{device}/{orderCode}', [DataLoggerOrderCodeController::class, 'status'])->name('app.data-logger.order-code.status');
+        });
     });
     Route::prefix('messages')->group(function () {
 
-        Route::get('/send-box', [SMSController::class , 'sendBox'])->name('app.Message.send-box');
-        Route::get('/recieve-box', [SMSController::class , 'recieveBox'])->name('app.Message.recieve-box');
+        Route::get('/send-box', [SMSController::class, 'sendBox'])->name('app.Message.send-box');
+        Route::get('/recieve-box', [SMSController::class, 'recieveBox'])->name('app.Message.recieve-box');
         Route::get('/create-message', [SMSController::class, 'createMessage'])->name('admin.Message.create-message');
         Route::post('/post-message', [SMSController::class, 'postMessage'])->name('admin.Message.post-message');
         Route::get('/delete-message', [SMSController::class, 'deleteMessage'])->name('admin.Message.delete-message');
-
     });
 
-    
+
 
     Route::prefix('modem-setting')->group(function () {
 
-        Route::get('/', [ModemSettingController::class , 'index'])->name('app.setting.index');
+        Route::get('/', [ModemSettingController::class, 'index'])->name('app.setting.index');
         Route::get('/edit/{setting}', [ModemSettingController::class, 'edit'])->name('admin.setting.edit');
         Route::put('/update/{setting}', [ModemSettingController::class, 'update'])->name('admin.setting.update');
-
     });
 
     //checkCode

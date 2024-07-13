@@ -129,11 +129,5 @@ class DataLoggerController extends Controller
     //     return redirect()->route('app.data-logger.index')->with('swal-success', ' چک کد با موفقیت ویرایش شد');
     // }
 
-    public function orderCode(Datalogger $device)
-    {
-
-        $orderCodes = OrderCode::all();
-        return view('app.data-logger.order-code', compact('device', 'orderCodes'));
-
-    }
+    
 }

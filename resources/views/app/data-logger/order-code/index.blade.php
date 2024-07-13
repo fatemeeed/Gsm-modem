@@ -20,13 +20,13 @@
                 <section class="main-body-container">
                     <section class="main-body-container-header">
                         <h5>
-                            تجهیزات
+                            کدهای کنترل
                         </h5>
                     </section>
 
                     <section class="d-flex justify-content-between align-items-center mt-4 mb-3 border-bottom pb-2">
-                        <a href="{{ route('app.data-logger.create') }}" class="btn btn-info btn-sm text-light">ایجاد
-                            افزودن تجهیز جدید</a>
+                        <a href="{{ route('app.data-logger.order-code.create',$device->id) }}" class="btn btn-info btn-sm text-light">
+                            افزودن کد جدید</a>
                         <div class="max-width-16-rem">
                             <input type="text" class="form-control form-control-sm form-text" placeholder="جستجو">
                         </div>
@@ -38,36 +38,20 @@
                                 <tr>
                                     <th>#</th>
                                     <th>نام </th>
-                                    <th>نوع تجهیز</th>
-                                    <th> شماره خط</th>
-                                    <th>مدل </th>
-                                    <th>نوع سنسور </th>
-                                    <th>نوع کلید </th>
-                                    <th>محل تجهیز </th>
-                                    <th>ارتفاع </th>
-                                    <th>حجم </th>
-                                    <th>حجم برداشت سالانه </th>
+                                    <th>بازه زمانی </th>
                                     <th>وضعیت</th>
-                                    <th> چک کد ها </th>
-                                    <th> power </th>
+
                                     <th class="max-width-16-rem text-center"><i class="fa fa-cogs"></i> تنظیمات</th>
                                 </tr>
                             </thead>
                             <tbody>
 
-                                @foreach ($devices as $device)
+                                
                                     <tr>
-                                        <td>{{ $loop->iteration }}</td>
-                                        <td>{{ $device->name }}</td>
-                                        <td>{{ $device->dataLoggerType }}</td>
-                                        <td>{{ $device->mobile_number }}</td>
-                                        <td>{{ $device->model }}</td>
-                                        <td>{{ $device->sensor_type }}</td>
-                                        <td>{{ $device->key_type == 1 ? 'تک کلید' : 'دو کلید' }}</td>
-                                        <td>{{ $device->city->name }}</td>
-                                        <td>{{ $device->fount_height }}</td>
-                                        <td>{{ $device->fount_bulk }}</td>
-                                        <td>{{ $device->yearly_bulk }}</td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        
                                         <td>
                                             {{-- <label>
                                                 <input id="{{ $device->id }}"
@@ -76,7 +60,7 @@
                                                     type="checkbox" @if ($device->status === 1) checked @endif>
                                             </label> --}}
 
-                                            <label class="switch">
+                                            {{-- <label class="switch">
                                                 @if ($device->power && $device->dataloggerLastStatus())
                                                     <input type="checkbox" id="{{ $device->id }}"
                                                         onchange="changeStatus({{ $device->id }})"
@@ -90,28 +74,9 @@
                                                     <span class="text-danger">نامشخص</span>
                                                 @endif
 
-                                            </label>
+                                            </label> --}}
                                         </td>
-                                        <td>
-                                            @forelse ($device->checkCodes as $checkCode)
-                                                {{ $checkCode->name }}
-
-                                            @empty
-
-                                                <span class="text-danger">چک کدی ثبت نشده </span>
-                                            @endforelse
-                                        </td>
-                                        <td>
-
-                                            @if ($device->powerCheckCode)
-                                                {{ $device->powerCheckCode->name }}
-                                            @else
-                                                <span class="text-danger"> نامشخص </span>
-                                            @endif
-
-
-                                        </td>
-
+                                        
                                         <td class="width-13-rem text-right font-size-2 ">
                                             <div class="dropdown" dir="rtl">
                                                 <a href="" class="btn btn-success btn-sm btn-block dropdown-toggle"
@@ -127,11 +92,9 @@
                                                     </a> --}}
                                                     <a href="{{ route('app.data-logger.edit', $device->id) }}"
                                                         class="dropdown-item"><i class="fa fa-edit"></i>
-                                                        تنظیمات</a>
+                                                        ویرایش</a>
 
-                                                    <a href="{{ route('app.data-logger.order-code', $device->id) }}"
-                                                        class="dropdown-item"><i class="fa fa-edit"></i>
-                                                        تعریف کد کنترل</a>
+                                                    
 
                                                     <form action="{{ route('app.data-logger.destroy', $device->id) }}"
                                                         method="POST" class="d-inline">
@@ -150,9 +113,7 @@
 
                                         </td>
                                     </tr>
-                                @endforeach
-
-
+                                
 
                             </tbody>
                         </table>
