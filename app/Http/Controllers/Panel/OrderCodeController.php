@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Panel;
 
 use App\Http\Controllers\Controller;
+use App\Models\OrderCode;
 use Illuminate\Http\Request;
 
 class OrderCodeController extends Controller
@@ -12,7 +13,8 @@ class OrderCodeController extends Controller
      */
     public function index()
     {
-        //
+        $orders=OrderCode::all();
+        return view('app.order-code.index',compact('orders'));
     }
 
     /**

@@ -20,6 +20,7 @@ return new class extends Migration
             $table->tinyInteger('key_type');
             $table->string('sensor_type');
             $table->foreignId('city_id')->constrained('cities')->onDelete('cascade')->onUpdate('cascade');
+            $table->foreignId('power')->nullable()->constrained('check_codes')->onDelete('cascade')->onUpdate('cascade');
             $table->string('fount_height')->nullable()->comment('ارتفاع منبع');
             $table->string('fount_bulk')->nullable()->comment('حجم منبع');
             $table->string('yearly_bulk')->comment('حجم برداشت سالانه');
