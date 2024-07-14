@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Middleware\Authenticate;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Panel\SMSController;
 use App\Http\Controllers\Auth\LoginController;
@@ -32,7 +33,7 @@ Route::namespace('Auth')->group(function () {
     Route::get('/logout', [LoginController::class, 'logout'])->name('auth.logout');
 });
 
-Route::prefix('panel')->namespace('Panel')->group(function () {
+Route::prefix('panel')->middleware(Authenticate::class)->namespace('Panel')->group(function () {
     Route::get('/', [HomeController::class, 'index'])->name('app.index');
 
     Route::get('/update', [HomeController::class, 'update'])->name('app.update');
@@ -54,12 +55,14 @@ Route::prefix('panel')->namespace('Panel')->group(function () {
             Route::get('/{device}', [DataLoggerOrderCodeController::class, 'index'])->name('app.data-logger.order-code');
             Route::get('/create/{device}', [DataLoggerOrderCodeController::class, 'create'])->name('app.data-logger.order-code.create');
             Route::post('/store/{device}', [DataLoggerOrderCodeController::class, 'store'])->name('app.data-logger.order-code.store');
-            Route::get('/edit/{device}/{orderCode}', [DataLoggerOrderCodeController::class, 'edit'])->name('app.data-logger.order-code.edit');
-            Route::put('/update/{device}/{orderCode}', [DataLoggerOrderCodeController::class, 'update'])->name('app.data-logger.order-code.update');
+            Route::get('/edit/{device}', [DataLoggerOrderCodeController::class, 'edit'])->name('app.data-logger.order-code.edit');
+            Route::put('/update/{device}', [DataLoggerOrderCodeController::class, 'update'])->name('app.data-logger.order-code.update');
             Route::delete('/delete/{device}/{orderCode}', [DataLoggerOrderCodeController::class, 'delete'])->name('app.data-logger.order-code.destroy');
-            Route::get('/status/{device}/{orderCode}', [DataLoggerOrderCodeController::class, 'status'])->name('app.data-logger.order-code.status');
+           
         });
+
     });
+
     Route::prefix('messages')->group(function () {
 
         Route::get('/send-box', [SMSController::class, 'sendBox'])->name('app.Message.send-box');
@@ -68,8 +71,6 @@ Route::prefix('panel')->namespace('Panel')->group(function () {
         Route::post('/post-message', [SMSController::class, 'postMessage'])->name('admin.Message.post-message');
         Route::get('/delete-message', [SMSController::class, 'deleteMessage'])->name('admin.Message.delete-message');
     });
-
-
 
     Route::prefix('modem-setting')->group(function () {
 

@@ -2,9 +2,10 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\Datalogger;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class OrderCode extends Model
 {
@@ -12,6 +13,11 @@ class OrderCode extends Model
 
    
     protected $guarded = ['id'];
+
+    public function dataloggers()
+    {
+        return $this->belongsToMany(Datalogger::class)->withPivot('time');
+    }
 
     
 }

@@ -1,6 +1,6 @@
-@extends('admin.layouts.master')
+@extends('app.layouts.master')
 
-@section('head-tag')
+@section('title')
     <title> ریست پسورد </title>
 @endsection
 
@@ -28,14 +28,14 @@
 
                 <section class="d-flex justify-content-between align-items-center mt-4 mb-3 border-bottom pb-2">
 
-                    <a class="btn btn-info btn-sm" href="{{ route('admin.user.index') }}">بازگشت </a>
+                    <a class="btn btn-info btn-sm text-light" href="{{ route('app.user.index') }}">بازگشت </a>
 
 
                 </section>
 
                 <section>
 
-                    <form action="{{ route('admin.user.reset-password.post',$user->id) }}" method="post" >
+                    <form action="{{ route('app.user.reset-password.post',$user->id) }}" method="post" >
                         @csrf
                         @method('put')
 
@@ -71,7 +71,7 @@
                                 @enderror
                             </section>
                             
-                            <section class="col-12 col-md-12">
+                            <section class="col-12 col-md-12 mt-3">
                                 <button class="btn btn-primary btn-sm">ثبت</button>
                             </section>
 

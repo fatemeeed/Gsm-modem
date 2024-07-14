@@ -40,7 +40,7 @@
 
                         <section class="row">
 
-                            <section class="col-12 col-md-6">
+                            <section class="col-12 col-md-6 mb-3">
                                 <div class="form-group">
                                     <label for="">نام </label>
                                     <input class="form-control form-control-sm" name="first_name" type="text"
@@ -55,7 +55,7 @@
                                 @enderror
                             </section>
 
-                            <section class="col-12 col-md-6">
+                            <section class="col-12 col-md-6 mb-3">
                                 <div class="form-group">
                                     <label for="">نام خانوادگی </label>
                                     <input class="form-control form-control-sm" name="last_name" type="text"
@@ -69,7 +69,7 @@
                                     </span>
                                 @enderror
                             </section>
-                            <section class="col-12 col-md-6">
+                            <section class="col-12 col-md-6 mb-3">
                                 <div class="form-group">
                                     <label for="">کد ملی </label>
                                     <input class="form-control form-control-sm" name="national_code" id="national_code"
@@ -97,22 +97,9 @@
                                     </span>
                                 @enderror
                             </section> --}}
-                            <section class="col-12 col-md-6">
-                                <div class="form-group">
-                                    <label for="">شماره موبایل</label>
-                                    <input class="form-control form-control-sm" name="mobile" id="mobile" type="text"
-                                        value="{{ old('mobile') }}">
-                                </div>
-                                @error('mobile')
-                                    <span class="alert-danger text-white bg-danger rounded" role="alert">
-                                        <strong>
-                                            {{ $message }}
-                                        </strong>
-                                    </span>
-                                @enderror
-                            </section>
+                            
 
-                            <section class="col-12 col-md-6">
+                            <section class="col-12 col-md-6 mb-3">
                                 <div class="form-group">
                                     <label for=""> کلمه عبور </label>
                                     <input class="form-control form-control-sm" name="password" id="password"
@@ -126,7 +113,7 @@
                                     </span>
                                 @enderror
                             </section>
-                            <section class="col-12 col-md-6">
+                            <section class="col-12 col-md-6 mb-3">
                                 <div class="form-group">
                                     <label for="">تکرار کلمه عبور </label>
                                     <input class="form-control form-control-sm" name="password_confirmation"
@@ -168,7 +155,7 @@
                                 </div>
                             </section> --}}
 
-                            <section class="col-12 col-md-6">
+                            <section class="col-12 col-md-6 mb-3">
                                 <div class="form-group">
                                     <label for=""> وضعیت فعالسازی</label>
                                     <select class="form-control  form-control-sm" name="activation" id="activation">

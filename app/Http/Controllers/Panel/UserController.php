@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests\UserRequest;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\Rules\Password;
 
 class UserController extends Controller
 {
@@ -58,7 +59,7 @@ class UserController extends Controller
      */
     public function edit(User $user)
     {
-        return view('admin.user.edit');
+        return view('app.user.edit',compact('user'));
     }
 
     /**
@@ -69,7 +70,7 @@ class UserController extends Controller
         $inputs = $request->all();
         
         $user->update($inputs);
-        return redirect()->route('admin.user.index')->with('swal-success', ' ویرایش با موفقیت ثبت شد');
+        return redirect()->route('app.user.index')->with('swal-success', ' ویرایش با موفقیت ثبت شد');
     }
 
     /**

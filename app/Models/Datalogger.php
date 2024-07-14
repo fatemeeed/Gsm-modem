@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\Message;
+use App\Models\OrderCode;
 use PhpParser\Node\Stmt\Switch_;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -81,12 +82,13 @@ class Datalogger extends Model
          return $this->lastRecieveMessage()->content[$this->powerCheckCode->name]  ?? '';
     }
 
-
-
-    
-
     public function powerCheckCode()
     {
         return $this->belongsTo(CheckCode::class,'power');
+    }
+
+    public function order_codes()
+    {
+        return $this->belongsToMany(OrderCode::class)->withPivot('time');
     }
 }

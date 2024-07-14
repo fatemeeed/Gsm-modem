@@ -30,9 +30,19 @@ class DataLoggerOrderCodeController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(Request $request,Datalogger $device)
     {
-        //
+        $validatedData = $request->validate([
+
+            'order_code_id'   => ['required', 'exists:order_codes,id'],
+            'time'   => ['required','min:2'],
+
+        ]);
+
+    
+
+        $device->order_codes()->sync([$request->order_code_id=> ['time' => $request->time]]);
+        return redirect()->route('app.data-logger.order-code', $device->id )->with('swal-success', ' کد کنترل با موفقیت اضافه شد');
     }
 
     /**
@@ -46,9 +56,10 @@ class DataLoggerOrderCodeController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit(Datalogger $device)
     {
-        //
+        $orderCodes=OrderCode::all();
+        return view('app.data-logger.order-code.edit',compact('device','orderCodes'));
     }
 
     /**

@@ -25,7 +25,8 @@
                     </section>
 
                     <section class="d-flex justify-content-between align-items-center mt-4 mb-3 border-bottom pb-2">
-                        <a href="{{ route('app.data-logger.order-code.create',$device->id) }}" class="btn btn-info btn-sm text-light">
+                        <a href="{{ route('app.data-logger.order-code.create', $device->id) }}"
+                            class="btn btn-info btn-sm text-light">
                             افزودن کد جدید</a>
                         <div class="max-width-16-rem">
                             <input type="text" class="form-control form-control-sm form-text" placeholder="جستجو">
@@ -38,82 +39,41 @@
                                 <tr>
                                     <th>#</th>
                                     <th>نام </th>
-                                    <th>بازه زمانی </th>
-                                    <th>وضعیت</th>
+                                    <th>بازه زمانی (دقیقه) </th>
 
-                                    <th class="max-width-16-rem text-center"><i class="fa fa-cogs"></i> تنظیمات</th>
+
+                                    {{-- <th class="max-width-16-rem text-center"><i class="fa fa-cogs"></i> تنظیمات</th> --}}
                                 </tr>
                             </thead>
                             <tbody>
 
-                                
+                                @foreach ($device->order_codes as $orderCode)
                                     <tr>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        
-                                        <td>
-                                            {{-- <label>
-                                                <input id="{{ $device->id }}"
-                                                    onchange="changeStatus({{ $device->id }})"
-                                                    data-url="{{ route('app.data-logger.status', $device->id) }}"
-                                                    type="checkbox" @if ($device->status === 1) checked @endif>
-                                            </label> --}}
+                                        <td>{{ $loop->iteration }}</td>
+                                        <td>{{ $orderCode->name }}</td>
+                                        <td>{{ $orderCode->pivot->time }}</td>
 
-                                            {{-- <label class="switch">
-                                                @if ($device->power && $device->dataloggerLastStatus())
-                                                    <input type="checkbox" id="{{ $device->id }}"
-                                                        onchange="changeStatus({{ $device->id }})"
-                                                        data-url="{{ route('app.data-logger.status', $device->id) }}"
-                                                        @if ($device->dataloggerLastStatus() === 'ON') checked @endif>
+                                        {{-- <td class="width-13-rem text-right font-size-2 ">
+
+                                            <a href="{{ route('app.data-logger.order-code.edit',[ 'device' => $device->id ] ) }}"
+                                                class="btn btn-primary btn-sm"><i class="fa fa-edit"></i>
+                                                ویرایش</a>
+                                            <form action="{{ route('app.data-logger.destroy', $device->id) }}"
+                                                method="POST" class=" btn btn-sm btn-danger">
+                                                @csrf
+                                                @method('delete')
+                                                <button class="dropdown-item" type="submit"><i class="fa fa-trash-alt"></i>
+                                                    حذف</button>
+                                            </form>
 
 
 
-                                                    <span class="slider round"></span>
-                                                @else
-                                                    <span class="text-danger">نامشخص</span>
-                                                @endif
-
-                                            </label> --}}
-                                        </td>
-                                        
-                                        <td class="width-13-rem text-right font-size-2 ">
-                                            <div class="dropdown" dir="rtl">
-                                                <a href="" class="btn btn-success btn-sm btn-block dropdown-toggle"
-                                                    role="button" id="dropdownMenuLink" data-toggle="dropdown"
-                                                    aria-expanded="false">
-
-                                                    <i class="fa fa-tools"></i> عملیات
-
-                                                </a>
-                                                <div class="dropdown-menu  text-right" aria-labelledby="dropdownMenuLink">
-
-                                                    {{-- <a class="dropdown-item" href="{{ route('app.data-logger.check-code', $device->id) }}"><i class="fa fa-key"></i> چک کد
-                                                    </a> --}}
-                                                    <a href="{{ route('app.data-logger.edit', $device->id) }}"
-                                                        class="dropdown-item"><i class="fa fa-edit"></i>
-                                                        ویرایش</a>
-
-                                                    
-
-                                                    <form action="{{ route('app.data-logger.destroy', $device->id) }}"
-                                                        method="POST" class="d-inline">
-                                                        @csrf
-                                                        @method('delete')
-                                                        <button class="dropdown-item" type="submit"><i
-                                                                class="fa fa-trash-alt"></i>
-                                                            حذف</button>
-                                                    </form>
-
-                                                </div>
-
-
-                                            </div>
-
-
-                                        </td>
+                                        </td> --}}
                                     </tr>
-                                
+                                @endforeach
+
+
+
 
                             </tbody>
                         </table>
