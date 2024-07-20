@@ -14,7 +14,7 @@ class RecieveMessageService extends ConnectService{
     
         //Start sending of message
         //fputs($this->fp, "AT+CMGL=\"REC UNREAD\"\r");
-        fputs($this->fp, "AT+CMGL=\"ALL\"\r");
+         fputs($this->fp, "AT+CMGL=\"ALL\"\r");
 
     
         //Wait for confirmation
@@ -22,6 +22,21 @@ class RecieveMessageService extends ConnectService{
     
         // get the messages as an array
         $arrMessages = explode("+CMGL:", $this->strReply);
+
+        foreach ($arrMessages as $line) {
+            if (strpos($line, "+CMGL:") !== false) {
+                // Extract the message index
+                preg_match('/\+CMGL: (\d+)/', $line, $matches);
+                if (isset($matches[1])) {
+                    $index = $matches[1];
+                    // Delete the message
+
+                    fputs($this->fp, "AT+CMGD=\"$index\"\r");
+                  
+                    
+                }
+            }
+        }
        
          
         // remove junk from the start of the array
