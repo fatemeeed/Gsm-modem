@@ -53,11 +53,11 @@ Route::prefix('panel')->middleware(Authenticate::class)->namespace('Panel')->gro
 
         Route::prefix('order-code')->group(function () {
             Route::get('/{device}', [DataLoggerOrderCodeController::class, 'index'])->name('app.data-logger.order-code');
-            Route::get('/create/{device}', [DataLoggerOrderCodeController::class, 'create'])->name('app.data-logger.order-code.create');
-            Route::post('/store/{device}', [DataLoggerOrderCodeController::class, 'store'])->name('app.data-logger.order-code.store');
-            Route::get('/edit/{device}', [DataLoggerOrderCodeController::class, 'edit'])->name('app.data-logger.order-code.edit');
-            Route::put('/update/{device}', [DataLoggerOrderCodeController::class, 'update'])->name('app.data-logger.order-code.update');
-            Route::delete('/delete/{device}/{orderCode}', [DataLoggerOrderCodeController::class, 'delete'])->name('app.data-logger.order-code.destroy');
+            Route::get('/{device}/create/', [DataLoggerOrderCodeController::class, 'create'])->name('app.data-logger.order-code.create');
+            Route::post('/{device}/store', [DataLoggerOrderCodeController::class, 'store'])->name('app.data-logger.order-code.store');
+            Route::get('/{device}/edit/{orderCode}', [DataLoggerOrderCodeController::class, 'edit'])->name('app.data-logger.order-code.edit');
+            Route::put('/{device}/update/{orderCode}', [DataLoggerOrderCodeController::class, 'update'])->name('app.data-logger.order-code.update');
+            Route::delete('/{device}/delete/{orderCode}', [DataLoggerOrderCodeController::class, 'delete'])->name('app.data-logger.order-code.destroy');
            
         });
 

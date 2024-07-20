@@ -9,7 +9,8 @@
         <ol class="breadcrumb">
             <li class="breadcrumb-item font-size-12"> <a href="#">خانه</a></li>
             <li class="breadcrumb-item font-size-12"> <a href="#">تجهیزات</a></li>
-            <li class="breadcrumb-item font-size-12 active" aria-current="page">کدهای کنترل</li>
+            <li class="breadcrumb-item font-size-12"> <a href="{{ route('app.data-logger.order-code', $device) }}">کدهای کنترل </a></li>
+            <li class="breadcrumb-item font-size-12 active" aria-current="page">افزودن کد جدید </li>
         </ol>
     </nav>
 
@@ -28,7 +29,7 @@
 
                 <section class="d-flex justify-content-between align-items-center mt-4 mb-3 border-bottom pb-2">
 
-                    <a class="btn btn-info btn-sm text-light" href="{{ route('app.data-logger.index') }}">بازگشت </a>
+                    <a class="btn btn-info btn-sm text-light" href="{{ route('app.data-logger.order-code', $device) }}">بازگشت </a>
 
 
                 </section>
