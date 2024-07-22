@@ -7,6 +7,7 @@ use App\Http\Services\Message\ConnectService;
 class RecieveMessageService extends ConnectService{
 
     public function read() {
+        
 
         //Filter tel
         $this->debugmsg("reading message ");

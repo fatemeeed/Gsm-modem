@@ -66,7 +66,7 @@ class SMSController extends Controller
 
             $sendMessage->init();
             $result = $sendMessage->send($mobile_number, $request->content);
-            dd($result);
+            
 
             if ($result) {
                  Message::create(

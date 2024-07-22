@@ -50,7 +50,13 @@
                                         <td>{{ $message->from }}</td>
                                         <td>{{ jalaliDate($message->time, 'Y/m/d H:i:s') }}</td>
                                         <td>{{ $message->datalogger->name ?? ''}}</td>
-                                        <td>{{ $message->content }}</td>
+                                        <td>
+                                            @foreach ($message->content  as $key => $item)
+
+                                            {{ $key.':'.$item }}
+                                                
+                                            @endforeach
+                                        </td>
                                         
                                         {{-- <td class="width-16-rem text-center ">
 
