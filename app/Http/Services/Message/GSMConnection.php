@@ -15,13 +15,13 @@ class GSMConnection
     private $port;
     private $baud;
     public $fp;
-    protected $buffer;
+    protected $buffer="";
     private $strReply = "";
 
     private function __construct()
     {
         $setting = Setting::first();
-        
+
         $this->port = $setting->port;
         $this->baud = $setting->baud_rate;
         $this->gsmConnection();
@@ -32,7 +32,6 @@ class GSMConnection
 
         if (self::$gsmConnectionInstance == null) {
             self::$gsmConnectionInstance = new GSMConnection();
-            
         }
 
         return self::$gsmConnectionInstance;
@@ -46,8 +45,6 @@ class GSMConnection
             if ($retval != 0) {
                 throw new Exception('Unable to setup COM port, check it is correct');
             }
-
-            
         } catch (Extension $e) {
             throw new Exception('error gsm connection');
         }
@@ -55,54 +52,109 @@ class GSMConnection
 
     public function sendATCommand($command, $delay = 500000)
     {
-        $this->fp = fopen($this->port, "r+");
-        if (!$this->fp) {
+        $fp = @fopen($this->port, "r+");
+        if (!$fp) {
             throw new Exception("Failed to open serial port");
         }
 
-        fputs( $this->fp, "$command\r");
+        fputs($fp, "$command\r");
         usleep($delay);
 
         $response = '';
-        while ($buffer = fgets( $this->fp, 128)) {
+        while ($buffer = fgets($fp, 128)) {
             $response .= $buffer;
             if (strpos($buffer, "OK") !== false || strpos($buffer, "ERROR") !== false) {
                 break;
             }
         }
 
-        fclose( $this->fp);
+        fclose($fp);
         return $response;
     }
 
     public function read()
     {
-        $this->strReply= $this->sendATCommand("AT+CMGL=\"ALL\"");
+        $this->fp = @fopen($this->port, "r+");
+        if (!$this->fp) {
+            throw new Exception("Failed to open serial port");
+        }
+
+        fputs($this->fp, "AT+CMGF=1\r"); // Set to text mode
+        usleep(500000);
+
+        fputs($this->fp, "AT+CMGL=\"REC UNREAD\"\r");
+        $this->wait_reply("OK\r\n> ", 5);
+    
+        // get the messages as an array
         $arrMessages = explode("+CMGL:", $this->strReply);
         return $arrMessages;
     }
 
+    protected function wait_reply($expected_result, $timeout) {
+        // clear reply cache
+		$this->strReply = "";
+
+        //Clear buffer
+        $this->buffer = '';
+
+        //Set timeout
+        $timeoutat = time() + $timeout;
+
+        //Loop until timeout reached (or expected result found)
+        do {
+
+            // $this->debugmsg('Now: ' . time() . ", Timeout at: {$timeoutat}");
+
+            $buffer = fread($this->fp, 1024);
+            $this->buffer .= $buffer;
+
+            usleep(200000);//0.2 sec
+            // $this->debugmsg("Received: {$buffer}");
+
+                $strReply = "";
+            // get response
+		
+			$strReply 		 = $buffer;
+			$this->strReply	.= $strReply;
+		
+
+            //Check if received expected responce
+            if (preg_match('/'.preg_quote($expected_result, '/').'$/', $this->buffer)) {
+               
+                return true;
+                //break;
+            } else if (preg_match('/\+CMS ERROR\:\ \d{1,3}\r\n$/', $this->buffer)) {
+                return false;
+            }
+
+        } while ($timeoutat > time());
+
+        // $this->debugmsg('Timed out');
+
+        return false;
+
+    }
+
+    
+
     public function send($tel, $message)
     {
 
-         //Filter tel
-         $tel = preg_replace("%[^0-9\+]%", '', $tel);
+        //Filter tel
+        $tel = preg_replace("%[^0-9\+]%", '', $tel);
 
-         //Filter message text
-         $message = preg_replace("%[^\040-\176\r\n\t]%", '', $message);
+        //Filter message text
+        $message = preg_replace("%[^\040-\176\r\n\t]%", '', $message);
+        
 
-        $this->sendATCommand("AT+CMGS=\"{$tel}\"");
+        $this->sendATCommand("AT+CMGF=1\r"); // Set to text mode
 
-         //Send message text
-        $this->sendATCommand("$message");
+        $this->sendATCommand("AT+CMGS=\"{$tel}\"\r");
+
+        //Send message text
+       return  $this->sendATCommand($message . chr(26));
 
         //Send message finished indicator
-        $this->sendATCommand("chr(26)");
-
-        return true;
-        
-       
-
 
     }
 
