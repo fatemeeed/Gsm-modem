@@ -33,6 +33,8 @@ class HomeController extends Controller
 		
 		$arrMessages = $Connection->read();
 
+		
+
 		$strJunk = array_shift($arrMessages);
 
 		// set return array
