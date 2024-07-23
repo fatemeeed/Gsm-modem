@@ -23,7 +23,7 @@
                     </section>
 
                     <section class="d-flex justify-content-between align-items-center mt-4 mb-3 border-bottom pb-2">
-                        <a href="{{ route('admin.Message.create-message') }}"  class=" btn btn-info btn-sm text-light">
+                        <a href="{{ route('admin.Message.create-message') }}" class=" btn btn-info btn-sm text-light">
                             ارسال پیام</a>
                         <div class="max-width-16-rem">
                             <input type="text" class="form-control form-control-sm form-text" placeholder="جستجو">
@@ -49,15 +49,18 @@
                                         <th>{{ $loop->iteration }}</th>
                                         <td>{{ $message->from }}</td>
                                         <td>{{ jalaliDate($message->time, 'Y/m/d H:i:s') }}</td>
-                                        <td>{{ $message->datalogger->name ?? ''}}</td>
+                                        <td>{{ $message->datalogger->name ?? '' }}</td>
                                         <td>
-                                            @foreach ($message->content  as $key => $item)
+                                            @if ($message->type == 1)
+                                                @foreach ($message->content as $key => $item)
+                                                    {{ $key . ':' . $item }}
+                                                @endforeach
+                                            @else
+                                                {{ $message->content }}
+                                            @endif
 
-                                            {{ $key.':'.$item }}
-                                                
-                                            @endforeach
                                         </td>
-                                        
+
                                         {{-- <td class="width-16-rem text-center ">
 
 

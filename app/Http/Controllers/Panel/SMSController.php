@@ -13,6 +13,7 @@ use App\Http\Interfaces\MessageInterface;
 use App\Http\Services\Message\SendMessageService;
 use App\Http\Services\Message\Connect\ConnectService;
 use App\Http\Services\Message\GSMConnection;
+use Carbon\Carbon;
 
 class SMSController extends Controller
 {
@@ -69,15 +70,17 @@ class SMSController extends Controller
                         'from' => $mobile_number,
                         'datalogger_id' => $request->datalogger_id,
                         'content' => $request->content,
+                        'time' => Carbon::now(),
                         'type' => 0
 
                     ]
                 );
-
-               
-                    return redirect()->route('app.Message.send-box')->with('swal-success', 'پیام  با موفقیت ارسال شد');
+    
                
             }
+
+            
         });
+        return redirect()->route('app.Message.send-box')->with('swal-success', 'پیام  با موفقیت ارسال شد');
     }
 }

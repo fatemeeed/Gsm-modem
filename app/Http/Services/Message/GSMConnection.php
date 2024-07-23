@@ -20,19 +20,22 @@ class GSMConnection
 
     private function __construct()
     {
-        $setting = Setting::all();
+        $setting = Setting::first();
+        
         $this->port = $setting->port;
         $this->baud = $setting->baud_rate;
-        //$this->gsmConnection();
+        $this->gsmConnection();
     }
 
     public static function getGSMConnectionInstance()
     {
 
         if (self::$gsmConnectionInstance == null) {
-            $GSMConnectionInstance = new GSMConnection();
-            self::$gsmConnectionInstance = $GSMConnectionInstance->gsmConnection();
+            self::$gsmConnectionInstance = new GSMConnection();
+            
         }
+
+        return self::$gsmConnectionInstance;
     }
 
     private function gsmConnection()
@@ -52,27 +55,27 @@ class GSMConnection
 
     public function sendATCommand($command, $delay = 500000)
     {
-        $fp = fopen($this->port, "r+");
-        if (!$fp) {
+        $this->fp = fopen($this->port, "r+");
+        if (!$this->fp) {
             throw new Exception("Failed to open serial port");
         }
 
-        fputs($fp, "$command\r");
+        fputs( $this->fp, "$command\r");
         usleep($delay);
 
         $response = '';
-        while ($buffer = fgets($fp, 128)) {
+        while ($buffer = fgets( $this->fp, 128)) {
             $response .= $buffer;
             if (strpos($buffer, "OK") !== false || strpos($buffer, "ERROR") !== false) {
                 break;
             }
         }
 
-        fclose($fp);
+        fclose( $this->fp);
         return $response;
     }
 
-    public function Read()
+    public function read()
     {
         $this->strReply= $this->sendATCommand("AT+CMGL=\"ALL\"");
         $arrMessages = explode("+CMGL:", $this->strReply);
@@ -95,6 +98,8 @@ class GSMConnection
 
         //Send message finished indicator
         $this->sendATCommand("chr(26)");
+
+        return true;
         
        
 
