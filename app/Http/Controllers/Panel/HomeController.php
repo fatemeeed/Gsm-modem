@@ -8,6 +8,7 @@ use App\Jobs\RecieveMessage;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Services\Message\DestroyMessage;
+use App\Http\Services\Message\GSMConnection;
 use Illuminate\Support\Facades\Artisan;
 use App\Http\Services\Message\RecieveMessageService;
 use App\Models\CheckCode;
@@ -17,6 +18,8 @@ class HomeController extends Controller
 {
 	public function index()
 	{
+
+	
 		$dataloggers = Datalogger::all();
 		// RecieveMessage::dispatch()->now();
 
@@ -45,22 +48,11 @@ class HomeController extends Controller
 		return view('app.index', compact('dataloggers'));
 	}
 
-	public function update()
+	public function update(GSMConnection $gsmConnection)
 	{
 
-		$config = Setting::first();
-
-		$recieveMessage = new RecieveMessageService();
-		$recieveMessage->setDebug('true');
-		$recieveMessage->setPort($config->port);
-		$recieveMessage->setBaud($config->baud_rate);
-
-		$recieveMessage->init();
-
-		$arrMessages = $recieveMessage->read();
-
-
-
+		
+		$arrMessages = $gsmConnection->read();
 
 		$strJunk = array_shift($arrMessages);
 
@@ -76,8 +68,6 @@ class HomeController extends Controller
 
 				$strMetta	= trim($arrMessage[0]);
 				$arrMetta	= explode(",", $strMetta);
-
-
 
 				// var_dump($strtoarray);
 

@@ -2,6 +2,7 @@
 
 namespace App\Console;
 
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
@@ -15,7 +16,12 @@ class Kernel extends ConsoleKernel
         // $schedule->command('inspire')->hourly();
 
         
-        $schedule->command('auto:recieveMessage')->everyThirtyMinutes();
+        // $schedule->command('auto:recieveMessage')->everyThirtyMinutes();
+        $schedule->command('auto:orderHourly')->hourly();
+        $schedule->command('auto:orderEveryThirty')->everyThirtyMinutes();
+        $schedule->command('auto:auto:orderEveryFifteen')->everyFifteenMinutes();
+        $schedule->command('auto:orderEveryTen')->everyTenMinutes();
+        $schedule->command('auto:recieveMessage')->everyThirtyMinutes()->withoutOverlapping();
     }
 
     /**

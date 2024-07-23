@@ -30,12 +30,9 @@
 
                     <a class="btn btn-info btn-sm text-light" href="{{ route('app.data-logger.index') }}">بازگشت </a>
 
-
                 </section>
 
                 <section>
-
-
 
                     <form action="{{ route('app.data-logger.order-code.update', $device) }}" method="POST">
                         @csrf
@@ -47,7 +44,7 @@
                                 <div class="form-group">
                                     <label for="">کد کنترل </label>
 
-                                   
+
 
                                     <select class=" form-control form-control-sm" name="order_code_id">
 
@@ -74,21 +71,30 @@
 
                             </section>
 
-                            <section class="col-6 col-md-3">
-
+                            <section class="col-12 col-md-6 my-2">
                                 <div class="form-group">
-                                    <label for="">بازه زمانی ارسال </label>
+                                    <label for="time">بازه زمانی ارسال </label>
+                                    <select name="time" id="time" class="form-control form-control-sm">
+                                        <option value="">بازه زمانی را انتخاب کنید</option>
+                                        <option value="60" @if (old('time', $orderCode->time) == '60') selected @endif>هر 1 ساعت
+                                        </option>
+                                        <option value="30" @if (old('time', $orderCode->time) == '30') selected @endif>هر 30دقیقه
+                                        </option>
+                                        <option value="15" @if (old('time', $orderCode->time) == '15') selected @endif>هر 15 دقیقه
+                                        </option>
+                                        <option value="10" @if (old('time', $orderCode->time) == '10') selected @endif>هر 10 دقیقه
+                                        </option>
 
-                                    <input class="form-control form-control-sm" name="time" type="text" value="{{ old('time', $device->order_codes->pivot->time)  }}"
-                                        placeholder=" به دقیقه">
+                                    </select>
+                                    @error('time')
+                                        <span class="alert_required bg-danger text-white p-1 rounded" role="alert">
+                                            <strong>
+                                                {{ $message }}
+                                            </strong>
+                                        </span>
+                                    @enderror
                                 </div>
-                                @error('time')
-                                    <span class="alert_required bg-danger text-white p-1 rounded" role="alert">
-                                        <strong>
-                                            {{ $message }}
-                                        </strong>
-                                    </span>
-                                @enderror
+
                             </section>
 
 

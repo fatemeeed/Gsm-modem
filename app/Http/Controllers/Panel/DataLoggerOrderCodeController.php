@@ -35,7 +35,7 @@ class DataLoggerOrderCodeController extends Controller
         $validatedData = $request->validate([
 
             'order_code_id'   => ['required', 'exists:order_codes,id'],
-            'time'   => ['required','min:2'],
+            'time'   => ['required','in:60,15,30,10'],
 
         ]);
 

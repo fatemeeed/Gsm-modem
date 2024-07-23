@@ -12,6 +12,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Interfaces\MessageInterface;
 use App\Http\Services\Message\SendMessageService;
 use App\Http\Services\Message\Connect\ConnectService;
+use App\Http\Services\Message\GSMConnection;
 
 class SMSController extends Controller
 {
@@ -51,21 +52,15 @@ class SMSController extends Controller
         return view('app.messages.create', compact('dataLoggers'));
     }
 
-    public function postMessage(SMSRequest $request)
+    public function postMessage(SMSRequest $request,GSMConnection $gsmConnection)
     {
         $dataLogger = Datalogger::where('id', $request->datalogger_id)->first();
         $mobile_number = $dataLogger->mobile_number;
 
-        DB::transaction(function () use ($mobile_number, $request) {
+        DB::transaction(function () use ($mobile_number, $request,$gsmConnection) {
 
-            $config = Setting::first();
-            $sendMessage = new SendMessageService();
-            $sendMessage->setDebug('false');
-            $sendMessage->setPort($config->port);
-            $sendMessage->setBaud($config->baud_rate);
-
-            $sendMessage->init();
-            $result = $sendMessage->send($mobile_number, $request->content);
+            
+            $result=$gsmConnection->send($mobile_number, $request->content);
             
 
             if ($result) {

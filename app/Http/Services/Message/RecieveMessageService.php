@@ -4,13 +4,13 @@ namespace App\Http\Services\Message;
 
 use App\Http\Services\Message\ConnectService;
 
-class RecieveMessageService extends ConnectService{
+class RecieveMessageService{
 
     public function read() {
         
+        
 
-        //Filter tel
-        $this->debugmsg("reading message ");
+        $gsmInstance = GSMConnection::getGSMConnectionInstance();
        
     
         //Start sending of message
