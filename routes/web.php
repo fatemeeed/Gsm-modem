@@ -36,7 +36,7 @@ Route::namespace('Auth')->group(function () {
 Route::prefix('panel')->middleware(Authenticate::class)->namespace('Panel')->group(function () {
     Route::get('/', [HomeController::class, 'index'])->name('app.index');
 
-    Route::get('/update', [HomeController::class, 'update'])->name('app.update');
+    Route::get('/read-message', [HomeController::class, 'readMessage'])->name('app.read-message');
 
     //dataLogger
     Route::prefix('dataLogger')->group(function () {
