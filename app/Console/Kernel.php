@@ -19,7 +19,7 @@ class Kernel extends ConsoleKernel
         // $schedule->command('auto:recieveMessage')->everyThirtyMinutes();
         $schedule->command('auto:orderHourly')->hourly();
         $schedule->command('auto:orderEveryThirty')->everyThirtyMinutes();
-        $schedule->command('auto:auto:orderEveryFifteen')->everyFifteenMinutes();
+        $schedule->command('auto:orderEveryFifteen')->everyFifteenMinutes();
         $schedule->command('auto:orderEveryTen')->everyTenMinutes();
         $schedule->command('auto:recieveMessage')->everyThirtyMinutes()->withoutOverlapping();
     }

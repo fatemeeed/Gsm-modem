@@ -2,23 +2,32 @@
 
 namespace App\Http\Controllers\Panel;
 
+use Carbon\Carbon;
 use App\Models\Message;
 use App\Models\Setting;
+use App\Models\CheckCode;
+use App\Models\Datalogger;
 use App\Jobs\RecieveMessage;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Http\Services\Message\DestroyMessage;
-use App\Http\Services\Message\GSMConnection;
 use Illuminate\Support\Facades\Artisan;
+use App\Http\Services\Message\GSMConnection;
+use App\Http\Services\Message\DestroyMessage;
 use App\Http\Services\Message\RecieveMessageService;
-use App\Models\CheckCode;
-use App\Models\Datalogger;
 
 class HomeController extends Controller
 {
 	public function index()
 	{
 
+		$dataloggers=Datalogger::whereHas('order_codes', function($query)  {
+            
+                $query->where('datalogger_order_code.time','10');
+           
+        })->get();
+
+		dd($dataloggers);
+		
 	
 		$dataloggers = Datalogger::all();
 		// RecieveMessage::dispatch()->now();

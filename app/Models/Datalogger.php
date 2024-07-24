@@ -89,6 +89,6 @@ class Datalogger extends Model
 
     public function order_codes()
     {
-        return $this->belongsToMany(OrderCode::class)->withPivot('time');
+        return $this->belongsToMany(OrderCode::class)->withPivot('time','last_sent_at');
     }
 }
