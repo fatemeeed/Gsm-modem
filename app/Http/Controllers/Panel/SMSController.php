@@ -9,10 +9,10 @@ use Illuminate\Http\Request;
 use App\Http\Requests\SMSRequest;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
-use App\Http\Interfaces\MessageInterface;
-use App\Http\Services\Message\SendMessageService;
-use App\Http\Services\Message\Connect\ConnectService;
+
 use App\Http\Services\Message\GSMConnection;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\Log;
 
 class SMSController extends Controller
 {
@@ -41,7 +41,7 @@ class SMSController extends Controller
 
         $messages = Message::where('type', '1')->simplePaginate(15)->withQueryString();
         // $this->connect->send();
-        
+
         return view('app.messages.index', compact('messages'));
     }
 
@@ -52,32 +52,38 @@ class SMSController extends Controller
         return view('app.messages.create', compact('dataLoggers'));
     }
 
-    public function postMessage(SMSRequest $request,GSMConnection $gsmConnection)
+    public function postMessage(SMSRequest $request, GSMConnection $gsmConnection)
     {
         $dataLogger = Datalogger::where('id', $request->datalogger_id)->first();
         $mobile_number = $dataLogger->mobile_number;
 
-        DB::transaction(function () use ($mobile_number, $request,$gsmConnection) {
+        DB::transaction(function () use ($mobile_number, $request, $gsmConnection) {
 
-            
-            $result=$gsmConnection->send($mobile_number, $request->content);
-            
 
-            if ($result) {
-                 Message::create(
+            //$result=$gsmConnection->send($mobile_number, $request->content);
+
+            try {
+                $response = $gsmConnection->send($mobile_number, $request->content);
+
+                Message::create(
                     [
                         'from' => $mobile_number,
                         'datalogger_id' => $request->datalogger_id,
                         'content' => $request->content,
+                        'time' => Carbon::now(),
                         'type' => 0
 
                     ]
                 );
 
-               
-                    return redirect()->route('app.Message.send-box')->with('swal-success', 'پیام  با موفقیت ارسال شد');
-               
+
+                Log::info('SMS sent', ['phone_number' => $mobile_number, 'message' => $request->content, 'response' => $response]);
+                return response()->json(['response' => $response]);
+            } catch (\Exception $e) {
+                Log::error('Failed to send SMS', ['error' => $e->getMessage()]);
+                return response()->json(['error' => $e->getMessage()], 500);
             }
         });
+        return redirect()->route('app.Message.send-box')->with('swal-success', 'پیام  با موفقیت ارسال شد');
     }
 }

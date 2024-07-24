@@ -17,6 +17,8 @@ use App\Http\Services\Message\RecieveMessageService;
 
 class HomeController extends Controller
 {
+	
+
 	public function index()
 	{
 
@@ -30,38 +32,17 @@ class HomeController extends Controller
 		
 	
 		$dataloggers = Datalogger::all();
-		// RecieveMessage::dispatch()->now();
-
-// 		$str = "Power ON      
-// AC1 ON        
-// AC2 ON        
-// AC3 OFF       
-// AC4 OFF       
-// DC1 OFF       
-// DC2 OFF       
-// Relay_1       ON
-// Relay_2       OFF
-
-
-// OK";
-// 		$str2 = preg_split('/[\s]+/', trim($str));
-
-// 		$length = count($str2);
-// 		for ($i = 0; $i < $length-1; $i += 2) {
-
-// 			$messageArray1[$str2[$i]] = $str2[$i + 1];
-// 		}
-
-
 
 		return view('app.index', compact('dataloggers'));
 	}
 
-	public function update(GSMConnection $gsmConnection)
+	public function readMessage(GSMConnection $Connection)
 	{
 
 		
-		$arrMessages = $gsmConnection->read();
+		$arrMessages = $Connection->read();
+
+		
 
 		$strJunk = array_shift($arrMessages);
 
