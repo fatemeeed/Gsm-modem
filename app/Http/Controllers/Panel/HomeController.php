@@ -28,7 +28,7 @@ class HomeController extends Controller
            
         })->get();
 
-		dd($dataloggers);
+		
 		
 	
 		$dataloggers = Datalogger::all();

@@ -2,7 +2,12 @@
 
 namespace App\Console;
 
+use App\Jobs\OrderCodeHourly;
+use App\Console\Commands\OrderHourly;
+use App\Jobs\OrderCodeEveryTenMinutes;
 use Illuminate\Support\Facades\Artisan;
+use App\Jobs\OrderCodeEveryThirtyMinute;
+use App\Jobs\OrderCodeEveryFifteenMinutes;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
@@ -17,10 +22,10 @@ class Kernel extends ConsoleKernel
 
         
         // $schedule->command('auto:recieveMessage')->everyThirtyMinutes();
-        $schedule->command('auto:orderHourly')->hourly();
-        $schedule->command('auto:orderEveryThirty')->everyThirtyMinutes();
-        $schedule->command('auto:orderEveryFifteen')->everyFifteenMinutes();
-        $schedule->command('auto:orderEveryTen')->everyTenMinutes();
+        $schedule->job(new OrderCodeHourly)->hourly();
+        $schedule->job(new OrderCodeEveryThirtyMinute)->everyThirtyMinutes();
+        $schedule->job(new OrderCodeEveryFifteenMinutes)->everyFifteenMinutes();
+        $schedule->job(new OrderCodeEveryTenMinutes)->everyTenMinutes();
         $schedule->command('auto:recieveMessage')->everyThirtyMinutes()->withoutOverlapping();
     }
 
