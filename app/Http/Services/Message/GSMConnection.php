@@ -35,6 +35,8 @@ class GSMConnection
         }
 
         return self::$gsmConnectionInstance;
+
+       
     }
 
     private function gsmConnection()

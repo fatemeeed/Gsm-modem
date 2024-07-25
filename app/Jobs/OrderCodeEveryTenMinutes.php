@@ -2,6 +2,7 @@
 
 namespace App\Jobs;
 
+use App\Models\Message;
 use Carbon\Carbon;
 use App\Models\Datalogger;
 use Illuminate\Bus\Queueable;
@@ -18,11 +19,11 @@ class OrderCodeEveryTenMinutes implements ShouldQueue
     /**
      * Create a new job instance.
      */
-    protected  $gsmConnection;
+    
 
     public function __construct()
     {
-        $this->gsmConnection = new GSMConnection;
+       //
     }
 
     /**
@@ -31,6 +32,7 @@ class OrderCodeEveryTenMinutes implements ShouldQueue
     public function handle(): void
     {
 
+        $gsmConnection = app(GSMConnection::class);
         $now = Carbon::now();
         $dataloggers = Datalogger::whereHas('order_codes', function ($query) use ($now) {
 
@@ -40,7 +42,8 @@ class OrderCodeEveryTenMinutes implements ShouldQueue
         foreach ($dataloggers as $datalogger) {
             foreach ($datalogger->order_codes as $order_code) {
 
-                $this->gsmConnection->send($datalogger->mobile_number,$order_code->name);
+                $gsmConnection->send($datalogger->mobile_number,$order_code->name);
+               
 
                 // Update the pivot table last_sent_at to current time after processing
                 $datalogger->order_codes()->updateExistingPivot($order_code->id, ['last_sent_at' => $now]);

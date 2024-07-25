@@ -9,7 +9,7 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
-use App\Http\Services\Message\RecieveMessageService;
+use App\Http\Services\Message\GSMConnection;
 
 
 class RecieveMessage implements ShouldQueue
@@ -30,16 +30,8 @@ class RecieveMessage implements ShouldQueue
     public function handle(): void
     {
        
-			
-		$config=Setting::first();
-        $recieveMessage=new RecieveMessageService();
-        $recieveMessage->setDebug('true');
-        $recieveMessage->setPort($config->port);
-        $recieveMessage->setBaud($config->baud_rate);
-		
-        $recieveMessage->init();
-
-        $arrMessages=$recieveMessage->read();
+        $gsmConnection = app(GSMConnection::class);
+		$arrMessages = $gsmConnection->read();
 		
         $strJunk = array_shift($arrMessages);
 		

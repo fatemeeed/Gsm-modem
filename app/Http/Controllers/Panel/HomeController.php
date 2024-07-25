@@ -21,18 +21,8 @@ class HomeController extends Controller
 
 	public function index()
 	{
-
-		$dataloggers=Datalogger::whereHas('order_codes', function($query)  {
-            
-                $query->where('datalogger_order_code.time','10');
-           
-        })->get();
-
-		dd($dataloggers);
 		
-	
 		$dataloggers = Datalogger::all();
-
 		return view('app.index', compact('dataloggers'));
 	}
 
@@ -41,8 +31,6 @@ class HomeController extends Controller
 
 		
 		$arrMessages = $Connection->read();
-
-		
 
 		$strJunk = array_shift($arrMessages);
 

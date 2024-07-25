@@ -74,7 +74,7 @@ class Datalogger extends Model
 
     public function lastRecieveMessage()
     {
-         return $this->messages()->latest('time')->first();
+         return $this->messages()->where('type','1')->latest('time')->first();
     }
 
     public function dataloggerLastStatus()

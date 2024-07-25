@@ -12,7 +12,7 @@
             <h5 class="d-flex text-center ">{{ $datalogger->name ?? ' ' }}</h5>
             <h6>
                 @if (empty($datalogger->dataloggerLastStatus()))
-                    {{ 'نامشخص ' }}
+                    {{ 'disconnect' }}
                 @else
                     {{ $datalogger->dataloggerLastStatus() }}
                 @endif

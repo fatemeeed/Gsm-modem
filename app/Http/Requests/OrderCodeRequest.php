@@ -23,7 +23,7 @@ class OrderCodeRequest extends FormRequest
     {
         return [
             'name' => 'required|max:120|min:2|regex:/^[ا-یa-zA-Z0-9\-۰-۹ء-ي., ]+$/u',
-            'description' => 'required|max:200|min:2|regex:/^[ا-یa-zA-Z0-9\-۰-۹ء-ي., ]+$/u'
+            'description' => 'required|max:200|min:2'
         ];
     }
 }
