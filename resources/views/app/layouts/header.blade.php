@@ -11,7 +11,17 @@
         </div>
     </div>
     <div class="header-action">
-    <a class="btn btn-primary btn-sm" href="{{ route('app.read-message') }}">بروزرسانی</a>
+        <a class="btn btn-primary btn-sm" href="{{ route('app.read-message') }}">بروزرسانی</a>
     </div>
-    
+
+
 </header>
+<section class="row">
+        
+    @if (session('error'))
+        <div class="alert alert-danger">{{ session('error') }}</div>
+    @endif
+
+
+
+</section>

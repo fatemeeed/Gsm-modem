@@ -3,6 +3,7 @@
 
 namespace App\Http\Services\Message;
 
+use App\Exceptions\GSMConnectionNotFoundException;
 use Exception;
 use App\Models\Setting;
 use PhpParser\Node\Stmt\TryCatch;
@@ -20,7 +21,8 @@ class GSMConnection
 
     private function __construct()
     {
-        $setting = Setting::all();
+        $setting = Setting::first();
+        
         $this->port = $setting->port;
         $this->baud = $setting->baud_rate;
         $this->gsmConnection();
@@ -30,8 +32,11 @@ class GSMConnection
     {
 
         if (self::$gsmConnectionInstance == null) {
-            $GSMConnectionInstance = new GSMConnection();
+            self::$gsmConnectionInstance = new GSMConnection();
+            
         }
+
+        return self::$gsmConnectionInstance;
     }
 
     private function gsmConnection()
@@ -40,38 +45,50 @@ class GSMConnection
         try {
             exec("MODE {$this->port}: BAUD={$this->baud} PARITY=N DATA=8 STOP=1", $output, $retval);
             if ($retval != 0) {
-                throw new Exception('Unable to setup COM port, check it is correct');
+                throw new GSMConnectionNotFoundException('امکان اتصال به مودم فراهم نیست ، لطفا پورت را چک کنید');
             }
 
             
-        } catch (Extension $e) {
-            throw new Exception('error gsm connection');
+        } catch (GSMConnectionNotFoundException $e) {
+            throw $e;
+            return back()->withError('امکان اتصال به مودم فراهم نیست ، لطفا پورت را چک کنید');
+            
         }
     }
 
     public function sendATCommand($command, $delay = 500000)
     {
-        $fp = fopen($this->port, "r+");
-        if (!$fp) {
-            throw new Exception("Failed to open serial port");
-        }
 
-        fputs($fp, "$command\r");
+        try {
+            $this->fp = fopen($this->port, "r+");
+            if (!$this->fp) {
+                throw new GSMConnectionNotFoundException("اتصال به پورت امکان پذیر نیست",500);
+            }
+        
+            
+        } catch (GSMConnectionNotFoundException $e) {
+            throw $e;
+            // return back()->withError('امکان اتصال به مودم فراهم نیست ، لطفا پورت را چک کنید');
+        }
+        
+     
+
+        fputs( $this->fp, "$command\r");
         usleep($delay);
 
         $response = '';
-        while ($buffer = fgets($fp, 128)) {
+        while ($buffer = fgets( $this->fp, 128)) {
             $response .= $buffer;
             if (strpos($buffer, "OK") !== false || strpos($buffer, "ERROR") !== false) {
                 break;
             }
         }
 
-        fclose($fp);
+        fclose( $this->fp);
         return $response;
     }
 
-    public function Read()
+    public function read()
     {
         $this->strReply= $this->sendATCommand("AT+CMGL=\"ALL\"");
         $arrMessages = explode("+CMGL:", $this->strReply);
@@ -93,7 +110,9 @@ class GSMConnection
         $this->sendATCommand("$message");
 
         //Send message finished indicator
-        $this->sendATCommand("chr(26)");
+       return  $this->sendATCommand("chr(26)");
+
+        // return true;
         
        
 

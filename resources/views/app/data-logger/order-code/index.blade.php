@@ -40,6 +40,7 @@
                                     <th>#</th>
                                     <th>نام </th>
                                     <th>بازه زمانی (دقیقه) </th>
+                                    <th> آخرین ارسال کد کنترلر</th>
 
 
                                     {{-- <th class="max-width-16-rem text-center"><i class="fa fa-cogs"></i> تنظیمات</th> --}}
@@ -52,6 +53,7 @@
                                         <td>{{ $loop->iteration }}</td>
                                         <td>{{ $orderCode->name }}</td>
                                         <td>{{ $orderCode->pivot->time }}</td>
+                                        <td>{{ jalaliDate($orderCode->last_send_at, 'Y/m/d H:i:s') }}</td>
 
                                         {{-- <td class="width-13-rem text-right font-size-2 ">
 

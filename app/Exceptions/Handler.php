@@ -2,8 +2,9 @@
 
 namespace App\Exceptions;
 
-use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Throwable;
+use Illuminate\Http\Request;
+use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 
 class Handler extends ExceptionHandler
 {
@@ -23,8 +24,19 @@ class Handler extends ExceptionHandler
      */
     public function register(): void
     {
-        $this->reportable(function (Throwable $e) {
-            //
-        });
+        //
     }
+
+    public function render($request, Throwable $exception)
+    {
+        if ($exception instanceof GSMConnectionNotFoundException) {
+            return $exception->render($request);
+        }
+
+        return parent::render($request, $exception);
+    }
+
+    
+
+    
 }

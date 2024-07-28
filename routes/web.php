@@ -33,7 +33,7 @@ Route::namespace('Auth')->group(function () {
     Route::get('/logout', [LoginController::class, 'logout'])->name('auth.logout');
 });
 
-Route::prefix('panel')->middleware(Authenticate::class)->namespace('Panel')->group(function () {
+Route::prefix('panel')->middleware('auth')->namespace('Panel')->group(function () {
     Route::get('/', [HomeController::class, 'index'])->name('app.index');
 
     Route::get('/read-message', [HomeController::class, 'readMessage'])->name('app.read-message');

@@ -22,11 +22,7 @@ class HomeController extends Controller
 	public function index()
 	{
 
-		$dataloggers=Datalogger::whereHas('order_codes', function($query)  {
-            
-                $query->where('datalogger_order_code.time','10');
-           
-        })->get();
+		
 
 		
 		

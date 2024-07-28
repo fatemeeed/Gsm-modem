@@ -2,6 +2,7 @@
 
 namespace App\Console;
 
+use App\Jobs\RecieveMessage;
 use App\Jobs\OrderCodeHourly;
 use App\Console\Commands\OrderHourly;
 use App\Jobs\OrderCodeEveryTenMinutes;
@@ -26,7 +27,7 @@ class Kernel extends ConsoleKernel
         $schedule->job(new OrderCodeEveryThirtyMinute)->everyThirtyMinutes();
         $schedule->job(new OrderCodeEveryFifteenMinutes)->everyFifteenMinutes();
         $schedule->job(new OrderCodeEveryTenMinutes)->everyTenMinutes();
-        $schedule->command('auto:recieveMessage')->everyThirtyMinutes()->withoutOverlapping();
+        $schedule->job(new RecieveMessage)->everyThirtyMinutes()->withoutOverlapping(5);
     }
 
     /**
