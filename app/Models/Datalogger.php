@@ -82,6 +82,8 @@ class Datalogger extends Model
          return $this->lastRecieveMessage()->content[$this->powerCheckCode->name]  ?? '';
     }
 
+    
+
     public function powerCheckCode()
     {
         return $this->belongsTo(CheckCode::class,'power');
