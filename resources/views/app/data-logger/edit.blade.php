@@ -113,9 +113,9 @@
                                     <label for="key_type"> نوع کلید</label>
                                     <select name="key_type" id="key_type" class="form-control form-control-sm">
                                         <option>نوع را انتخاب کنید</option>
-                                        <option value="1" @if (old('key_type', $device->key_type) === '1') selected @endif>تک کلید
+                                        <option value="1" @if (old('key_type', $device->key_type) ==1 ) selected @endif>تک کلید
                                         </option>
-                                        <option value="2" @if (old('key_type', $device->key_type) === '2') selected @endif>دو کلید
+                                        <option value="2" @if (old('key_type', $device->key_type) ==2 ) selected @endif>دو کلید
                                         </option>
 
                                     </select>
