@@ -24,9 +24,6 @@ class HomeController extends Controller
 
 		
 
-		
-		
-	
 		$dataloggers = Datalogger::all();
 
 		return view('app.index', compact('dataloggers'));

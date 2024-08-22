@@ -11,15 +11,17 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Datalogger extends Model
 {
-    use HasFactory,SoftDeletes;
+    use HasFactory, SoftDeletes;
 
-    protected $table='dataloggers';
+    protected $table = 'dataloggers';
 
     protected $guarded = ['id'];
 
+    protected $casts=['content'=> array() ];
+
     public function city()
     {
-        return $this->belongsTo(City::class,'city_id');
+        return $this->belongsTo(City::class, 'city_id');
     }
 
 
@@ -35,8 +37,6 @@ class Datalogger extends Model
             case '2':
                 $resualt = 'منبع';
                 break;
-
-           
         }
 
         return $resualt;
@@ -60,8 +60,6 @@ class Datalogger extends Model
             case '2':
                 $resualt = 'source';
                 break;
-
-           
         }
 
         return $resualt;
@@ -74,23 +72,43 @@ class Datalogger extends Model
 
     public function lastRecieveMessage()
     {
-         return $this->messages()->latest('time')->first();
+        return $this->messages()->latest('time')->first();
     }
 
     public function dataloggerLastStatus()
     {
-         return $this->lastRecieveMessage()->content[$this->powerCheckCode->name]  ?? '';
+      
+        
+        return $this->lastRecieveMessage()->content[$this->powerCheckCode->name]  ?? '';
     }
 
-    
+    public function sourceVolumePercentage()
+    {
+        if ($this->lastRecieveMessage()) {
+            
+          
+            $currentHeight =str_replace('meter','',$this->lastRecieveMessage()->content['Height']) ;
+            $baseHeight = $this->fount_height;
+            $persent = round(($currentHeight / $baseHeight)* 100, 0) ;
+            
+           
+        }
+        else{
+            $persent=0;
+        }
+
+        return $persent;
+        
+    }
+
 
     public function powerCheckCode()
     {
-        return $this->belongsTo(CheckCode::class,'power');
+        return $this->belongsTo(CheckCode::class, 'power');
     }
 
     public function order_codes()
     {
-        return $this->belongsToMany(OrderCode::class)->withPivot('time','last_sent_at');
+        return $this->belongsToMany(OrderCode::class)->withPivot('time', 'last_sent_at');
     }
 }

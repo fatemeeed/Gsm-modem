@@ -6,9 +6,20 @@
 @section('content')
     <section class="container">
         @foreach ($dataloggers as $datalogger)
+            @php
+                $componentName = 'dataloggers.' . $datalogger->deviceSahpe; 
+            @endphp
+           
+
+            {{-- <livewire:{{ 'dataloggers.'. $datalogger->deviceSahpe }} /> --}}
+
+            
+
             <section class="shape">
                 <section class="d-flex justify-content-between w-100">
                     <section class="status">
+
+                       
                         @if (empty($datalogger->dataloggerLastStatus()))
                             {{ 'disconnect' }}
                         @else
@@ -20,43 +31,38 @@
 
                     </section>
 
-                    @livewire('dataloggerToggle', ['dataloggerStatus' => $datalogger->dataloggerLastStatus()])
+                    @livewire('datalogger-toggle', ['datalogger' => $datalogger], key($datalogger->id))
+
+                   
 
                 </section>
-                <section class=" {{ $datalogger->deviceSahpe ?? ' ' }}  ">
-                    @if ($datalogger->deviceSahpe == 'source')
-                        {{-- <div class="volume-label">Current Volume: 70%</div> --}}
+                @livewire($componentName , ['datalogger' => $datalogger], key($datalogger->id))
 
-                        <span class="volume-label">11230</span>
-                    @endif
-                </section>
+                
 
                 <div class="d-flex pt-3 flex-column w-100">
 
-
-
-
                     <h5 class="d-flex ">{{ $datalogger->name ?? ' ' }}</h5>
                     <section class="d-flex justify-content-between">
-                        <p class="text-secondary">{{ jalaliDate($datalogger->lastRecieveMessage()->time) }}</p>
+                        <p class="text-secondary">{{  $datalogger->lastRecieveMessage()->time  }}</p>
                         <a href=""><i class="fas fa-reply text-secondary"></i></a>
                     </section>
 
-
-
-
-
-
-
                 </div>
-
-
-
-
-
 
 
             </section>
         @endforeach
     </section>
+@endsection
+@section('script')
+    <script>
+        $(document).ready(function() {
+            $('.source').each(function() {
+                var volume = $(this).data('volume'); // Get the volume from data attribute
+                $(this).find('.source-level').css('height', volume +
+                '%'); // Set the height of the water level
+            });
+        });
+    </script>
 @endsection

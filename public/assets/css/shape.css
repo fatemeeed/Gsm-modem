@@ -124,24 +124,25 @@
 
 
 .source {
-    width: 80px;
-
-    /* border-radius: horziontal values / vertical values */
-    /* border-radius: 130px 130px / 80px 80px;
-    border: 1px solid yellow; */
-
-
-    background: linear-gradient(to top, #61b3da 70%, #f4f4f4 70%);
- 
-    height: 100px;
-    border-radius: 10px;
+    width: 30%; /* Adjust to your desired width */
+    height: 100px; /* Adjust to your desired height */
+    background-color: #e0e0e0; /* Background color of the source (e.g., gray) */
     position: relative;
-
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    border-radius: 10px; /* Optional, for a rounded source */
+    /* overflow: hidden; */
+   
 
 }
+
+.source-level {
+    width: 100%;
+    background-color: blue; /* Water color */
+    position: absolute;
+    bottom: 0;
+    height: 0; /* Initially, no water */
+    transition: height 0.5s ease;
+    border-radius: 0 0 10px 10px;
+  }
 
 
 .ON {

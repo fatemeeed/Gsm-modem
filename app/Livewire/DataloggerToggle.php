@@ -7,12 +7,7 @@ use Livewire\Component;
 class DataloggerToggle extends Component
 {
 
-    public $dataloggerStatus;
-
-    public function setDataloggerStatus($dataloggerStatus)
-    {
-        $this->dataloggerStatus=$dataloggerStatus;
-    }
+    public $datalogger;
 
 
     public function render()
