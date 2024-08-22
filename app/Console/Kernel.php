@@ -27,7 +27,7 @@ class Kernel extends ConsoleKernel
         $schedule->job(new OrderCodeEveryThirtyMinute)->everyThirtyMinutes();
         $schedule->job(new OrderCodeEveryFifteenMinutes)->everyFifteenMinutes();
         $schedule->job(new OrderCodeEveryTenMinutes)->everyTenMinutes();
-        $schedule->job(new RecieveMessage)->everyThirtyMinutes()->withoutOverlapping(5);
+        $schedule->job(new RecieveMessage)->everyThirtyMinutes();
     }
 
     /**

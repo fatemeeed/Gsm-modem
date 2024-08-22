@@ -3,6 +3,7 @@
 
 namespace App\Http\Services\Message;
 
+use App\Exceptions\GSMConnectionNotFoundException;
 use Exception;
 use App\Models\Setting;
 use PhpParser\Node\Stmt\TryCatch;
@@ -15,13 +16,13 @@ class GSMConnection
     private $port;
     private $baud;
     public $fp;
-    protected $buffer="";
+    protected $buffer;
     private $strReply = "";
 
     private function __construct()
     {
         $setting = Setting::first();
-
+        
         $this->port = $setting->port;
         $this->baud = $setting->baud_rate;
         $this->gsmConnection();
@@ -32,11 +33,10 @@ class GSMConnection
 
         if (self::$gsmConnectionInstance == null) {
             self::$gsmConnectionInstance = new GSMConnection();
+            
         }
 
         return self::$gsmConnectionInstance;
-
-       
     }
 
     private function gsmConnection()
@@ -45,118 +45,77 @@ class GSMConnection
         try {
             exec("MODE {$this->port}: BAUD={$this->baud} PARITY=N DATA=8 STOP=1", $output, $retval);
             if ($retval != 0) {
-                throw new Exception('Unable to setup COM port, check it is correct');
+                throw new GSMConnectionNotFoundException('امکان اتصال به مودم فراهم نیست ، لطفا پورت را چک کنید');
             }
-        } catch (Extension $e) {
-            throw new Exception('error gsm connection');
+
+            
+        } catch (GSMConnectionNotFoundException $e) {
+            throw $e;
+            return back()->withError('امکان اتصال به مودم فراهم نیست ، لطفا پورت را چک کنید');
+            
         }
     }
 
     public function sendATCommand($command, $delay = 500000)
     {
-        $fp = @fopen($this->port, "r+");
-        if (!$fp) {
-            throw new Exception("Failed to open serial port");
-        }
 
-        fputs($fp, "$command\r");
+        try {
+            $this->fp = fopen($this->port, "r+");
+            if (!$this->fp) {
+                throw new GSMConnectionNotFoundException("اتصال به پورت امکان پذیر نیست",500);
+            }
+        
+            
+        } catch (GSMConnectionNotFoundException $e) {
+            throw $e;
+            // return back()->withError('امکان اتصال به مودم فراهم نیست ، لطفا پورت را چک کنید');
+        }
+        
+     
+
+        fputs( $this->fp, "$command\r");
         usleep($delay);
 
         $response = '';
-        while ($buffer = fgets($fp, 128)) {
+        while ($buffer = fgets( $this->fp, 128)) {
             $response .= $buffer;
             if (strpos($buffer, "OK") !== false || strpos($buffer, "ERROR") !== false) {
                 break;
             }
         }
 
-        fclose($fp);
+        fclose( $this->fp);
         return $response;
     }
 
     public function read()
     {
-        $this->fp = @fopen($this->port, "r+");
-        if (!$this->fp) {
-            throw new Exception("Failed to open serial port");
-        }
-
-        fputs($this->fp, "AT+CMGF=1\r"); // Set to text mode
-        usleep(500000);
-
-        fputs($this->fp, "AT+CMGL=\"REC UNREAD\"\r");
-        $this->wait_reply("OK\r\n> ", 5);
-    
-        // get the messages as an array
+        $this->strReply= $this->sendATCommand("AT+CMGL=\"ALL\"");
         $arrMessages = explode("+CMGL:", $this->strReply);
         return $arrMessages;
     }
 
-    protected function wait_reply($expected_result, $timeout) {
-        // clear reply cache
-		$this->strReply = "";
-
-        //Clear buffer
-        $this->buffer = '';
-
-        //Set timeout
-        $timeoutat = time() + $timeout;
-
-        //Loop until timeout reached (or expected result found)
-        do {
-
-            // $this->debugmsg('Now: ' . time() . ", Timeout at: {$timeoutat}");
-
-            $buffer = fread($this->fp, 1024);
-            $this->buffer .= $buffer;
-
-            usleep(200000);//0.2 sec
-            // $this->debugmsg("Received: {$buffer}");
-
-                $strReply = "";
-            // get response
-		
-			$strReply 		 = $buffer;
-			$this->strReply	.= $strReply;
-		
-
-            //Check if received expected responce
-            if (preg_match('/'.preg_quote($expected_result, '/').'$/', $this->buffer)) {
-               
-                return true;
-                //break;
-            } else if (preg_match('/\+CMS ERROR\:\ \d{1,3}\r\n$/', $this->buffer)) {
-                return false;
-            }
-
-        } while ($timeoutat > time());
-
-        // $this->debugmsg('Timed out');
-
-        return false;
-
-    }
-
-    
-
     public function send($tel, $message)
     {
 
-        //Filter tel
-        $tel = preg_replace("%[^0-9\+]%", '', $tel);
+         //Filter tel
+         $tel = preg_replace("%[^0-9\+]%", '', $tel);
 
-        //Filter message text
-        $message = preg_replace("%[^\040-\176\r\n\t]%", '', $message);
-        
+         //Filter message text
+         $message = preg_replace("%[^\040-\176\r\n\t]%", '', $message);
 
-        $this->sendATCommand("AT+CMGF=1\r"); // Set to text mode
+        $this->sendATCommand("AT+CMGS=\"{$tel}\"");
 
-        $this->sendATCommand("AT+CMGS=\"{$tel}\"\r");
-
-        //Send message text
-       return  $this->sendATCommand($message . chr(26));
+         //Send message text
+        $this->sendATCommand("$message");
 
         //Send message finished indicator
+       return  $this->sendATCommand("chr(26)");
+
+        // return true;
+        
+       
+
 
     }
 
