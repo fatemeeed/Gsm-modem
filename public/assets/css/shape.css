@@ -1,35 +1,149 @@
-.shape{
+.container {
+
+    background-color: #f4f4f4;
+    display: flex;
+
+    align-items: center;
+    gap: 10px;
+    padding: 20px;
+    margin: 0;
+}
+
+.shape {
+    width: 30%;
+    padding: 15px 20px 0px 20px;
+
+    background-color: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+}
+
+.shape h2 {
+    font-size: 24px;
+    margin-bottom: 10px;
+    color: #333;
+}
+
+.shape .status {
+    width: 100%;
+    display: flex;
+    justify-content: start;
+    flex-direction: row-reverse;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.shape .status span {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    margin: 0 7px;
+
+
+}
+
+.status span.ON {
+    background-color: #4CAF50;
+}
+
+.status span.OFF {
+    background-color: #F44336;
+}
+
+.shape .volume {
+    background: linear-gradient(to top, #4CAF50 70%, #f4f4f4 70%);
+    height: 25px;
+    border-radius: 5px;
+    position: relative;
+    overflow: hidden;
     display: flex;
     justify-content: center;
     align-items: center;
-    flex-direction: column;
-
 }
+
+/* .shape .volume::before {
+    content: attr(data-volume);
+    position: absolute;
+    right: 10px;
+    top: 40%;
+    transform: translateY(-50%);
+    font-weight: bold;
+    color: #777;
+} */
+
+.shape .volume-label {
+
+    position: absolute;
+    top: 20%;
+    right: -20%;
+    color: #fff;
+    border-radius: 1px solid #c91e12;
+    background-color: #F44336;
+    border-radius: 5px;
+    padding: 1px;
+    font-size: 12px;
+}
+
+/* .shape .toggle {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background-color: #2196F3;
+    color: #ffffff;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.shape .toggle.off {
+    background-color: #f44336;
+} */
 .pump {
-    width: 50px;
-    height: 50px;
+    width: 40px;
+    height: 40px;
     position: relative;
 }
 
 .pit {
-    width: 150px;
-    height: 150px;
+    width: 100px;
+    height: 100px;
     color: rgb(255, 255, 255);
-    background-color: rgb(221, 221, 221);
+    background: linear-gradient(to right, #aaffa9, #11ffbd);
     box-shadow: rgba(0, 0, 0, 0.5) 0px 0px 20px inset;
     border-radius: 50%;
-    margin: 20px auto;
+    /* margin: 10px auto; */
 
 }
+
+
 
 .source {
-    width: 50px;
-    height: 70px;
-    /* border-radius: horziontal values / vertical values */
-    border-radius: 50px 50px / 20px 20px;
-
+    width: 30%; /* Adjust to your desired width */
+    height: 100px; /* Adjust to your desired height */
+    background-color: #e0e0e0; /* Background color of the source (e.g., gray) */
+    position: relative;
+    border-radius: 10px; /* Optional, for a rounded source */
+    /* overflow: hidden; */
+   
 
 }
+
+.source-level {
+    width: 100%;
+    background-color: blue; /* Water color */
+    position: absolute;
+    bottom: 0;
+    height: 0; /* Initially, no water */
+    transition: height 0.5s ease;
+    border-radius: 0 0 10px 10px;
+  }
+
 
 .ON {
     background-color: green;
