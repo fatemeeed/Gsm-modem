@@ -79,7 +79,7 @@ class Datalogger extends Model
     {
       
         
-        return $this->lastRecieveMessage()->content[$this->powerCheckCode->name]  ?? 'Disconnect';
+        return $this->lastRecieveMessage()->content[$this->powerCheckCode->name]  ?? 'NoConnect';
     }
 
     public function sourceVolumePercentage()
