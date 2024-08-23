@@ -84,7 +84,7 @@ class Datalogger extends Model
 
     public function sourceVolumePercentage()
     {
-        if ($this->lastRecieveMessage()) {
+        if ($this->dataloggerLastStatus() =='ON') {
             
           
             $currentHeight =str_replace('meter','',$this->lastRecieveMessage()->content['Height']) ;
