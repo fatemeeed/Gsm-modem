@@ -72,14 +72,14 @@ class Datalogger extends Model
 
     public function lastRecieveMessage()
     {
-        return $this->messages()->latest('time')->first();
+        return $this->messages()->latest('time')->first() ;
     }
 
     public function dataloggerLastStatus()
     {
       
         
-        return $this->lastRecieveMessage()->content[$this->powerCheckCode->name]  ?? '';
+        return $this->lastRecieveMessage()->content[$this->powerCheckCode->name]  ?? 'Disconnect';
     }
 
     public function sourceVolumePercentage()
