@@ -45,7 +45,7 @@
 
                     <h5 class="d-flex ">{{ $datalogger->name ?? ' ' }}</h5>
                     <section class="d-flex justify-content-between">
-                        <p class="text-secondary">{{  $datalogger->lastRecieveMessage()->time ?? ' '  }}</p>
+                        <p class="text-secondary">{{  jalaliDate($datalogger->lastRecieveMessage()->time) ?? ' '  }}</p>
                         <a href=""><i class="fas fa-reply text-secondary"></i></a>
                     </section>
 

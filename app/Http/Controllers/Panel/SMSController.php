@@ -65,16 +65,21 @@ class SMSController extends Controller
             try {
                 $response = $gsmConnection->send($mobile_number, $request->content);
 
-                Message::create(
-                    [
-                        'from' => $mobile_number,
-                        'datalogger_id' => $request->datalogger_id,
-                        'content' => $request->content,
-                        'time' => Carbon::now(),
-                        'type' => 0
+              
 
-                    ]
-                );
+               
+                    Message::create(
+                        [
+                            'from' => $mobile_number,
+                            'datalogger_id' => $request->datalogger_id,
+                            'content' => $request->content,
+                            'time' => Carbon::now(),
+                            'type' => 0
+    
+                        ]
+                    );
+                
+               
 
 
                 Log::info('SMS sent', ['phone_number' => $mobile_number, 'message' => $request->content, 'response' => $response]);
@@ -82,8 +87,12 @@ class SMSController extends Controller
             } catch (\Exception $e) {
                 Log::error('Failed to send SMS', ['error' => $e->getMessage()]);
                 return response()->json(['error' => $e->getMessage()], 500);
+                
             }
+
+           
         });
-        return redirect()->route('app.Message.send-box')->with('swal-success', 'پیام  با موفقیت ارسال شد');
+        return redirect()->route('app.Message.send-box')->with('swal-success','پیام با موفقیت ارسال شد');
+        
     }
 }

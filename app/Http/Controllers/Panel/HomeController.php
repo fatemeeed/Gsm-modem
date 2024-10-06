@@ -19,11 +19,21 @@ class HomeController extends Controller
 {
 	
 
-	public function index()
+	public function index(GSMConnection $Connection,Request $request)
 	{
 
 		
+       // Step 1: Test basic communication
+    //$response = $Connection->sendATCommand("AT", 1000000);
+    //echo "AT Response: $response\n";  // Expect "OK"
+    
+    // Step 2: Set modem to text mode for SMS commands
+    //$response = $Connection->sendATCommand("AT+CMGF=1", 1000000);
+    //echo "Set Text Mode Response: $response\n";  // Expect "OK"
 
+    // Step 3: List all messages
+    //$response = $Connection->sendATCommand("AT+CMGL=\"ALL\"", 2000000);
+    //echo "List Messages Response: $response\n";  // Expect message list or "OK"
 		$dataloggers = Datalogger::all();
 
 		return view('app.index', compact('dataloggers'));
@@ -36,8 +46,11 @@ class HomeController extends Controller
 		$arrMessages = $Connection->read();
 
 		
+		
 
 		$strJunk = array_shift($arrMessages);
+
+		
 
 		// set return array
 		$arrReturn = array();
@@ -48,6 +61,8 @@ class HomeController extends Controller
 			foreach ($arrMessages as $arrMessage) {
 				// split content from metta data
 				$arrMessage	= explode("\n", $arrMessage, 2);
+
+				
 
 				$strMetta	= trim($arrMessage[0]);
 				$arrMetta	= explode(",", $strMetta);
@@ -88,15 +103,20 @@ class HomeController extends Controller
 				if ($datalogger) {
 
 					$strContent	= trim($arrMessage[1]);
-					$strtoarray = preg_split('/[\s]+/', trim($strContent));
-
 					$messageArray1 = [];
-					$length = count($strtoarray);
+					$messageArray1=$datalogger->parseMessage($strContent);
+					// $strtoarray = preg_split('/[\s]+/', trim($strContent));
+                    
+				
+					
 
-					for ($i = 0; $i < $length-1; $i += 2) {
+					
+					// $length = count($strtoarray);
 
-						$messageArray1[$strtoarray[$i]] = $strtoarray[$i + 1];
-					}
+					// for ($i = 0; $i < $length-1; $i += 2) {
+
+					// 	$messageArray1[$strtoarray[$i]] = $strtoarray[$i + 1];
+					// }
 
 
 

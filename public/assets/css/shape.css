@@ -88,6 +88,7 @@
     border-radius: 5px;
     padding: 1px;
     font-size: 12px;
+    z-index: 10;
 }
 
 /* .shape .toggle {
