@@ -22,7 +22,7 @@ class GSMConnection
     private function __construct()
     {
         $setting = Setting::first();
-        
+
         $this->port = $setting->port;
         $this->baud = $setting->baud_rate;
         $this->gsmConnection();
@@ -33,7 +33,6 @@ class GSMConnection
 
         if (self::$gsmConnectionInstance == null) {
             self::$gsmConnectionInstance = new GSMConnection();
-            
         }
 
         return self::$gsmConnectionInstance;
@@ -47,74 +46,88 @@ class GSMConnection
             if ($retval != 0) {
                 throw new GSMConnectionNotFoundException('امکان اتصال به مودم فراهم نیست ، لطفا پورت را چک کنید');
             }
-
-            
         } catch (GSMConnectionNotFoundException $e) {
             throw $e;
             return back()->withError('امکان اتصال به مودم فراهم نیست ، لطفا پورت را چک کنید');
-            
         }
     }
 
-    public function sendATCommand($command, $delay = 500000)
+    public function sendATCommand($command, $delay = 2000000)
     {
 
         try {
-            $this->fp = fopen($this->port, "r+");
-            if (!$this->fp) {
-                throw new GSMConnectionNotFoundException("اتصال به پورت امکان پذیر نیست",500);
-            }
-        
-            
-        } catch (GSMConnectionNotFoundException $e) {
-            throw $e;
-            // return back()->withError('امکان اتصال به مودم فراهم نیست ، لطفا پورت را چک کنید');
-        }
-        
-     
 
-        fputs( $this->fp, "$command\r");
-        usleep($delay);
+            $this->fp = fopen($this->port, "r+");
+
+
+            if (!$this->fp) {
+                throw new GSMConnectionNotFoundException("اتصال به پورت امکان پذیر نیست", 500);
+            }
+        } catch (GSMConnectionNotFoundException $e) {
+            error_log("GSM Connection Error: " . $e->getMessage());
+            throw $e;
+            //    return back()->withError('امکان اتصال به مودم فراهم نیست ، لطفا پورت را چک کنید');
+        }
+
+
+        fputs($this->fp, "$command\r");
+        usleep($delay * 2);
 
         $response = '';
-        while ($buffer = fgets( $this->fp, 128)) {
+        usleep(500000); // Give some additional time before reading response
+        while ($buffer = fgets($this->fp, 128)) {
             $response .= $buffer;
             if (strpos($buffer, "OK") !== false || strpos($buffer, "ERROR") !== false) {
                 break;
             }
         }
 
-        fclose( $this->fp);
+        fclose($this->fp);
         return $response;
     }
 
     public function read()
     {
-        $this->strReply= $this->sendATCommand("AT+CMGL=\"ALL\"");
+        $this->strReply = $this->sendATCommand("AT+CMGL=\"ALL\"");
+
+
         $arrMessages = explode("+CMGL:", $this->strReply);
+
         return $arrMessages;
     }
 
     public function send($tel, $message)
     {
 
-         //Filter tel
-         $tel = preg_replace("%[^0-9\+]%", '', $tel);
 
-         //Filter message text
-         $message = preg_replace("%[^\040-\176\r\n\t]%", '', $message);
+        //Filter tel
+        $tel = preg_replace("%[^0-9\+]%", '', $tel);
 
-        $this->sendATCommand("AT+CMGS=\"{$tel}\"");
+        //Filter message text
+        $message = preg_replace("%[^\040-\176\r\n\t]%", '', $message);
 
-         //Send message text
-        $this->sendATCommand("$message");
 
-        //Send message finished indicator
-       return  $this->sendATCommand("chr(26)");
 
-        // return true;
-        
-       
+        $response = $this->sendATCommand("AT+CMGS=\"{$tel}\"", 1000000);  // 1 second delay
+        echo "CMGS Command Response: $response\n";
+
+        // If the response contains '>', it's ready to accept the message text
+        if (strpos($response, '>') !== false) {
+            // Send the message text
+            $response = $this->sendATCommand($message, 2000000);  // 2 second delay for sending the message
+            echo "Message Send Response: $response\n";
+
+            // End message by sending CTRL+Z (ASCII code 26)
+            $response = $this->sendATCommand(chr(26));  // Wait 5 seconds after sending CTRL+Z
+            echo "End Message Response: $response\n";
+
+            // Check if the message was sent successfully
+            if (strpos($response, 'OK') !== false) {
+                return true;  // Message sent successfully
+            }
+        }
+
+        return false;  // Message sending failed
 
 
     }
