@@ -4,6 +4,7 @@
 <head>
     @include('app.layouts.head-tag')
     @yield('title')
+    @livewireStyles
 
 </head>
 
@@ -22,9 +23,12 @@
         @include('app.layouts.footer')
 
     </div>
-
+    @livewireScripts
     @include('app.layouts.script')
     @yield('script')
+
+    <script src="{{ asset('vendor/livewire-alert/livewire-alert.js') }}"></script>
+    <x-livewire-alert::flash />
     <section class="toast-wrapper ">
         @include('alerts.toast.success')
         @include('alerts.toast.error')

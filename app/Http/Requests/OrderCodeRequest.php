@@ -22,7 +22,7 @@ class OrderCodeRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'required|max:120|min:2|regex:/^[ا-یa-zA-Z0-9\-۰-۹ء-ي., ]+$/u',
+            'name' => 'required|max:120|min:2',
             'description' => 'required|max:200|min:2'
         ];
     }

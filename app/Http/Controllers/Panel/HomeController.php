@@ -45,8 +45,8 @@ class HomeController extends Controller
 		
 		$arrMessages = $Connection->read();
 
-		
-		
+		$Connection->deleteMessage();
+	
 
 		$strJunk = array_shift($arrMessages);
 
@@ -104,6 +104,7 @@ class HomeController extends Controller
 
 					$strContent	= trim($arrMessage[1]);
 					$messageArray1 = [];
+					// dd($strContent);
 					$messageArray1=$datalogger->parseMessage($strContent);
 					// $strtoarray = preg_split('/[\s]+/', trim($strContent));
                     
@@ -130,6 +131,8 @@ class HomeController extends Controller
 				}
 			}
 		}
+
+        
 
 		// $deleteMessage=new DestroyMessage();
 		// $deleteMessage->destroy();

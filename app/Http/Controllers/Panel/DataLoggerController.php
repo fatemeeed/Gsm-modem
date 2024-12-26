@@ -65,6 +65,8 @@ class DataLoggerController extends Controller
      */
     public function update(DataLoggerRequest $request, Datalogger $device)
     {
+
+      
         $inputs = $request->all();
 
         DB::beginTransaction();
@@ -77,7 +79,7 @@ class DataLoggerController extends Controller
             // all good
         } catch (\Exception $e) {
             DB::rollback();
-            return redirect()->route('app.data-logger.edit')->with('alert-section-error', ' .ویرایش با خطا مواجه شد');
+            return redirect()->route('app.data-logger.edit',$device)->with('alert-section-error', ' .ویرایش با خطا مواجه شد');
             // something went wrong
         }
 

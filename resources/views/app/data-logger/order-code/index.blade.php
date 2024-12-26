@@ -49,11 +49,15 @@
                             <tbody>
 
                                 @foreach ($device->order_codes as $orderCode)
+
+                               
                                     <tr>
                                         <td>{{ $loop->iteration }}</td>
                                         <td>{{ $orderCode->name }}</td>
-                                        <td>{{ $orderCode->pivot->time }}</td>
-                                        <td>{{ jalaliDate($orderCode->last_send_at, 'Y/m/d H:i:s') }}</td>
+                                        <td>{{ $orderCode->readableTime }}</td>
+
+                                        <td>{{ $orderCode->last_send_at ? jalaliDate($orderCode->last_send_at, 'Y/m/d H:i:s') : 'ارسال نشده' }}</td>
+
 
                                         {{-- <td class="width-13-rem text-right font-size-2 ">
 
