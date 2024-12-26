@@ -72,7 +72,7 @@ class Datalogger extends Model
 
     public function lastRecieveMessage()
     {
-        return $this->messages()->where('type','1')->latest('time')->first();
+        return $this->messages()->where('type', '1')->latest('time','created_at')->first();
     }
 
     public function dataloggerLastStatus()
@@ -93,14 +93,14 @@ class Datalogger extends Model
         // } else {
         //     $persent = 0;
         // }
+ //dd(  $this->lastRecieveMessage());
+        $currentHeight = $this->lastRecieveMessage()->content['Level'];
 
-        $currentHeight =$this->lastRecieveMessage()->content['Height'];
-       
-        $baseHeight = $this->fount_height;
-        
-        $persent =(($currentHeight / $baseHeight) * 100);
+        // $baseHeight = $this->fount_height ?? '';
 
-        return $persent;
+        // $persent = (($currentHeight / $baseHeight) * 100);
+
+        return $currentHeight;
     }
 
 
@@ -117,49 +117,67 @@ class Datalogger extends Model
 
     public function parseMessage($message)
     {
-        // Set delimiter and unit removal array based on type
+        
         switch ($this->type) {
             case '1':
-                $delimiter = "/[\s]+/"; // Split by any whitespace for type 1
-                $unitRemovals = [];      // No units to remove for type 1
+                $delimiter = '/[\s]+/'; // فقط برای نوع 1
+                $unitRemovals = [];
                 break;
-
+        
             case '2':
-                $delimiter = "/\s*:\s*/"; // Split by colon for type 2
-                $unitRemovals = ['m3/s', 'meter', '%','bar']; // Units to remove in type 2
+                $pattern = '/^(.+?)[\s\-:]+(.+)$/'; // برای نوع 2
+                $unitRemovals = ['bar', 'meter', '%', 'm3/s'];
                 break;
-
+        
             default:
-                // Default to a safe delimiter if type is unrecognized
-                $delimiter = "/[\s]+/";
+                $delimiter = '/[\s]+/'; // پیش‌فرض
                 $unitRemovals = [];
                 break;
         }
-
-        // Break message into lines
+        
+        // تقسیم پیام به خطوط
         $lines = explode("\n", trim($message));
-
-        // Initialize an array to store parsed key-value pairs
+        
+        // آرایه برای ذخیره جفت‌های کلید-مقدار
         $messageArray = [];
+        
         foreach ($lines as $line) {
-            // Split line based on the chosen delimiter
-            $strtoarray = preg_split($delimiter, $line);
-
-            // Ensure we have exactly two parts
-            if (count($strtoarray) == 2) {
-                $key = trim($strtoarray[0]);    // Extract key
-                $value = trim($strtoarray[1]);  // Extract value
-
-                // Remove any unwanted units from the value
-                foreach ($unitRemovals as $unit) {
-                    $value = str_replace($unit, '', $value);
+            $line = trim($line); // حذف فاصله‌های اضافی
+        
+            if ($line === '') continue; // عبور از خطوط خالی
+        
+            if ($this->type == 2) {
+                // استفاده از preg_match برای نوع 2
+                if (preg_match($pattern, $line, $matches)) {
+                    $key = trim($matches[1]);
+                    $value = trim($matches[2]);
+        
+                    // حذف واحدهای اضافی از مقدار
+                    foreach ($unitRemovals as $unit) {
+                        $value = str_replace($unit, '', $value);
+                    }
+        
+                    $messageArray[$key] = $value;
                 }
-
-                // Store the cleaned key-value pair
-                $messageArray[$key] = $value;
+            } else {
+                // استفاده از preg_split برای سایر انواع
+                $strtoarray = preg_split($delimiter, $line);
+                if (count($strtoarray) >= 2) {
+                    $key = trim($strtoarray[0]);
+                    $value = trim($strtoarray[1]);
+        
+                    // حذف واحدها (در صورت وجود)
+                    foreach ($unitRemovals as $unit) {
+                        $value = str_replace($unit, '', $value);
+                    }
+        
+                    $messageArray[$key] = $value;
+                }
             }
         }
-
+      
         return $messageArray;
+        
+           
     }
 }

@@ -8,7 +8,7 @@
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
             <li class="breadcrumb-item font-size-12"><a href="#"> خانه</a></li>
-            <li class="breadcrumb-item font-size-12 active" aria-current="page">  چک کد ها </li>
+            <li class="breadcrumb-item font-size-12 active" aria-current="page"> چک کد ها </li>
         </ol>
     </nav>
 
@@ -27,7 +27,8 @@
 
                 <section class="d-flex justify-content-between align-items-center mt-4 mb-3 border-bottom pb-2">
 
-                    <a class="btn btn-info btn-sm text-light" href="{{ route('app.check-code.create') }}">ایجاد چک کد جدید</a>
+                    <a class="btn btn-info btn-sm text-light" href="{{ route('app.check-code.create') }}">ایجاد چک کد
+                        جدید</a>
 
                     <div class="max-width-16-rem">
 
@@ -55,7 +56,7 @@
                                     <th>{{ $loop->iteration }}</th>
                                     <th>{{ $checkCode->name }}</th>
                                     <th>
-                                        @if(empty($checkCode->dataLoggers()->get()->toArray()))
+                                        @if (empty($checkCode->dataLoggers()->get()->toArray()))
                                             <span class="text-danger"> دیتالاگر تعریف نشده</span>
                                         @else
                                             @foreach ($checkCode->dataLoggers as $dataLogger)
@@ -64,10 +65,19 @@
                                         @endif
                                     </th>
                                     <td class="width-22-rem text-left">
-                                        
-                                        <a href="{{ route('app.check-code.edit', $checkCode->id) }}" class="btn btn-primary btn-sm"><i class="fa fa-edit"></i> ویرایش</a>
-                                        <button type="submit" class="btn btn-danger btn-sm"><i class="fa fa-trash-alt"></i>
-                                            حذف</button>
+
+                                        <a href="{{ route('app.check-code.edit', $checkCode->id) }}"
+                                            class="btn btn-primary btn-sm"><i class="fa fa-edit"></i> ویرایش</a>
+                                        <form action="{{ route('app.check-code.destroy', $checkCode->id) }}" method="POST"  class="d-inline">
+                                            @csrf
+                                            @method('delete')
+
+                                            <button type="submit" class="btn btn-danger btn-sm"><i
+                                                    class="fa fa-trash-alt"></i>
+                                                حذف</button>
+
+                                        </form>
+
                                     </td>
                                 </tr>
                             @endforeach

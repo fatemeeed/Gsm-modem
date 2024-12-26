@@ -9,7 +9,8 @@
         <ol class="breadcrumb">
             <li class="breadcrumb-item font-size-12"> <a href="#">خانه</a></li>
             <li class="breadcrumb-item font-size-12"> <a href="#">تجهیزات</a></li>
-            <li class="breadcrumb-item font-size-12"> <a href="{{ route('app.data-logger.order-code', $device) }}">کدهای کنترل </a></li>
+            <li class="breadcrumb-item font-size-12"> <a href="{{ route('app.data-logger.order-code', $device) }}">کدهای کنترل
+                </a></li>
             <li class="breadcrumb-item font-size-12 active" aria-current="page">افزودن کد جدید </li>
         </ol>
     </nav>
@@ -29,7 +30,8 @@
 
                 <section class="d-flex justify-content-between align-items-center mt-4 mb-3 border-bottom pb-2">
 
-                    <a class="btn btn-info btn-sm text-light" href="{{ route('app.data-logger.order-code', $device) }}">بازگشت </a>
+                    <a class="btn btn-info btn-sm text-light"
+                        href="{{ route('app.data-logger.order-code', $device) }}">بازگشت </a>
 
 
                 </section>
@@ -146,19 +148,17 @@
                                     </span>
                                 @enderror
                             </section> --}}
-                            <section class="col-12 col-md-6 my-2">
+                            <section class="col-12 col-md-6">
                                 <div class="form-group">
                                     <label for="time">بازه زمانی ارسال </label>
                                     <select name="time" id="time" class="form-control form-control-sm">
                                         <option value="">بازه زمانی را انتخاب کنید</option>
-                                        <option value="60" @if (old('time') == '60') selected @endif>هر 1 ساعت
-                                        </option>
-                                        <option value="30" @if (old('time') == '30') selected @endif>هر 30دقیقه
-                                        </option>
-                                        <option value="15" @if (old('time') == '15') selected @endif>هر 15 دقیقه
-                                        </option>
-                                        <option value="10" @if (old('time') == '10') selected @endif>هر 10 دقیقه  
-                                        </option>
+                                        @foreach ($timeCycles as $key => $timeCycle)
+
+                                        <option value="{{ $key }}"  @if (old('time')==$key) selected @endif>{{ $timeCycle }}</option>
+                                        @endforeach
+
+                                        
 
                                     </select>
                                     @error('time')

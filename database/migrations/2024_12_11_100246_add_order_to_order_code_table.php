@@ -12,10 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('order_codes', function (Blueprint $table) {
-            $table->string('name');
-            $table->integer('time')->nullable();
-            $table->tinyInteger('status')->default(1);
-            $table->softDeletes();
+            $table->string('order')->after('name')->nullable();
         });
     }
 
@@ -25,7 +22,7 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('order_codes', function (Blueprint $table) {
-            //
+           //
         });
     }
 };

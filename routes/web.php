@@ -38,6 +38,8 @@ Route::prefix('panel')->middleware('auth')->namespace('Panel')->group(function (
 
     Route::get('/read-message', [HomeController::class, 'readMessage'])->name('app.read-message');
 
+    
+
     //dataLogger
     Route::prefix('dataLogger')->group(function () {
 

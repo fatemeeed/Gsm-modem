@@ -21,6 +21,9 @@ class DataLoggerRequest extends FormRequest
      */
     public function rules(): array
     {
+      
+       
+       
         return [
             'name' => 'required|min:3|max:50',
             'type' => 'required|in:0,1,2',
@@ -33,7 +36,7 @@ class DataLoggerRequest extends FormRequest
             'fount_height' => 'required|numeric',
             'fount_bulk' => 'required|numeric',
             'yearly_bulk' => 'required|numeric',
-            'checkCode' => 'exists:check_codes,id|array',
+            'checkCode.*' => 'exists:check_codes,id',
             'power' => 'nullable|exists:check_codes,id',
         ];
     }

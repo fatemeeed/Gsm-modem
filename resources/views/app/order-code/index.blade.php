@@ -45,8 +45,10 @@
                         <thead>
                             <tr>
                                 <th>#</th>
+                                <th>order</th>
                                 <th>نام کد</th>
                                 <th>توضیحات کد</th>
+                                <th>وضعیت</th>
                                 <th class="max-width-16-rem text-center"><i class="fa fa-cogs"></i> تنظیمات</th>
                             </tr>
                         </thead>
@@ -54,9 +56,10 @@
                             @foreach ($orders as $order)
                                 <tr>
                                     <th>{{ $loop->iteration }}</th>
+                                    <th>{{ $order->order }}</th>
                                     <th>{{ $order->name }}</th>
                                     <th>{{ $order->description }}</th>
-                                    
+                                    <th>{{ $order->status == 1 ? 'فعال' : 'غیرفعال'}}</th>
                                     <td class=" text-left">
                                         
                                         <a href="{{ route('app.order-code.edit', $order->id) }}" class="btn btn-primary btn-sm"><i class="fa fa-edit"></i> ویرایش</a>

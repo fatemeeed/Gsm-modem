@@ -97,7 +97,29 @@
                                     </span>
                                 @enderror
                             </section> --}}
-                            
+                            <section class="col-12 col-md-6 my-2">
+                                <div class="form-group">
+                                    <label for=""> استان</label>
+                                    <select name="city_id" id="city_id" class="form-control form-control-sm">
+                                        <option value="">استان را انتخاب کنید</option>
+                                        @foreach ($cities as $city)
+                                            <option value="{{ $city->id }}"
+                                                @if (old('city_id') == $city->id) selected @endif> {{ $city->name }}
+                                            </option>
+                                        @endforeach
+
+
+                                    </select>
+                                    @error('')
+                                        <span class="alert_required bg-danger text-white p-1 rounded" role="alert">
+                                            <strong>
+                                                {{ $message }}
+                                            </strong>
+                                        </span>
+                                    @enderror
+                                </div>
+
+                            </section>
 
                             <section class="col-12 col-md-6 mb-3">
                                 <div class="form-group">

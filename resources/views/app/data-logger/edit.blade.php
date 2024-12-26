@@ -255,7 +255,7 @@
 
                                     </select>
                                 </div>
-                                @error('checkCode')
+                                @error('checkCode.*')
                                     <span class="alert-danger rounded" role="alert">
                                         <strong>
                                             {{ $message }}

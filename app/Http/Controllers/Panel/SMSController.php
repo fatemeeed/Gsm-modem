@@ -30,7 +30,7 @@ class SMSController extends Controller
     // }
     public function sendBox()
     {
-        $messages = Message::where('type', '0')->simplePaginate(15)->withQueryString();
+        $messages = Message::where('type', '0')->orderBy('time','desc')->simplePaginate(15)->withQueryString();
         // $this->connect->send();
         return view('app.messages.index', compact('messages'));
     }
@@ -39,7 +39,7 @@ class SMSController extends Controller
     {
 
 
-        $messages = Message::where('type', '1')->simplePaginate(15)->withQueryString();
+        $messages = Message::where('type', '1')->orderBy('time','desc')->simplePaginate(15)->withQueryString();
         // $this->connect->send();
 
         return view('app.messages.index', compact('messages'));

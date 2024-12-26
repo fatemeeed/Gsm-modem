@@ -88,6 +88,7 @@ class GSMConnection
 
     public function read()
     {
+        //$this->strReply = $this->sendATCommand("AT+CMGL=\"REC UNREAD\"");
         $this->strReply = $this->sendATCommand("AT+CMGL=\"ALL\"");
 
 
@@ -99,16 +100,20 @@ class GSMConnection
     public function send($tel, $message)
     {
 
-
         //Filter tel
         $tel = preg_replace("%[^0-9\+]%", '', $tel);
 
         //Filter message text
         $message = preg_replace("%[^\040-\176\r\n\t]%", '', $message);
 
+        $status = $this->sendATCommand("AT+CMGF=1", 1000000); // Set to text mode before sending SMS
 
-
+        if (!$status) {
+            throw new Exception('Unable to set text mode');
+        }
         $response = $this->sendATCommand("AT+CMGS=\"{$tel}\"", 1000000);  // 1 second delay
+
+
         echo "CMGS Command Response: $response\n";
 
         // If the response contains '>', it's ready to accept the message text
@@ -130,6 +135,39 @@ class GSMConnection
         return false;  // Message sending failed
 
 
+    }
+
+
+    public function deleteMessage($index = null)
+    {
+        try {
+            $this->sendATCommand("AT+CMGF=1", 1000000); // تنظیم به حالت متنی
+
+            if ($index !== null) {
+                // حذف پیام خاص
+                $command = "AT+CMGD={$index}";
+            } else {
+                // حذف تمامی پیام‌ها
+                $command = "AT+CMGD=1,4";
+            }
+
+
+            $this->sendATCommand("AT+CPMS=\"SM\"");
+
+            // ارسال دستور
+            $response = $this->sendATCommand($command, 1000000);
+            error_log("Delete Response: " . $response);
+
+            // بررسی موفقیت‌آمیز بودن عملیات
+            if (strpos($response, 'OK') !== false) {
+                return true;
+            } else {
+                throw new Exception('خطا در حذف پیام: ' . $response);
+            }
+        } catch (Exception $e) {
+            error_log("Delete Message Error: " . $e->getMessage());
+            throw $e;
+        }
     }
 
 

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Panel;
 
 use App\Http\Controllers\Controller;
 use App\Models\Datalogger;
+use App\Models\DataloggerOrderCode;
 use App\Models\OrderCode;
 use Illuminate\Http\Request;
 
@@ -24,7 +25,8 @@ class DataLoggerOrderCodeController extends Controller
     public function create(Datalogger $device)
     {
         $orderCodes=OrderCode::all();
-        return view('app.data-logger.order-code.create',compact('device','orderCodes'));
+        $timeCycles=DataloggerOrderCode::$timeCycle;
+        return view('app.data-logger.order-code.create',compact('device','orderCodes','timeCycles'));
     }
 
     /**
@@ -35,13 +37,13 @@ class DataLoggerOrderCodeController extends Controller
         $validatedData = $request->validate([
 
             'order_code_id'   => ['required', 'exists:order_codes,id'],
-            'time'   => ['required','in:60,15,30,10'],
+            'time'   => ['required','in:60,15,30,10,0'],
 
         ]);
 
     
 
-        $device->order_codes()->sync([$request->order_code_id=> ['time' => $request->time]]);
+        $device->order_codes()->attach([$request->order_code_id=> ['time' => $request->time]]);
         return redirect()->route('app.data-logger.order-code', $device->id )->with('swal-success', ' کد کنترل با موفقیت اضافه شد');
     }
 
