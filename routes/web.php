@@ -12,6 +12,7 @@ use App\Http\Controllers\Panel\OrderCodeController;
 use App\Http\Controllers\Panel\DataLoggerController;
 use App\Http\Controllers\Panel\PermissionController;
 use App\Http\Controllers\Panel\ModemSettingController;
+use App\Http\Controllers\Panel\IndustrialCityController;
 use App\Http\Controllers\Panel\DataLoggerOrderCodeController;
 
 /*
@@ -38,7 +39,7 @@ Route::prefix('panel')->middleware('auth')->namespace('Panel')->group(function (
 
     Route::get('/read-message', [HomeController::class, 'readMessage'])->name('app.read-message');
 
-    
+
 
     //dataLogger
     Route::prefix('dataLogger')->group(function () {
@@ -60,9 +61,7 @@ Route::prefix('panel')->middleware('auth')->namespace('Panel')->group(function (
             Route::get('/{device}/edit/{orderCode}', [DataLoggerOrderCodeController::class, 'edit'])->name('app.data-logger.order-code.edit');
             Route::put('/{device}/update/{orderCode}', [DataLoggerOrderCodeController::class, 'update'])->name('app.data-logger.order-code.update');
             Route::delete('/{device}/delete/{orderCode}', [DataLoggerOrderCodeController::class, 'delete'])->name('app.data-logger.order-code.destroy');
-           
         });
-
     });
 
     Route::prefix('messages')->group(function () {
@@ -77,8 +76,12 @@ Route::prefix('panel')->middleware('auth')->namespace('Panel')->group(function (
     Route::prefix('modem-setting')->group(function () {
 
         Route::get('/', [ModemSettingController::class, 'index'])->name('app.setting.index');
-        Route::get('/edit/{setting}', [ModemSettingController::class, 'edit'])->name('admin.setting.edit');
-        Route::put('/update/{setting}', [ModemSettingController::class, 'update'])->name('admin.setting.update');
+        Route::get('/create', [ModemSettingController::class, 'create'])->name('app.setting.create');
+        Route::post('/store', [ModemSettingController::class, 'store'])->name('app.setting.store');
+        Route::get('/edit/{setting}', [ModemSettingController::class, 'edit'])->name('app.setting.edit');
+        Route::put('/update/{setting}', [ModemSettingController::class, 'update'])->name('app.setting.update');
+        Route::get('/status/{setting}', [ModemSettingController::class, 'status'])->name('app.setting.status');
+
     });
 
     //checkCode
@@ -115,25 +118,37 @@ Route::prefix('panel')->middleware('auth')->namespace('Panel')->group(function (
         Route::get('/activation/{user}', [UserController::class, 'activation'])->name('app.user.activation');
         Route::get('/reset-password/{user}', [UserController::class, 'resetPassword'])->name('app.user.reset-password');
         Route::put('/reset-password/{user}/post', [UserController::class, 'postResetPassword'])->name('app.user.reset-password.post');
-        // Route::get('/roles/{admin}', [UserController::class, 'roles'])->name('admin.user.admin-user.roles');
-        // Route::post('/roles/{admin}/store', [UserController::class, 'rolesStore'])->name('admin.user.admin-user.roles.store');
-        // Route::get('/permissions/{admin}', [UserController::class, 'permissions'])->name('admin.user.admin-user.permissions');
-        // Route::post('/permissions/{admin}/store', [UserController::class, 'permissionStore'])->name('admin.user.admin-user.permission.store');
+        Route::get('/roles/{user}', [UserController::class, 'roles'])->name('app.user.role');
+        Route::post('/roles/{user}/store', [UserController::class, 'rolesStore'])->name('app.user.role.store');
+        Route::get('/industrial/{user}', [UserController::class, 'industrial'])->name('app.user.industrial-form');
+        Route::post('/industrial/{user}/store', [UserController::class, 'industrialStore'])->name('app.user.industrial-store');
 
     });
 
-    //role
-    // Route::prefix('role')->group(function () {
+    Route::prefix('industrial')->group(function () {
 
-    //     Route::get('/', [RoleController::class, 'index'])->name('admin.user.role.index');
-    //     Route::get('/create', [RoleController::class, 'create'])->name('admin.user.role.create');
-    //     Route::post('/store', [RoleController::class, 'store'])->name('admin.user.role.store');
-    //     Route::get('/edit/{role}', [RoleController::class, 'edit'])->name('admin.user.role.edit');
-    //     Route::put('/update/{role}', [RoleController::class, 'update'])->name('admin.user.role.update');
-    //     Route::delete('/destroy/{role}', [RoleController::class, 'destroy'])->name('admin.user.role.destroy');
-    //     Route::get('/permission-form/{role}', [RoleController::class, 'permissionForm'])->name('admin.user.role.permission-form');
-    //     Route::post('/permission-update/{role}', [RoleController::class, 'permissionUpdate'])->name('admin.user.role.permission-update');
-    // });
+        Route::get('/', [IndustrialCityController::class, 'index'])->name('app.industrial.index');
+        Route::get('/create', [IndustrialCityController::class, 'create'])->name('app.industrial.create');
+        Route::post('/store', [IndustrialCityController::class, 'store'])->name('app.industrial.store');
+        Route::get('/edit/{industrial}', [IndustrialCityController::class, 'edit'])->name('app.industrial.edit');
+        Route::put('/update/{industrial}', [IndustrialCityController::class, 'update'])->name('app.industrial.update');
+        Route::delete('/destroy/{industrial}', [IndustrialCityController::class, 'destroy'])->name('app.industrial.destroy');
+        Route::get('/status/{industrial}', [IndustrialCityController::class, 'status'])->name('app.industrial.status');
+        Route::post('/fetch-city', [IndustrialCityController::class, 'fetchCity'])->name('app.industrial.fetch-city');
+    });
+
+    //role
+    Route::prefix('role')->group(function () {
+
+        Route::get('/', [RoleController::class, 'index'])->name('app.role.index');
+        Route::get('/create', [RoleController::class, 'create'])->name('app.role.create');
+        Route::post('/store', [RoleController::class, 'store'])->name('app.role.store');
+        Route::get('/edit/{role}', [RoleController::class, 'edit'])->name('app.role.edit');
+        Route::put('/update/{role}', [RoleController::class, 'update'])->name('app.role.update');
+        Route::delete('/destroy/{role}', [RoleController::class, 'destroy'])->name('app.role.destroy');
+        // Route::get('/permission-form/{role}', [RoleController::class, 'permissionForm'])->name('app.role.permission-form');
+        // Route::post('/permission-update/{role}', [RoleController::class, 'permissionUpdate'])->name('app.role.permission-update');
+    });
 
     //permission
     // Route::prefix('permission')->group(function () {

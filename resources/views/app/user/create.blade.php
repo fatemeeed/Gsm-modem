@@ -39,6 +39,43 @@
                         @csrf
 
                         <section class="row">
+                            <section class="col-12 col-md-6">
+                                <div class="form-group">
+                                    <label for="tags">شهرک صنعتی </label>
+
+                                    <select class="select2 form-control form-control-sm" name="industrial_id" >
+
+                                        <option value="">شهرک کاربر را انتخاب کنید</option>
+                                    @foreach ($industrials as $industrial)
+                                        <option value="{{ $industrial->id }}">
+                                            {{ $industrial->name }}</option>
+                                    @endforeach
+
+                                </select>
+                                </div>
+                                @error('industrial_id')
+                                    <span class="alert-danger rounded" role="alert">
+                                        <strong>
+                                            {{ $message }}
+                                        </strong>
+                                    </span>
+                                @enderror
+                            </section>
+
+                            <section class="col-12 col-md-6 mb-3">
+                                <div class="form-group">
+                                    <label for="">کد ملی </label>
+                                    <input class="form-control form-control-sm" name="national_code" id="national_code"
+                                        type="text" value="{{ old('national_code') }}">
+                                </div>
+                                @error('national_code')
+                                    <span class="alert-danger text-white bg-danger rounded" role="alert">
+                                        <strong>
+                                            {{ $message }}
+                                        </strong>
+                                    </span>
+                                @enderror
+                            </section>
 
                             <section class="col-12 col-md-6 mb-3">
                                 <div class="form-group">
@@ -69,20 +106,7 @@
                                     </span>
                                 @enderror
                             </section>
-                            <section class="col-12 col-md-6 mb-3">
-                                <div class="form-group">
-                                    <label for="">کد ملی </label>
-                                    <input class="form-control form-control-sm" name="national_code" id="national_code"
-                                        type="text" value="{{ old('national_code') }}">
-                                </div>
-                                @error('national_code')
-                                    <span class="alert-danger text-white bg-danger rounded" role="alert">
-                                        <strong>
-                                            {{ $message }}
-                                        </strong>
-                                    </span>
-                                @enderror
-                            </section>
+                            
                             {{-- <section class="col-12 col-md-6">
                                 <div class="form-group">
                                     <label for="">ایمیل </label>
@@ -97,30 +121,7 @@
                                     </span>
                                 @enderror
                             </section> --}}
-                            <section class="col-12 col-md-6 my-2">
-                                <div class="form-group">
-                                    <label for=""> استان</label>
-                                    <select name="city_id" id="city_id" class="form-control form-control-sm">
-                                        <option value="">استان را انتخاب کنید</option>
-                                        @foreach ($cities as $city)
-                                            <option value="{{ $city->id }}"
-                                                @if (old('city_id') == $city->id) selected @endif> {{ $city->name }}
-                                            </option>
-                                        @endforeach
-
-
-                                    </select>
-                                    @error('')
-                                        <span class="alert_required bg-danger text-white p-1 rounded" role="alert">
-                                            <strong>
-                                                {{ $message }}
-                                            </strong>
-                                        </span>
-                                    @enderror
-                                </div>
-
-                            </section>
-
+                           
                             <section class="col-12 col-md-6 mb-3">
                                 <div class="form-group">
                                     <label for=""> کلمه عبور </label>
@@ -188,6 +189,34 @@
                                         </option>
                                     </select>
                                 </div>
+                                @error('activation')
+                                    <span class="alert-danger text-white bg-danger rounded" role="alert">
+                                        <strong>
+                                            {{ $message }}
+                                        </strong>
+                                    </span>
+                                @enderror
+                            </section>
+
+                            <section class="col-12 col-md-6">
+                                <div class="form-group">
+                                    <label for=""> نقش کاربر </label>
+                                    <select class="form-control  form-control-sm" name="role_id" id="role_id">
+                                        <option value="">نقش کاربر را انتخاب کنید</option>
+                                        @foreach ($roles as $role)
+                                            <option
+                                                value="{{ $role->id }} @if (old('role_id') == $role->id) selected @endif">
+                                                {{ $role->description }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                @error('role')
+                                    <span class="alert-danger text-white bg-danger rounded" role="alert">
+                                        <strong>
+                                            {{ $message }}
+                                        </strong>
+                                    </span>
+                                @enderror
                             </section>
                             <section class="col-12 col-md-12">
                                 <button class="btn btn-primary btn-sm">ثبت</button>

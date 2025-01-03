@@ -5,8 +5,7 @@
 
 @section('content')
     <section class="container">
-
-
+        
 
         @foreach ($dataloggers as $datalogger)
             @php
@@ -59,36 +58,34 @@
 @section('script')
     <script>
         $(document).ready(function() {
-    $('.source').each(function() {
-        var level = $(this).data('level'); // دریافت مقدار level از ویژگی data-level
-        var height = 0; // مقدار پیش‌فرض ارتفاع
+            $('.source').each(function() {
+                var level = $(this).data('level'); // دریافت مقدار level از ویژگی data-level
+                var height = 0; // مقدار پیش‌فرض ارتفاع
 
-        // تبدیل سطح به درصد
-        switch (level) {
-            case 'level-0':
-                height = 0; // منبع خالی
-                break;
-            case 'level-1':
-                height = 25; // 25 درصد پر
-                break;
-            case 'level-2':
-                height = 50; // 50 درصد پر
-                break;
-            case 'level-3':
-                height = 75; // 75 درصد پر
-                break;
-            case 'level-4':
-                height = 100; // کاملاً پر
-                break;
-            default:
-                height = 0; // مقدار پیش‌فرض برای مقادیر نامعتبر
-        }
+                // تبدیل سطح به درصد
+                switch (level) {
+                    case 'level-0':
+                        height = 0; // منبع خالی
+                        break;
+                    case 'level-1':
+                        height = 25; // 25 درصد پر
+                        break;
+                    case 'level-2':
+                        height = 50; // 50 درصد پر
+                        break;
+                    case 'level-3':
+                        height = 75; // 75 درصد پر
+                        break;
+                    case 'level-4':
+                        height = 100; // کاملاً پر
+                        break;
+                    default:
+                        height = 0; // مقدار پیش‌فرض برای مقادیر نامعتبر
+                }
 
-        // تنظیم ارتفاع سطح آب
-        $(this).find('.source-level').css('height', height + '%');
-    });
-});
+                // تنظیم ارتفاع سطح آب
+                $(this).find('.source-level').css('height', height + '%');
+            });
+        });
     </script>
-
-    
 @endsection

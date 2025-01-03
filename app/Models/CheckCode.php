@@ -16,4 +16,9 @@ class CheckCode extends Model
     {
         return $this->belongsToMany(Datalogger::class);
     }
+
+    public function industrialCity()
+    {
+        return $this->belongsTo(IndustrialCity::class);
+    }
 }

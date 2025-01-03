@@ -1,4 +1,4 @@
-@extends('admin.layouts.master')
+@extends('app.layouts.master')
 
 @section('head-tag')
     <title>ایجاد نقش </title>
@@ -8,7 +8,6 @@
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
             <li class="breadcrumb-item font-size-12"><a href="#"> خانه </a></li>
-            <li class="breadcrumb-item font-size-12"><a href="#"> کاربران </a></li>
             <li class="breadcrumb-item font-size-12"><a href="#"> نقش ها </a></li>
             <li class="breadcrumb-item font-size-12 active" aria-current="page"> ایجاد نقش </li>
         </ol>
@@ -29,14 +28,14 @@
 
                 <section class="d-flex justify-content-between align-items-center mt-4 mb-3 border-bottom pb-2">
 
-                    <a class="btn btn-info btn-sm" href="{{ route('admin.user.role.index') }}">بازگشت </a>
+                    <a class="btn btn-info btn-sm" href="{{ route('app.role.index') }}">بازگشت </a>
 
 
                 </section>
 
                 <section>
 
-                    <form action="{{ route('admin.user.role.store') }}" method="post">
+                    <form action="{{ route('app.role.store') }}" method="post">
 
                         @csrf
 
@@ -76,33 +75,6 @@
                                 <button class="btn btn-primary btn-sm">ثبت</button>
                             </section>
 
-                            <section class="col-12">
-                                <section class="row border-top mt-3 py-3">
-                                    @foreach ($permissions as $key => $permission)
-                                        <section class="col-md-3">
-                                            <div>
-                                                <input type="checkbox" class="form-check-input"
-                                                    value="{{ $permission->id }}" name="permission_id[]" id="check1"
-                                                    checked>
-                                                <label for="check1"
-                                                    class="form-check-label mr-3 mt-1">{{ $permission->name }}
-                                                </label>
-                                            </div>
-
-                                        </section>
-                                    @endforeach
-                                    <div class="mt-2">
-                                        @error('permission'.$key)
-                                            <span class="alert-danger text-white bg-danger rounded" role="alert">
-                                                <strong>
-                                                    {{ $message }}
-                                                </strong>
-                                            </span>
-                                        @enderror
-                                    </div>
-
-                                </section>
-                            </section>
 
                         </section>
 

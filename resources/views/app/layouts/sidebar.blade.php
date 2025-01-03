@@ -14,14 +14,14 @@
             <div class="avatar-info">
                 <div class="avatar-text">
                     <h5> {{ auth()->user()->fullName }} </h5>
-                   
+
                 </div>
                 {{-- <span class="fas fa-chevron-down"></span> --}}
             </div>
         </div>
         <div class="sidebar-menu">
             <ul class="sidebar-menu-link">
-                <li class="sidebar-menu-link-item"><a href="{{ route('app.index') }}" >
+                <li class="sidebar-menu-link-item"><a href="{{ route('app.index') }}">
                         <i class="fas fa-tachometer-alt"></i>
                         <span>داشبورد</span>
                     </a>
@@ -44,30 +44,49 @@
                         <span>صندوق دریافت</span>
                     </a>
                 </li>
-                <li class="sidebar-menu-link-item">
-                    <a href="{{ route('app.setting.index') }}">
-                        <span class="fas fa-cog"></span>
-                        <span>تنظیمات مودم </span>
-                    </a>
-                </li>
-                <li class="sidebar-menu-link-item">
-                    <a href="{{ route('app.check-code.index') }}">
-                        <span class="fas fa-cog"></span>
-                        <span> چک کد ها </span>
-                    </a>
-                </li>
-                <li class="sidebar-menu-link-item">
-                    <a href="{{ route('app.order-code.index') }}">
-                        <span class="fas fa-cog"></span>
-                        <span> کدهای کنترل </span>
-                    </a>
-                </li>
-                <li class="sidebar-menu-link-item">
-                    <a href="{{ route('app.user.index') }}" >
-                        <span class="fas fa-user"></span>
-                        <span>کاربران</span>
-                    </a>
-                </li>
+                @role('SuperAdmin')
+                    <li class="sidebar-menu-link-item">
+                        <a href="{{ route('app.setting.index') }}">
+                            <span class="fas fa-cog"></span>
+                            <span>تنظیمات مودم </span>
+                        </a>
+                    </li>
+                    <li class="sidebar-menu-link-item">
+                        <a href="{{ route('app.check-code.index') }}">
+                            <span class="fas fa-cog"></span>
+                            <span> چک کد ها </span>
+                        </a>
+                    </li>
+                    <li class="sidebar-menu-link-item">
+                        <a href="{{ route('app.order-code.index') }}">
+                            <span class="fas fa-cog"></span>
+                            <span> کدهای کنترل </span>
+                        </a>
+                    </li>
+                    <li class="sidebar-menu-link-item">
+                        <a href="{{ route('app.user.index') }}">
+                            <span class="fas fa-user"></span>
+                            <span>کاربران</span>
+                        </a>
+                    </li>
+
+
+                    <li class="sidebar-menu-link-item">
+                        <a href="{{ route('app.role.index') }}">
+                            <span class="fas fa-user"></span>
+                            <span>مدیریت نقش ها</span>
+                        </a>
+                    </li>
+
+
+                    <li class="sidebar-menu-link-item">
+                        <a href="{{ route('app.industrial.index') }}">
+                            <span class="fas fa-user"></span>
+                            <span>شهرک ها</span>
+                        </a>
+                    </li>
+                @endrole
+
 
             </ul>
         </div>

@@ -12,13 +12,16 @@ class GSMConnectionNotFoundException extends Exception
     public function __construct($message = "امکان اتصال به مودم فراهم نیست ، لطفا تنظیمات پورت را چک کنید", $code = 400)
     {
         parent::__construct($message, $code);
+        
     }
 
     public function render($request)
     {
-        return response()->view('errors.custome', [
+        
+    
+        return redirect()->route('app.setting.index')->with('modem_error', [
             'message' => $this->getMessage(),
             'code' => $this->getCode(),
-        ], $this->getCode());
+        ]);
     }
 }

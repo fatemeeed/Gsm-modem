@@ -1,4 +1,4 @@
-@extends('admin.layouts.master')
+@extends('app.layouts.master')
 
 @section('head-tag')
     <title>ویرایش نقش </title>
@@ -8,7 +8,6 @@
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
             <li class="breadcrumb-item font-size-12"><a href="#"> خانه </a></li>
-            <li class="breadcrumb-item font-size-12"><a href="#"> کاربران </a></li>
             <li class="breadcrumb-item font-size-12"><a href="#"> نقش ها </a></li>
             <li class="breadcrumb-item font-size-12 active" aria-current="page"> ویرایش نقش </li>
         </ol>
@@ -29,14 +28,14 @@
 
                 <section class="d-flex justify-content-between align-items-center mt-4 mb-3 border-bottom pb-2">
 
-                    <a class="btn btn-info btn-sm" href="{{ route('admin.user.role.index') }}">بازگشت </a>
+                    <a class="btn btn-info btn-sm" href="{{ route('app.role.index') }}">بازگشت </a>
 
 
                 </section>
 
                 <section>
 
-                    <form action="{{ route('admin.user.role.update', $role->id) }}" method="post">
+                    <form action="{{ route('app.role.update', $role->id) }}" method="post">
 
                         @csrf
                         @method('put')

@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\Message;
+use App\Models\CheckCode;
 use App\Models\OrderCode;
 use PhpParser\Node\Stmt\Switch_;
 use Illuminate\Database\Eloquent\Model;
@@ -17,35 +18,42 @@ class Datalogger extends Model
 
     protected $guarded = ['id'];
 
-    protected $casts = ['content' => array()];
+    // protected $casts = ['content' => array()];
 
-    public function city()
+
+
+    public function dataloggerable()
     {
-        return $this->belongsTo(City::class, 'city_id');
+        return $this->morphTo();
     }
 
 
     public function getDataLoggerTypeAttribute()
     {
-        switch ($this->type) {
-            case '0':
-                $resualt = 'پمپ';
+        switch ($this->dataloggerable_type) {
+            case 'App\Models\Well':
+                $type = 'چاه';
                 break;
-            case '1':
-                $resualt = 'چاه';
+            case 'App\Models\Pump':
+                $type = 'پمپ';
                 break;
-            case '2':
-                $resualt = 'منبع';
+            case 'App\Models\Source':
+                $type = 'منبع';
                 break;
+            default:
         }
-
-        return $resualt;
+        return $type;
     }
 
 
     public function checkCodes()
     {
         return $this->belongsToMany(CheckCode::class);
+    }
+
+    public function industrialCity()
+    {
+        return $this->belongsTo(IndustrialCity::class);
     }
 
     public function getDeviceSahpeAttribute()
@@ -72,14 +80,24 @@ class Datalogger extends Model
 
     public function lastRecieveMessage()
     {
-        return $this->messages()->where('type', '1')->latest('time','created_at')->first();
+        return $this->messages()->where('type', '1')->latest('time', 'created_at')->first();
+    }
+
+    public function powerCheckCode()
+    {
+        return $this->belongsTo(CheckCode::class, 'power');
     }
 
     public function dataloggerLastStatus()
     {
+        $lastMessage = $this->lastRecieveMessage();
+        $powerCheckCodeName = $this->powerCheckCode->name ?? null;
 
+        if ($lastMessage && $powerCheckCodeName) {
+            return $lastMessage->content[$powerCheckCodeName] ?? 'NoConnect';
+        }
 
-        return $this->lastRecieveMessage()->content[$this->powerCheckCode->name]  ?? 'NoConnect';
+        return 'NoConnect';
     }
 
     public function sourceVolumePercentage()
@@ -93,7 +111,7 @@ class Datalogger extends Model
         // } else {
         //     $persent = 0;
         // }
- //dd(  $this->lastRecieveMessage());
+        //dd(  $this->lastRecieveMessage());
         $currentHeight = $this->lastRecieveMessage()->content['Level'];
 
         // $baseHeight = $this->fount_height ?? '';
@@ -104,10 +122,7 @@ class Datalogger extends Model
     }
 
 
-    public function powerCheckCode()
-    {
-        return $this->belongsTo(CheckCode::class, 'power');
-    }
+
 
     public function order_codes()
     {
@@ -117,46 +132,46 @@ class Datalogger extends Model
 
     public function parseMessage($message)
     {
-        
+
         switch ($this->type) {
             case '1':
                 $delimiter = '/[\s]+/'; // فقط برای نوع 1
                 $unitRemovals = [];
                 break;
-        
+
             case '2':
                 $pattern = '/^(.+?)[\s\-:]+(.+)$/'; // برای نوع 2
                 $unitRemovals = ['bar', 'meter', '%', 'm3/s'];
                 break;
-        
+
             default:
                 $delimiter = '/[\s]+/'; // پیش‌فرض
                 $unitRemovals = [];
                 break;
         }
-        
+
         // تقسیم پیام به خطوط
         $lines = explode("\n", trim($message));
-        
+
         // آرایه برای ذخیره جفت‌های کلید-مقدار
         $messageArray = [];
-        
+
         foreach ($lines as $line) {
             $line = trim($line); // حذف فاصله‌های اضافی
-        
+
             if ($line === '') continue; // عبور از خطوط خالی
-        
+
             if ($this->type == 2) {
                 // استفاده از preg_match برای نوع 2
                 if (preg_match($pattern, $line, $matches)) {
                     $key = trim($matches[1]);
                     $value = trim($matches[2]);
-        
+
                     // حذف واحدهای اضافی از مقدار
                     foreach ($unitRemovals as $unit) {
                         $value = str_replace($unit, '', $value);
                     }
-        
+
                     $messageArray[$key] = $value;
                 }
             } else {
@@ -165,19 +180,17 @@ class Datalogger extends Model
                 if (count($strtoarray) >= 2) {
                     $key = trim($strtoarray[0]);
                     $value = trim($strtoarray[1]);
-        
+
                     // حذف واحدها (در صورت وجود)
                     foreach ($unitRemovals as $unit) {
                         $value = str_replace($unit, '', $value);
                     }
-        
+
                     $messageArray[$key] = $value;
                 }
             }
         }
-      
+
         return $messageArray;
-        
-           
     }
 }

@@ -79,6 +79,8 @@ body {
     width: 345px;
     height: 100%;
     position: fixed;
+    z-index: 99999;
+    overflow: hidden;
     top: 0;
     right: 0;
     bottom: 0;
@@ -104,8 +106,14 @@ body {
 }
 
 .sidebar-container {
-    width: 100%;
+    height: calc(100vh);
+    /* position: fixed; */
+    /* overflow-y: scroll; */
     height: 100%;
+    overflow: auto;
+    right: 0;
+    width: 100%;
+    
     border-radius: 10px;
     -webkit-border-radius: 10px;
     -moz-border-radius: 10px;
@@ -446,12 +454,11 @@ main {
     position: fixed;
     z-index: 9999;
     top: 3rem;
-    right: 0;
+    left: 0;
     width: 26rem;
     max-width: 80%;
     padding: 2rem;
 }
-
 
 @media screen and (max-width: 1200px) {
     .overview .overview-item {

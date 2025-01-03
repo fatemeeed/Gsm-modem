@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers\Panel;
 
+use App\Models\Role;
 use App\Models\OrderCode;
 use Illuminate\Http\Request;
+use App\Models\IndustrialCity;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\OrderCodeRequest;
 
@@ -23,6 +25,7 @@ class OrderCodeController extends Controller
      */
     public function create()
     {
+       
         return view('app.order-code.create');
     }
 

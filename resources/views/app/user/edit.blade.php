@@ -41,6 +41,41 @@
 
                         <section class="row">
 
+                            <section class="col-12 col-md-6">
+                                <div class="form-group">
+                                    <label for="tags">شهرک صنعتی </label>
+
+                                    <select class="form-control form-control-sm" name="industrial_id" >
+
+                                        <option value="">شهرک کاربر را انتخاب کنید</option>
+                                    @foreach ($industrials as $industrial)
+                                        <option value="{{ $industrial->id }}" >{{ $industrial->name }}</option>
+                                    @endforeach
+
+                                </select>
+                                </div>
+                                @error('industrial_id')
+                                    <span class="alert-danger rounded" role="alert">
+                                        <strong>
+                                            {{ $message }}
+                                        </strong>
+                                    </span>
+                                @enderror
+                            </section>
+                            <section class="col-12 col-md-6 mb-3">
+                                <div class="form-group">
+                                    <label for="">کد ملی </label>
+                                    <input class="form-control form-control-sm" name="national_code" id="national_code"
+                                        type="text" value="{{ old('national_code', $user->national_code) }}">
+                                </div>
+                                @error('national_code')
+                                    <span class="alert-danger text-white bg-danger rounded" role="alert">
+                                        <strong>
+                                            {{ $message }}
+                                        </strong>
+                                    </span>
+                                @enderror
+                            </section>
                             <section class="col-12 col-md-6 mb-3">
                                 <div class="form-group">
                                     <label for="">نام </label>
@@ -71,20 +106,7 @@
                                 @enderror
                             </section>
 
-                            <section class="col-12 col-md-6 mb-3">
-                                <div class="form-group">
-                                    <label for="">کد ملی </label>
-                                    <input class="form-control form-control-sm" name="national_code" id="national_code"
-                                        type="text" value="{{ old('national_code', $user->national_code) }}">
-                                </div>
-                                @error('national_code')
-                                    <span class="alert-danger text-white bg-danger rounded" role="alert">
-                                        <strong>
-                                            {{ $message }}
-                                        </strong>
-                                    </span>
-                                @enderror
-                            </section>
+                            
                             {{-- <section class="col-12 col-md-6">
                                 <div class="form-group">
                                     <label for="">ایمیل </label>
@@ -101,7 +123,7 @@
                             </section> --}}
                             
 
-                            {{-- <section class="col-12 col-md-6">
+                            <section class="col-12 col-md-6">
                                 <div class="form-group">
                                     <label for=""> نقش کاربر </label>
                                     <select class="form-control  form-control-sm" name="role_id" id="role_id">
@@ -113,7 +135,14 @@
                                         @endforeach
                                     </select>
                                 </div>
-                            </section> --}}
+                                @error('role_id')
+                                    <span class="alert-danger text-white bg-danger rounded" role="alert">
+                                        <strong>
+                                            {{ $message }}
+                                        </strong>
+                                    </span>
+                                @enderror
+                            </section>
 
                             {{-- <section class="col-12 col-md-6">
                                 <div class="form-group">

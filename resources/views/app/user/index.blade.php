@@ -47,10 +47,12 @@
                             <tr>
                                 <th>#</th>
                                 <th>نام کاربری </th>
-                               
+
                                 <th>نام کاربر </th>
                                 <th>نام خانودگی کاربر </th>
-                                
+                                <th> شهرک صنعتی </th>
+                                <th> نقش کاربر </th>
+
                                 <th> فعالسازی </th>
                                 {{-- <th>وضعیت  </th> --}}
                                 <th class="max-width-16-rem text-center"><i class="fa fa-cogs"></i> تنظیمات</th>
@@ -61,14 +63,31 @@
                                 <tr>
                                     <th>{{ $key + 1 }}</th>
                                     <th>{{ $user->national_code }}</th>
-                                    
+
                                     <th>{{ $user->first_name }}</th>
                                     <th>{{ $user->last_name }}</th>
-                                   
+                                    <th>
+                                        @forelse ($user->industrials as $key => $industrial)
+                                            {{ $industrial->name }}
+
+                                        @empty
+
+                                            <span class="text-danger">شهرک کاربر یافت نشد</span>
+                                        @endforelse
+                                    </th>
+                                    
+                                    <th>
+                                        @forelse ($user->roles as $role)
+                                            {{ $role->description }}
+
+                                        @empty
+
+                                            <span class="text-danger">نقشی یافت نشد</span>
+                                        @endforelse
+                                    </th>
                                     <th>
                                         <label>
-                                            <input id="{{ $user->id }}"
-                                                onchange="changeActivation({{ $user->id }})"
+                                            <input id="{{ $user->id }}" onchange="changeActivation({{ $user->id }})"
                                                 data-url="{{ route('app.user.activation', $user->id) }}" type="checkbox"
                                                 @if ($user->activation === 1) checked @endif>
                                         </label>
@@ -80,12 +99,51 @@
                                             @endif>
                                         </label>
                                     </th> --}}
-                                    <th class="width-22-rem text-left">
+                                    <th class="width-22-rem text-center">
+
+                                        <div class="dropdown ">
+                                            <a href="" class="btn btn-success btn-sm btn-block dropdown-toggle"
+                                                role="button" id="dropdownMenuLink" data-toggle="dropdown"
+                                                aria-expanded="false">
+
+                                                <i class="fa fa-tools"></i> عملیات
+
+                                            </a>
+                                            <div class="dropdown-menu  text-right" aria-labelledby="dropdownMenuLink">
+                                                <a class="dropdown-item" href="{{ route('app.user.role', $user->id) }}"><i
+                                                        class="fa fa-user"></i> نقش </a>
+                                                <a class="dropdown-item"
+                                                    href="{{ route('app.user.industrial-form', $user->id) }}"><i
+                                                        class="fa fa-user"></i> نمایندگی </a>
+
+                                                <a class="dropdown-item" href="{{ route('app.user.edit', $user->id) }}"><i
+                                                        class="fa fa-edit"></i> ویرایش</a>
+                                                <a class="dropdown-item"
+                                                    href="{{ route('app.user.reset-password', $user->id) }}"
+                                                    class="btn btn-warning btn-sm"><i class="fa fa-edit"></i> ریست پسورد
+                                                </a>
+
+                                                <form action="{{ route('app.user.destroy', $user->id) }}" method="POST"
+                                                    class="text-right">
+
+                                                    @csrf
+                                                    @method('delete')
+
+                                                    <button type="submit" class="dropdown-item "><i
+                                                            class="fa fa-window-close"></i> حذف</button>
+
+                                                </form>
+
+                                            </div>
+
+
+                                        </div>
                                         {{-- <a href="" class="btn btn-warning btn-sm"><i class="fa fa-edit"></i> نقش </a> --}}
-                                        <a href="{{ route('app.user.reset-password', $user->id) }}" class="btn btn-warning btn-sm"><i class="fa fa-edit"></i> ریست پسورد </a>
-                                        <a href="{{ route('app.user.edit', $user->id) }}"
-                                            class="btn btn-primary btn-sm"><i class="fa fa-edit"></i> ویرایش</a>
-                                            {{-- <form action="{{ route('admin.user.destroy', $user->id) }}" class="d-inline" method="POST">
+                                        {{-- <a href="{{ route('app.user.reset-password', $user->id) }}"
+                                            class="btn btn-warning btn-sm"><i class="fa fa-edit"></i> ریست پسورد </a>
+                                        <a href="{{ route('app.user.edit', $user->id) }}" class="btn btn-primary btn-sm"><i
+                                                class="fa fa-edit"></i> ویرایش</a> --}}
+                                        {{-- <form action="{{ route('admin.user.destroy', $user->id) }}" class="d-inline" method="POST">
 
                                                 @csrf
                                                 {{ method_field('delete') }}

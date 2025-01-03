@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers\Panel;
 
+use App\Models\Role;
 use App\Models\User;
 use Illuminate\Http\Request;
+use App\Models\IndustrialCity;
 use App\Http\Requests\UserRequest;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
@@ -16,7 +18,13 @@ class UserController extends Controller
      */
     public function index()
     {
-        $users = User::orderBy('created_at', 'desc')->simplepaginate(15);
+        if (auth()->user()->hasRole('SuperAdmin')) {
+            $users = User::orderBy('created_at', 'desc')->simplepaginate(15);
+        } else {
+            $users = auth()->user()->whereHas('roles', function ($query) {
+                return $query->where('name', '!=', 'SuperAdmin');
+            })->orderBy('created_at', 'desc')->simplepaginate(15);;
+        }
         return view('app.user.index',compact('users'));
     }
 
@@ -25,7 +33,16 @@ class UserController extends Controller
      */
     public function create()
     {
-        return view('app.user.create');
+       
+
+        if (auth()->user()->hasRole('SuperAdmin')) {
+            $roles = Role::all();
+            $industrials=IndustrialCity::all();
+        } else {
+            $roles = Role::where('name', '!=', 'SuperAdmin')->get();
+            $industrials=IndustrialCity::whereHas('users')->get();
+        }
+        return view('app.user.create',compact('industrials','roles'));
     }
 
     /**
@@ -41,8 +58,8 @@ class UserController extends Controller
         $inputs['name'] = $request->first_name . ' ' . $request->last_name;
 
         $user = User::create($inputs);
-
-        
+        $user->roles()->sync($request->role_id);
+        $user->industrials()->sync($request->industrial_id);
         return redirect()->route('app.user.index')->with('swal-success', ' کاربر جدید با موفقیت ثبت شد');
     }
 
@@ -59,7 +76,14 @@ class UserController extends Controller
      */
     public function edit(User $user)
     {
-        return view('app.user.edit',compact('user'));
+        if (auth()->user()->hasRole('SuperAdmin')) {
+            $roles = Role::all();
+            $industrials=IndustrialCity::all();
+        } else {
+            $roles = Role::where('name', '!=', 'SuperAdmin')->get();
+            $industrials=IndustrialCity::whereHas('users')->get();
+        }
+        return view('app.user.edit',compact('user','industrials','roles'));
     }
 
     /**
@@ -70,6 +94,8 @@ class UserController extends Controller
         $inputs = $request->all();
         
         $user->update($inputs);
+        $user->roles()->sync($request->role_id);
+        $user->industrials()->sync($request->industrial_id);
         return redirect()->route('app.user.index')->with('swal-success', ' ویرایش با موفقیت ثبت شد');
     }
 

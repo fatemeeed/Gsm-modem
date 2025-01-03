@@ -23,6 +23,10 @@ class GSMConnection
     {
         $setting = Setting::first();
 
+        if(!$setting){
+            throw new GSMConnectionNotFoundException('تنظیمات پورت یا باند مشخص نشده است.');
+        }
+
         $this->port = $setting->port;
         $this->baud = $setting->baud_rate;
         $this->gsmConnection();

@@ -13,9 +13,11 @@ class City extends Model
     protected $table='cities';
     protected $guarded=['id'];
 
+     
+
 
     public function province()
     {
-        $this->belongsTo(Province::class);
+        $this->belongsTo(Province::class,'province_id','id');
     }
 }

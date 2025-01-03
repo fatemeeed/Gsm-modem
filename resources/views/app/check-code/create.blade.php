@@ -41,8 +41,8 @@
                         @csrf
 
                         <section class="row">
-
-                            <section class="col-12 col-md-5">
+                           
+                            <section class="col-12 col-md-6">
                                 <div class="form-group">
                                     <label for=""> نام چک کد </label>
                                     <input class="form-control form-control-sm" type="text" name="name" id="name"
@@ -57,7 +57,7 @@
                                 @enderror
                             </section>
 
-                            <section class="col-12 col-md-5">
+                            <section class="col-12 col-md-6 mt-2">
                                 <div class="form-group">
                                     <label for="">توضیحات </label>
                                     <input class="form-control form-control-sm" type="text" name="description"
@@ -72,7 +72,7 @@
                                 @enderror
                             </section>
 
-                            <section class="col-12 col-md-2 mt-md-4">
+                            <section class="col-12 mt-2 ">
                                 <button class="btn btn-primary btn-sm">ثبت</button>
                             </section>
 

@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers\Panel;
 
+use App\Models\Role;
 use App\Models\CheckCode;
 use Illuminate\Http\Request;
+use App\Models\IndustrialCity;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CheckCodeRequest;
 
