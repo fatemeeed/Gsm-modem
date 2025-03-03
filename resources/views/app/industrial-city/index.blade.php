@@ -29,11 +29,12 @@
 
                 <section class="d-flex justify-content-between align-items-center mt-4 mb-3 border-bottom pb-2">
 
-                    <a class="btn btn-info btn-sm text-light" href="{{ route('app.industrial.create') }}">ایجاد شهرک جدید</a>
+                    <a class="btn btn-info btn-sm text-light" href="{{ route('app.industrial.create') }}">ایجاد شهرک
+                        جدید</a>
 
                     <div class="max-width-16-rem">
 
-                        <input type="text" placeholder="جستجو" class="form-control form-control-sm form-text">
+                        {{-- <input type="text" placeholder="جستجو" id="datatable" class="form-control form-control-sm form-text"> --}}
 
 
                     </div>
@@ -42,13 +43,13 @@
 
                 <section class="table-responsive">
 
-                    <table class="table table-striped font-size-14 table-bordered table-hover">
+                    <table class="table table-striped font-size-14 table-bordered table-hover" id="datatable">
                         <thead>
                             <tr>
                                 <th>#</th>
                                 <th>نام شهرک </th>
                                 <th> شهرستان</th>
-                                <th>وضعیت  </th>
+                                <th>وضعیت </th>
                                 <th class="max-width-16-rem text-center"><i class="fa fa-cogs"></i> تنظیمات</th>
                             </tr>
                         </thead>
@@ -58,20 +59,20 @@
                                     <th>{{ $key + 1 }}</th>
                                     <th>{{ $industrial->name }}</th>
                                     <th>{{ $industrial->city->name }}</th>
-                                   
+
                                     <th>
                                         <label>
-                                            <input id="{{ $industrial->id }}" onchange="changeStatus({{ $industrial->id }})" data-url="{{ route('app.industrial.status', $industrial->id) }}" type="checkbox" @if ($industrial->status === 1)
-                                            checked
-                                            @endif>
+                                            <input id="{{ $industrial->id }}" onchange="changeStatus({{ $industrial->id }})"
+                                                data-url="{{ route('app.industrial.status', $industrial->id) }}"
+                                                type="checkbox" @if ($industrial->status === 1) checked @endif>
                                         </label>
                                     </th>
                                     <th class="width-22-rem text-left">
-       
-                                       
+
+
                                         <a href="{{ route('app.industrial.edit', $industrial->id) }}"
                                             class="btn btn-primary btn-sm"><i class="fa fa-edit"></i> ویرایش</a>
-                                            {{-- <form action="{{ route('admin.user.destroy', $user->id) }}" class="d-inline" method="POST">
+                                        {{-- <form action="{{ route('admin.user.destroy', $user->id) }}" class="d-inline" method="POST">
 
                                                 @csrf
                                                 {{ method_field('delete') }}
@@ -97,69 +98,80 @@
     </section>
 @endsection
 @section('script')
+    <script>
+        $(document).ready(function() {
+
+
+            new DataTable('#datatable', {
+                fixedColumns: true,
+                paging: false,
+                scrollCollapse: true,
+                scrollX: true,
+                scrollY: 400
+            });
+        });
+    </script>
     <script type="text/javascript">
-        function changeStatus(id){
+        function changeStatus(id) {
             var element = $("#" + id)
             var url = element.attr('data-url')
             var elementValue = !element.prop('checked');
 
             $.ajax({
-                url : url,
-                type : "GET",
-                success : function(response){
-                    if(response.status){
-                        if(response.checked){
+                url: url,
+                type: "GET",
+                success: function(response) {
+                    if (response.status) {
+                        if (response.checked) {
                             element.prop('checked', true);
-                            successToast('کاربر فعال شد')
-                        }
-                        else{
+                            successToast('شهرک صنعتی فعال شد')
+                        } else {
                             element.prop('checked', false);
-                            successToast('کاربر غیرفعال شد')
+                            successToast('شهرک صنعتی غیرفعال شد')
                         }
-                    }
-                    else{
+                    } else {
                         element.prop('checked', elementValue);
                         errorToast('هنگام ویرایش مشکلی بوجود امده است')
                     }
                 },
-                error : function(){
+                error: function() {
                     element.prop('checked', elementValue);
                     errorToast('ارتباط برقرار نشد')
                 }
             });
 
-            function successToast(message){
+            function successToast(message) {
 
                 var successToastTag = '<section class="toast" data-delay="5000">\n' +
                     '<section class="toast-body py-3 d-flex bg-success text-white">\n' +
-                        '<strong class="ml-auto">' + message + '</strong>\n' +
-                        '<button type="button" class="mr-2 close" data-dismiss="toast" aria-label="Close">\n' +
-                            '<span aria-hidden="true">&times;</span>\n' +
-                            '</button>\n' +
-                            '</section>\n' +
-                            '</section>';
+                    '<strong class="ml-auto">' + message + '</strong>\n' +
+                    '<button type="button" class="mr-2 close" data-dismiss="toast" aria-label="Close">\n' +
+                    '<span aria-hidden="true">&times;</span>\n' +
+                    '</button>\n' +
+                    '</section>\n' +
+                    '</section>';
 
-                            $('.toast-wrapper').append(successToastTag);
-                            $('.toast').toast('show').delay(5500).queue(function() {
-                                $(this).remove();
-                            })
+                $('.toast-wrapper').append(successToastTag);
+                $('.toast').toast('show').delay(5500).queue(function() {
+                    $(this).remove();
+                })
             }
 
-            function errorToast(message){
+            function errorToast(message) {
 
                 var errorToastTag = '<section class="toast" data-delay="5000">\n' +
                     '<section class="toast-body py-3 d-flex bg-danger text-white">\n' +
-                        '<strong class="ml-auto">' + message + '</strong>\n' +
-                        '<button type="button" class="mr-2 close" data-dismiss="toast" aria-label="Close">\n' +
-                            '<span aria-hidden="true">&times;</span>\n' +
-                            '</button>\n' +
-                            '</section>\n' +
-                            '</section>';
+                    '<strong class="ml-auto">' + message + '</strong>\n' +
+                    '<button type="button" class="mr-2 close" data-dismiss="toast" aria-label="Close">\n' +
+                    '<span aria-hidden="true">&times;</span>\n' +
+                    '</button>\n' +
+                    '</section>\n' +
+                    '</section>';
 
-                            $('.toast-wrapper').append(errorToastTag);
-                            $('.toast').toast('show').delay(5500).queue(function() {
-                                $(this).remove();
-                            })
+                $('.toast-wrapper').append(errorToastTag);
+                $('.toast').toast('show').delay(5500).queue(function() {
+                    $(this).remove();
+                })
             }
         }
     </script>

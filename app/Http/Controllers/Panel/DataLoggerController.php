@@ -34,19 +34,22 @@ class DataLoggerController extends Controller
             'wells'
         ])
             ->select('id', 'mobile_number', 'name')
-            ->get()
-            ->map(function ($source) {
-                $source->dataloggerId = $source->datalogger->id;
+            ->get();
+
+        if ($sources->isNotEmpty()) {
+            $sources = $sources->map(function ($source) {
+                $source->dataloggerId = $source->datalogger->id ?? null;
                 $source->type = 'منبع';
                 $source->industrial_city_name = $source->datalogger->industrialCity->name ?? null;
                 $source->power = $source->datalogger->power ?? null;
-                $source->checkCodes = $source->datalogger->checkCodes;
-                $source->powerCheckCode = $source->datalogger->powerCheckCode;
-                $source->dataloggerLastStatus = $source->datalogger->dataloggerLastStatus();
+                $source->checkCodes = $source->datalogger->checkCodes ?? null;
+                $source->powerCheckCode = $source->datalogger->powerCheckCode ?? null;
+                $source->dataloggerLastStatus = $source->datalogger?->dataloggerLastStatus() ?? null;
                 $source->wells = $source->wells ?? null;
                 $source->pumps = $source->pumps ?? null;
                 return $source;
             });
+        }
 
         $wells = Well::with([
             'datalogger.industrialCity',
@@ -54,23 +57,25 @@ class DataLoggerController extends Controller
             'datalogger.powerCheckCode',
             'datalogger.messages',
             'sources',
-            
         ])
             ->select('id', 'mobile_number', 'name')
-            ->get()
-            ->map(function ($well) {
-                $well->dataloggerId = $well->datalogger->id;
+            ->get();
+
+        if ($wells->isNotEmpty()) {
+            $wells = $wells->map(function ($well) {
+                $well->dataloggerId = $well->datalogger->id ?? null;
                 $well->type = 'چاه';
                 $well->industrial_city_name = $well->datalogger->industrialCity->name ?? null;
                 $well->power = $well->datalogger->power ?? null;
-                $well->checkCodes = $well->datalogger->checkCodes;
+                $well->checkCodes = $well->datalogger->checkCodes ?? null;
                 $well->powerCheckCode = $well->datalogger->powerCheckCode ?? null;
-                $well->dataloggerLastStatus = $well->datalogger->dataloggerLastStatus() ?? null;
+                $well->dataloggerLastStatus = $well->datalogger?->dataloggerLastStatus() ?? null;
                 $well->pumps = null;
                 $well->sources = $well->sources ?? null;
 
                 return $well;
             });
+        }
 
         $pumps = Pump::with([
             'datalogger.industrialCity',
@@ -78,28 +83,27 @@ class DataLoggerController extends Controller
             'datalogger.powerCheckCode',
             'datalogger.messages',
             'sources',
-
         ])
             ->select('id', 'mobile_number', 'name')
-            ->get()
-            ->map(function ($pump) {
-                $pump->dataloggerId = $pump->datalogger->id;
+            ->get();
+
+        if ($pumps->isNotEmpty()) {
+            $pumps = $pumps->map(function ($pump) {
+                $pump->dataloggerId = $pump->datalogger->id ?? null;
                 $pump->type = 'پمپ';
                 $pump->industrial_city_name = $pump->datalogger->industrialCity->name ?? null;
                 $pump->power = $pump->datalogger->power ?? null;
-                $pump->checkCodes = $pump->datalogger->checkCodes->map(function ($checkCode) {
-                    return [
-                        'code' => $checkCode->code,
-                        'description' => $checkCode->description,
-                    ];
-                });
-                $pump->powerCheckCode = $pump->datalogger->powerCheckCode;
-                $pump->dataloggerLastStatus = $pump->datalogger->dataloggerLastStatus();
-                $pump->well = null;
-                $pump->sources = $well->sources ?? null;
+                $pump->checkCodes = $pump->datalogger->checkCodes ?? null;
+                $pump->powerCheckCode = $pump->datalogger->powerCheckCode ?? null;
+                $pump->dataloggerLastStatus = $pump->datalogger?->dataloggerLastStatus() ?? null;
+                $pump->wells = null;
+                $pump->sources = $pump->sources ?? null;
 
                 return $pump;
             });
+        }
+
+
 
         $equipments = $sources->merge($wells)->merge($pumps);
 
@@ -133,54 +137,68 @@ class DataLoggerController extends Controller
         $inputs = $request->all();
         $entity = null;
 
-        switch ($request['entity_type']) {
-            case 'source':
-                $entity = Source::create([
+        DB::transaction(function () use ($inputs, $entity, $request) {
 
+
+
+
+            //$result=$gsmConnection->send($mobile_number, $request->content);
+
+            try {
+                switch ($request['entity_type']) {
+                    case 'source':
+                        $entity = Source::create([
+
+                            'industrial_city_id' => $inputs['industrial_city_id'],
+                            'name' => $inputs['name'],
+                            'sensor_type' => $inputs['sensor_type'],
+                            'fount_height' => $inputs['fount_height'],
+                            'fount_bulk' => $inputs['fount_bulk'],
+                            'mobile_number' => $inputs['mobile_number'],
+                            'datalogger_model' => $inputs['datalogger_model'],
+                            'status'  => $inputs['status']
+
+
+                        ]);
+                        break;
+                    case 'well':
+                        $entity = Well::create([
+
+                            'industrial_city_id' => $inputs['industrial_city_id'],
+                            'name' => $inputs['name'],
+                            'yearly_bulk' => $inputs['yearly_bulk'],
+                            'flow_rate' => $inputs['flow_rate'],
+                            'mobile_number' => $inputs['mobile_number'],
+                            'datalogger_model' => $inputs['datalogger_model'],
+                            'status'  => $inputs['status']
+
+                        ]);
+                        break;
+                    case 'pump':
+                        $entity = Pump::create([
+
+                            'industrial_city_id' => $inputs['industrial_city_id'],
+                            'name' => $inputs['name'],
+                            'mobile_number' => $inputs['mobile_number'],
+                            'datalogger_model' => $inputs['datalogger_model'],
+                            'status'  => $inputs['status']
+
+                        ]);
+                        break;
+                }
+
+                $entity->datalogger()->create([
                     'industrial_city_id' => $inputs['industrial_city_id'],
-                    'name' => $inputs['name'],
-                    'sensor_type' => $inputs['sensor_type'],
-                    'fount_height' => $inputs['fount_height'],
-                    'fount_bulk' => $inputs['fount_bulk'],
                     'mobile_number' => $inputs['mobile_number'],
-                    'datalogger_model' => $inputs['datalogger_model'],
                     'status'  => $inputs['status']
 
-
                 ]);
-                break;
-            case 'well':
-                $entity = Well::create([
+            } catch (\Exception $e) {
+                return response()->json(['error' => $e->getMessage()], 500);
+            }
+        });
 
-                    'industrial_city_id' => $inputs['industrial_city_id'],
-                    'name' => $inputs['name'],
-                    'yearly_bulk' => $inputs['yearly_bulk'],
-                    'flow_rate' => $inputs['flow_rate'],
-                    'mobile_number' => $inputs['mobile_number'],
-                    'datalogger_model' => $inputs['datalogger_model'],
-                    'status'  => $inputs['status']
 
-                ]);
-                break;
-            case 'pump':
-                $entity = Pump::create([
-
-                    'industrial_city_id' => $inputs['industrial_city_id'],
-                    'name' => $inputs['name'],
-                    'mobile_number' => $inputs['mobile_number'],
-                    'datalogger_model' => $inputs['datalogger_model'],
-                    'status'  => $inputs['status']
-
-                ]);
-                break;
-        }
-
-        $entity->datalogger()->create([
-            'industrial_city_id' => $inputs['industrial_city_id'],
-            'mobile_number' => $inputs['mobile_number'],
-            'status'  => $inputs['status']
-
-        ]);
 
         return redirect()->route('app.data-logger.index')->with('swal-success', 'تجهیز جدید با موفقیت ثبت شد');
     }
@@ -200,9 +218,13 @@ class DataLoggerController extends Controller
     {
 
         $checkCodes = CheckCode::all();
-        $pumps = Pump::all();
-        $wells = Well::all();
 
+
+        $pumps = Pump::where('industrial_city_id',$device->industrial_city_id)->get();
+        $wells = Well::where('industrial_city_id',$device->industrial_city_id)->get();
+
+
+        
         if (auth()->user()->hasRole('SuperAdmin')) {
 
             $industrials = IndustrialCity::all();
@@ -219,6 +241,7 @@ class DataLoggerController extends Controller
     public function update(DataLoggerRequest $request, Datalogger $device)
     {
 
+      
 
         $inputs = $request->all();
 
@@ -232,18 +255,15 @@ class DataLoggerController extends Controller
                 'power' => $request->power,
             ]);
 
+        
             // به‌روزرسانی مقادیر خاص
             switch (class_basename($device->dataloggerable_type)) {
                 case 'Pump':
                     $device->dataloggerable->update([
                         'industrial_city_id' => $inputs['industrial_city_id'],
                         'name' => $inputs['name'],
-                        'sensor_type' => $inputs['sensor_type'],
-                        'fount_height' => $inputs['fount_height'],
-                        'fount_bulk' => $inputs['fount_bulk'],
                         'mobile_number' => $inputs['mobile_number'],
-                        'datalogger_model' => $inputs['datalogger_model'],
-                        'status'  => $inputs['status']
+                        'datalogger_model' => $inputs['datalogger_model']
                     ]);
                     break;
 
@@ -295,6 +315,7 @@ class DataLoggerController extends Controller
     public function destroy(Datalogger $device)
     {
 
+        $device->dataloggerable()->delete();
         $device->delete();
         return redirect()->route('app.data-logger.index')->with('swal-success', 'تجهیز  با موفقیت حذف شد');
     }

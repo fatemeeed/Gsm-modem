@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('industrial_cities', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->foreignId('city_id');
+            $table->foreignId('city_id')->constrained('cities')->onDelete('cascade')->onUpdate('cascade');
             $table->tinyInteger('status')->default('1');
             $table->timestamps();
             $table->softDeletes();

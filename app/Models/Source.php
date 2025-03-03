@@ -6,10 +6,12 @@ use App\Models\Pump;
 use App\Models\Well;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\Scopes\ForUserIndustrialCityScope;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Source extends Model
 {
-    use HasFactory;
+    use HasFactory,SoftDeletes;
 
     protected $guarded = ['id'];
 
@@ -33,4 +35,12 @@ class Source extends Model
         return $this->belongsToMany(Pump::class, 'source_pump', 'source_id', 'pump_id');
     }
 
+    protected static function booted()
+    { 
+        static::addGlobalScope(new ForUserIndustrialCityScope);
+        
+    }
+
+
+    
 }

@@ -51,17 +51,21 @@ class IndustrialCityController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit(IndustrialCity  $industrial)
     {
-        //
+        $provinces=Province::all();
+        return view('app.industrial-city.edit',compact('industrial','provinces'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(IndustrialRequest $request, IndustrialCity  $industrial)
     {
-        //
+        $inputs=$request->all();
+        $industrial->update($inputs);
+        return redirect()->route('app.industrial.index')->with('swal-success', ' شهرک صنعتی  با موفقیت ویرایش شد');
+
     }
 
     /**
@@ -70,6 +74,22 @@ class IndustrialCityController extends Controller
     public function destroy(string $id)
     {
         //
+    }
+
+
+    public function status(IndustrialCity $industrial )
+    {
+        $industrial->status = $industrial->status == 0 ? 1 : 0;
+        $result = $industrial->save();
+        if ($result) {
+            if ($industrial->status == 0) {
+                return response()->json(['status' => true, 'checked' => false]);
+            } else {
+                return response()->json(['status' => true, 'checked' => true]);
+            }
+        } else {
+            return response()->json(['status' => false]);
+        }
     }
 
     public function fetchCity(Request $request)

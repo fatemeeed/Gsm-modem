@@ -33,11 +33,9 @@ class LoginController extends Controller
 
             return  redirect('panel');
 
-
-
         }
 
-        return redirect()->route('auth.login')->with('alert-section-error', 'نام کاربری یا رمز عبور شما اشتباه است!');
+        return redirect()->route('auth.login')->withErrors('نام کاربری یا رمز عبور شما اشتباه است!');
     }
 
     public function logOut()

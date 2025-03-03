@@ -34,7 +34,7 @@
                              کنترل جدید</a>
 
                          <div class="max-width-16-rem">
-                             <input type="text" class="form-control form-control-sm form-text" placeholder="جستجو">
+                             {{-- <input type="text" class="form-control form-control-sm form-text" placeholder="جستجو"> --}}
                          </div>
                      </section>
 

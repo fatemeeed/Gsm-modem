@@ -41,7 +41,7 @@
                                     <th>نام </th>
                                     <th>بازه زمانی (دقیقه) </th>
                                     <th> آخرین ارسال کد کنترلر</th>
-
+                                    <th>وضعیت</th>
 
                                     {{-- <th class="max-width-16-rem text-center"><i class="fa fa-cogs"></i> تنظیمات</th> --}}
                                 </tr>
@@ -50,15 +50,22 @@
 
                                 @foreach ($device->order_codes as $orderCode)
 
-                               
+
+
                                     <tr>
                                         <td>{{ $loop->iteration }}</td>
                                         <td>{{ $orderCode->name }}</td>
                                         <td>{{ $orderCode->readableTime }}</td>
 
-                                        <td>{{ $orderCode->last_send_at ? jalaliDate($orderCode->last_send_at, 'Y/m/d H:i:s') : 'ارسال نشده' }}</td>
+                                        <td>{{ $orderCode->pivot->last_sent_at  ? jalaliDate($orderCode->pivot->last_sent_at , 'Y/m/d H:i:s') : 'ارسال نشده' }}</td>
 
-
+                                        <th>
+                                            <label>
+                                                <input id="{{ $orderCode->pivot->id }}" onchange="changeStatus({{ $orderCode->pivot->id }})"
+                                                    data-url="{{ route('app.data-logger.order-code.status', $orderCode->pivot->datalogger_id) }}" type="checkbox"
+                                                    @if ($orderCode->pivot->status === 1) checked @endif>
+                                            </label>
+                                        </th>
                                         {{-- <td class="width-13-rem text-right font-size-2 ">
 
                                             <a href="{{ route('app.data-logger.order-code.edit',[ 'device' => $device->id ] ) }}"
@@ -103,10 +110,10 @@
                     if (response.status) {
                         if (response.checked) {
                             element.prop('checked', true);
-                            successToast('تجهیز  فعال شد')
+                            successToast('کد کنترلر  فعال شد')
                         } else {
                             element.prop('checked', false);
-                            successToast(' تجهیز غیرفعال شد')
+                            successToast(' کدکنترلر غیرفعال شد')
                         }
                     } else {
                         element.prop('checked', elementValue);

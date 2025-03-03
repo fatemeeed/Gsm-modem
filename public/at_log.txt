@@ -1,0 +1,5 @@
+Command: AT+CMGF?
+Response: 
+> 
+Command: AT+CMGF=1
+Response: 

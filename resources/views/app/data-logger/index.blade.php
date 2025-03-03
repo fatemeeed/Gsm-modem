@@ -24,15 +24,15 @@
                     </section>
 
                     <section class="d-flex justify-content-between align-items-center mt-4 mb-3 border-bottom pb-2">
-                        <a href="{{ route('app.data-logger.create') }}" class="btn btn-info btn-sm text-light">ایجاد
+                        <a href="{{ route('app.data-logger.create') }}" class="btn btn-info btn-sm text-light">
                             افزودن تجهیز جدید</a>
                         <div class="max-width-16-rem">
-                            <input type="text" class="form-control form-control-sm form-text" placeholder="جستجو">
+                            {{-- <input type="text" class="form-control form-control-sm form-text" placeholder="جستجو"> --}}
                         </div>
                     </section>
 
                     <section class="table-responsive">
-                        <table class="table table-striped font-size-14 table-bordered table-hover text-center">
+                        <table class="table table-striped table-bordered table-hover text-center" id="datatable">
                             <thead>
                                 <tr>
                                     <th>#</th>
@@ -68,10 +68,15 @@
                                             <label class="switch">
 
                                                 @if ($equipment->power && $equipment->dataloggerLastStatus)
+
+                                                
+                                               
                                                     <input type="checkbox" id="{{ $equipment->id }}"
                                                         onchange="changeStatus({{ $equipment->id }})"
                                                         data-url="{{ route('app.data-logger.status', $equipment->id) }}"
-                                                        @if ($equipment->dataloggerLastStatus === 'ON') checked @endif>
+
+                                                       
+                                                        @if (strtolower($equipment->dataloggerLastStatus) == strtolower('ON')) checked @endif>
 
 
 
@@ -83,11 +88,9 @@
                                             </label>
                                         </td>
                                         <td>
-                                            @forelse ($equipment->checkCodes as $checkCode)
+                                            @forelse ($equipment->checkCodes ?? [] as $checkCode)
                                                 {{ $checkCode->name }}
-
                                             @empty
-
                                                 <span class="text-danger">چک کدی ثبت نشده </span>
                                             @endforelse
                                         </td>
@@ -120,7 +123,7 @@
 
                                                 <span class="text-danger"> ثبت نشده </span>
                                             @endforelse
-                                            
+
                                         </td>
 
 
@@ -137,16 +140,18 @@
 
                                                     {{-- <a class="dropdown-item" href="{{ route('app.data-logger.check-code', $equipment->id) }}"><i class="fa fa-key"></i> چک کد
                                                     </a> --}}
-                                                    <a href="{{ route('app.data-logger.edit', $equipment->dataloggerId) }}"
+
+                                                  
+                                                    <a href="{{ route('app.data-logger.edit',['device' => $equipment->dataloggerId]) }}"
                                                         class="dropdown-item"><i class="fa fa-edit"></i>
                                                         تنظیمات</a>
 
-                                                    <a href="{{ route('app.data-logger.order-code', $equipment->dataloggerId) }}"
+                                                    <a href="{{ route('app.data-logger.order-code', ['device' => $equipment->dataloggerId]) }}"
                                                         class="dropdown-item"><i class="fa fa-edit"></i>
                                                         تعریف کد کنترل</a>
 
                                                     <form
-                                                        action="{{ route('app.data-logger.destroy', $equipment->dataloggerId) }}"
+                                                        action="{{ route('app.data-logger.destroy',['device' => $equipment->dataloggerId]) }}"
                                                         method="POST" class="d-inline">
                                                         @csrf
                                                         @method('delete')
@@ -176,6 +181,19 @@
     </main>
 @endsection
 @section('script')
+<script>
+    $(document).ready(function() {
+        
+
+        new DataTable('#datatable', {
+            fixedColumns: true,
+            paging: false,
+            scrollCollapse: true,
+            scrollX: true,
+            scrollY: 400
+        });
+    });
+</script>
     <script type="text/javascript">
         function changeStatus(id) {
             var element = $("#" + id)

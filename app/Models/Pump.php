@@ -4,10 +4,12 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Scopes\ForUserIndustrialCityScope;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Pump extends Model
 {
-    use HasFactory;
+    use HasFactory,SoftDeletes;
 
     protected $guarded = ['id'];
 
@@ -15,6 +17,8 @@ class Pump extends Model
     {
         return $this->belongsTo(IndustrialCity::class);
     }
+
+    
 
 
     public function datalogger()
@@ -26,4 +30,8 @@ class Pump extends Model
         return $this->belongsToMany(Source::class, 'source_pump', 'pump_id', 'source_id');
     }
 
+    protected static function booted()
+    {
+        static::addGlobalScope(new ForUserIndustrialCityScope);
+    }
 }

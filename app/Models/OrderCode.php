@@ -14,9 +14,9 @@ class OrderCode extends Model
    
     protected $guarded = ['id'];
 
-    public function dataloggers()
+    public function datalogger()
     {
-        return $this->belongsToMany(Datalogger::class)->withPivot('time','last_sent_at');
+        return $this->belongsToMany(Datalogger::class)->withPivot(['time','last_sent_at','status']);
     }
 
     public function getReadableTimeAttribute()

@@ -28,7 +28,7 @@
 
                 <section class="d-flex justify-content-between align-items-center mt-4 mb-3 border-bottom pb-2">
 
-                    <a class="btn btn-info btn-sm" href="{{ route('app.role.index') }}">بازگشت </a>
+                    <a class="btn btn-info btn-sm text-light" href="{{ route('app.role.index') }}">بازگشت </a>
 
 
                 </section>

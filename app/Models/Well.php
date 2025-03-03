@@ -4,10 +4,12 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Scopes\ForUserIndustrialCityScope;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Well extends Model
 {
-    use HasFactory;
+    use HasFactory,SoftDeletes;
 
     protected $guarded = ['id'];
 
@@ -25,5 +27,11 @@ class Well extends Model
     public function sources()
     {
         return $this->belongsToMany(Source::class, 'source_well', 'well_id', 'source_id');
+    }
+
+    protected static function booted()
+    { 
+        static::addGlobalScope(new ForUserIndustrialCityScope);
+        
     }
 }

@@ -11,9 +11,9 @@
     </script>
     
 
-    @if ($datalogger->dataloggerLastStatus() == 'ON')
+    @if (strtolower($datalogger->dataloggerLastStatus()) == strtolower('ON'))
         <button wire:click="toggleStatus" class="btn btn-danger btn-sm">خاموش</button>
-    @elseif($datalogger->dataloggerLastStatus() == 'OFF')
+    @elseif(strtolower($datalogger->dataloggerLastStatus()) == strtolower('OFF'))
         <button wire:click="toggleStatus" class="btn btn-success btn-sm">روشن</button>
     @else
         <button class="btn btn-success btn-sm" disabled>روشن</button>

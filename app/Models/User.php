@@ -6,12 +6,15 @@ namespace App\Models;
 
 use App\Models\Role;
 use App\Models\IndustrialCity;
+use App\Models\Scopes\ForUserIndustrialCityScope;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Notifications\Notifiable;
 use App\Traits\Permissions\HasPermissionsTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
+
+#[ScopedBy([ForUserIndustrialCityScope::class])]
 class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
@@ -43,6 +46,11 @@ class User extends Authenticatable
         'remember_token',
     ];
 
+    // protected static function booted()
+    // {
+    //     static::addGlobalScope(new ForUserIndustrialCityScope);
+    // }
+
     /**
      * The attributes that should be cast.
      *
@@ -66,4 +74,6 @@ class User extends Authenticatable
     {
         return $this->belongsToMany(IndustrialCity::class,'industrial_user','user_id','industrial_id');
     }
+
+    
 }

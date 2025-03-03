@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Rules\UniqueMobileNumber;
 use Illuminate\Foundation\Http\FormRequest;
 
 class DataLoggerRequest extends FormRequest
@@ -29,7 +30,7 @@ class DataLoggerRequest extends FormRequest
                 'industrial_city_id' => 'required|exists:industrial_cities,id',
                 'name' => 'required|min:3|max:50',
                 // 'type' => 'required|in:0,1,2',
-                'mobile_number' => 'required|numeric',
+                'mobile_number' => ['required','numeric',new UniqueMobileNumber()],
                 'datalogger_model' => 'required',
                 'status' => 'required|in:0,1',
                 'sensor_type' => 'nullable|required_if:entity_type,source',
@@ -41,11 +42,14 @@ class DataLoggerRequest extends FormRequest
                 // 'power' => 'nullable|exists:check_codes,id',
             ];
         } else {
+
+           $device = $this->route('device'); // فرض کنید نام پارامتر روت datalogger است
+
             return [
                 'industrial_city_id' => 'required|exists:industrial_cities,id',
                 'name' => 'required|min:3|max:50',
                 // 'type' => 'required|in:0,1,2',
-                'mobile_number' => 'required|numeric',
+                'mobile_number' => ['required','numeric',new UniqueMobileNumber($device->id)],
                 'datalogger_model' => 'required',
                 'sensor_type' => 'nullable|required_if:entity_type,source',
                 'fount_height' => 'nullable|numeric|required_if:entity_type,source',
@@ -66,6 +70,16 @@ class DataLoggerRequest extends FormRequest
             'name' => 'نام تجهیز',
             'type' => 'نوع تجهیز',
             'model' => 'مدل',
+        ];
+    }
+
+    public function messages()
+    {
+        return [
+            'mobile_number.required' => 'وارد کردن شماره موبایل الزامی است.',
+            'mobile_number.numeric' => 'شماره موبایل باید عددی باشد.',
+            'mobile_number.digits' => 'شماره موبایل باید ۱۱ رقم باشد.',
+            'mobile_number.unique' => 'این شماره موبایل قبلاً ثبت شده است.',
         ];
     }
 }

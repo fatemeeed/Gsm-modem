@@ -33,7 +33,7 @@
 
                     <div class="max-width-16-rem">
 
-                        <input type="text" placeholder="جستجو" class="form-control form-control-sm form-text">
+                        {{-- <input type="text" placeholder="جستجو" class="form-control form-control-sm form-text"> --}}
 
 
                     </div>
@@ -42,7 +42,7 @@
 
                 <section class="table-responsive">
 
-                    <table class="table table-striped font-size-14 table-bordered table-hover">
+                    <table class="table table-striped font-size-14 table-bordered table-hover" id="datatable">
                         <thead>
                             <tr>
                                 <th>#</th>
@@ -110,11 +110,11 @@
 
                                             </a>
                                             <div class="dropdown-menu  text-right" aria-labelledby="dropdownMenuLink">
-                                                <a class="dropdown-item" href="{{ route('app.user.role', $user->id) }}"><i
-                                                        class="fa fa-user"></i> نقش </a>
-                                                <a class="dropdown-item"
+                                                {{-- <a class="dropdown-item" href="{{ route('app.user.role', $user->id) }}"><i
+                                                        class="fa fa-user"></i> نقش </a> --}}
+                                                {{-- <a class="dropdown-item"
                                                     href="{{ route('app.user.industrial-form', $user->id) }}"><i
-                                                        class="fa fa-user"></i> نمایندگی </a>
+                                                        class="fa fa-user"></i> نمایندگی </a> --}}
 
                                                 <a class="dropdown-item" href="{{ route('app.user.edit', $user->id) }}"><i
                                                         class="fa fa-edit"></i> ویرایش</a>
@@ -123,7 +123,7 @@
                                                     class="btn btn-warning btn-sm"><i class="fa fa-edit"></i> ریست پسورد
                                                 </a>
 
-                                                <form action="{{ route('app.user.destroy', $user->id) }}" method="POST"
+                                                {{-- <form action="{{ route('app.user.destroy', $user->id) }}" method="POST"
                                                     class="text-right">
 
                                                     @csrf
@@ -132,7 +132,7 @@
                                                     <button type="submit" class="dropdown-item "><i
                                                             class="fa fa-window-close"></i> حذف</button>
 
-                                                </form>
+                                                </form> --}}
 
                                             </div>
 
@@ -169,6 +169,19 @@
     </section>
 @endsection
 @section('script')
+<script>
+    $(document).ready(function() {
+        
+
+        new DataTable('#datatable', {
+            fixedColumns: true,
+            paging: false,
+            scrollCollapse: true,
+            scrollX: true,
+            scrollY: 400
+        });
+    });
+</script>
     {{-- <script type="text/javascript">
         function changeStatus(id){
             var element = $("#" + id)

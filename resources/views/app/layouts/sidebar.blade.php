@@ -21,29 +21,34 @@
         </div>
         <div class="sidebar-menu">
             <ul class="sidebar-menu-link">
+
                 <li class="sidebar-menu-link-item"><a href="{{ route('app.index') }}">
                         <i class="fas fa-tachometer-alt"></i>
                         <span>داشبورد</span>
                     </a>
                 </li>
-                <li class="sidebar-menu-link-item">
-                    <a href="{{ route('app.data-logger.index') }}">
-                        <span class="fas fa-key"></span>
-                        <span>تجهیزات </span>
-                    </a>
-                </li>
-                <li class="sidebar-menu-link-item">
-                    <a href="{{ route('app.Message.send-box') }}">
-                        <span class="fas fa-paper-plane"></span>
-                        <span>صندوق ارسال </span>
-                    </a>
-                </li>
-                <li class="sidebar-menu-link-item">
-                    <a href="{{ route('app.Message.recieve-box') }}">
-                        <span class="fas fa-check"></span>
-                        <span>صندوق دریافت</span>
-                    </a>
-                </li>
+
+
+                @role('SuperAdmin', 'Admin')
+                    <li class="sidebar-menu-link-item">
+                        <a href="{{ route('app.data-logger.index') }}">
+                            <span class="fas fa-key"></span>
+                            <span>تجهیزات </span>
+                        </a>
+                    </li>
+                    <li class="sidebar-menu-link-item">
+                        <a href="{{ route('app.Message.send-box') }}">
+                            <span class="fas fa-paper-plane"></span>
+                            <span>صندوق ارسال </span>
+                        </a>
+                    </li>
+                    <li class="sidebar-menu-link-item">
+                        <a href="{{ route('app.Message.recieve-box') }}">
+                            <span class="fas fa-check"></span>
+                            <span>صندوق دریافت</span>
+                        </a>
+                    </li>
+                @endrole
                 @role('SuperAdmin')
                     <li class="sidebar-menu-link-item">
                         <a href="{{ route('app.setting.index') }}">
@@ -53,19 +58,19 @@
                     </li>
                     <li class="sidebar-menu-link-item">
                         <a href="{{ route('app.check-code.index') }}">
-                            <span class="fas fa-cog"></span>
+                            <span class="fas fa-file-code"></span>
                             <span> چک کد ها </span>
                         </a>
                     </li>
                     <li class="sidebar-menu-link-item">
                         <a href="{{ route('app.order-code.index') }}">
-                            <span class="fas fa-cog"></span>
+                            <span class="fas fa-exchange-alt"></span>
                             <span> کدهای کنترل </span>
                         </a>
                     </li>
                     <li class="sidebar-menu-link-item">
                         <a href="{{ route('app.user.index') }}">
-                            <span class="fas fa-user"></span>
+                            <span class="fas fa-user-lock"></span>
                             <span>کاربران</span>
                         </a>
                     </li>
@@ -73,7 +78,7 @@
 
                     <li class="sidebar-menu-link-item">
                         <a href="{{ route('app.role.index') }}">
-                            <span class="fas fa-user"></span>
+                            <span class="fas fa-users-cog"></span>
                             <span>مدیریت نقش ها</span>
                         </a>
                     </li>
@@ -81,11 +86,18 @@
 
                     <li class="sidebar-menu-link-item">
                         <a href="{{ route('app.industrial.index') }}">
-                            <span class="fas fa-user"></span>
+                            <span class="fas fa-industry"></span>
                             <span>شهرک ها</span>
                         </a>
                     </li>
                 @endrole
+
+                <li class="sidebar-menu-link-item">
+                    <a href="{{ route('auth.logout') }}">
+                        <span class="fas fa-sign-out"></span>
+                        <span> خروج </span>
+                    </a>
+                </li>
 
 
             </ul>
