@@ -58,7 +58,7 @@ Route::prefix('panel')->middleware('auth')->namespace('Panel')->group(function (
             Route::get('/{device}/create/', [DataLoggerOrderCodeController::class, 'create'])->name('app.data-logger.order-code.create');
             Route::post('/{device}/store', [DataLoggerOrderCodeController::class, 'store'])->name('app.data-logger.order-code.store');
             Route::get('/{device}/edit/{orderCode}', [DataLoggerOrderCodeController::class, 'edit'])->name('app.data-logger.order-code.edit');
-            Route::get('/status/{device}', [DataLoggerOrderCodeController::class, 'status'])->name('app.data-logger.order-code.status');
+            Route::post('/{device}/status/{orderCode}', [DataLoggerOrderCodeController::class, 'status'])->name('app.data-logger.order-code.status');
             
             Route::put('/{device}/update/{orderCode}', [DataLoggerOrderCodeController::class, 'update'])->name('app.data-logger.order-code.update');
             Route::delete('/{device}/delete/{orderCode}', [DataLoggerOrderCodeController::class, 'delete'])->name('app.data-logger.order-code.destroy');

@@ -49,23 +49,24 @@
                             <tbody>
 
                                 @foreach ($device->order_codes as $orderCode)
-
-
-
                                     <tr>
                                         <td>{{ $loop->iteration }}</td>
                                         <td>{{ $orderCode->name }}</td>
                                         <td>{{ $orderCode->readableTime }}</td>
 
-                                        <td>{{ $orderCode->pivot->last_sent_at  ? jalaliDate($orderCode->pivot->last_sent_at , 'Y/m/d H:i:s') : 'ارسال نشده' }}</td>
+                                        <td>{{ $orderCode->pivot->last_sent_at ? jalaliDate($orderCode->pivot->last_sent_at, 'Y/m/d H:i:s') : 'ارسال نشده' }}
+                                        </td>
 
                                         <th>
                                             <label>
-                                                <input id="{{ $orderCode->pivot->id }}" onchange="changeStatus({{ $orderCode->pivot->id }})"
-                                                    data-url="{{ route('app.data-logger.order-code.status', $orderCode->pivot->datalogger_id) }}" type="checkbox"
-                                                    @if ($orderCode->pivot->status === 1) checked @endif>
+                                                <input id="orderCode-{{ $orderCode->pivot->order_code_id }}"
+                                                    onchange="changeStatus(this)"
+                                                    data-url="{{ route('app.data-logger.order-code.status', ['device' => $orderCode->pivot->datalogger_id, 'orderCode' => $orderCode->pivot->order_code_id]) }}"
+                                                    type="checkbox" @if ($orderCode->pivot->status === 1) checked @endif>
                                             </label>
                                         </th>
+
+
                                         {{-- <td class="width-13-rem text-right font-size-2 ">
 
                                             <a href="{{ route('app.data-logger.order-code.edit',[ 'device' => $device->id ] ) }}"
@@ -98,67 +99,56 @@
 @endsection
 @section('script')
     <script type="text/javascript">
-        function changeStatus(id) {
-            var element = $("#" + id)
-            var url = element.attr('data-url')
-            var elementValue = !element.prop('checked');
+        function changeStatus(element) {
+            var url = element.getAttribute('data-url');
+        
+            var isChecked = element.checked; // مقدار جدید چک‌باکس
+            var csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
             $.ajax({
                 url: url,
-                type: "GET",
+                type: "POST",
+                data: {
+                    _token: csrfToken
+                }, // ارسال CSRF Token
                 success: function(response) {
                     if (response.status) {
                         if (response.checked) {
-                            element.prop('checked', true);
-                            successToast('کد کنترلر  فعال شد')
+                            element.checked = true;
+                            showToast('success', 'کد کنترلر فعال شد');
                         } else {
-                            element.prop('checked', false);
-                            successToast(' کدکنترلر غیرفعال شد')
+                            element.checked = false;
+                            showToast('success', 'کد کنترلر غیرفعال شد');
                         }
                     } else {
-                        element.prop('checked', elementValue);
-                        errorToast('هنگام ویرایش مشکلی بوجود امده است')
+                        element.checked = !isChecked;
+                        showToast('error', 'هنگام ویرایش مشکلی بوجود آمد');
                     }
                 },
                 error: function() {
-                    element.prop('checked', elementValue);
-                    errorToast('ارتباط برقرار نشد')
+                    element.checked = !isChecked;
+                    showToast('error', 'ارتباط برقرار نشد');
                 }
             });
+        }
 
-            function successToast(message) {
+        // تابع نمایش Toast برای پیام‌های موفقیت و خطا
+        function showToast(type, message) {
+            var bgClass = type === 'success' ? 'bg-success' : 'bg-danger';
+            var toastTag = `
+        <section class="toast" data-delay="5000">
+            <section class="toast-body py-3 d-flex ${bgClass} text-white">
+                <strong class="ml-auto">${message}</strong>
+                <button type="button" class="mr-2 close" data-dismiss="toast" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </section>
+        </section>`;
 
-                var successToastTag = '<section class="toast" data-delay="5000">\n' +
-                    '<section class="toast-body py-3 d-flex bg-success text-white">\n' +
-                    '<strong class="ml-auto">' + message + '</strong>\n' +
-                    '<button type="button" class="mr-2 close" data-dismiss="toast" aria-label="Close">\n' +
-                    '<span aria-hidden="true">&times;</span>\n' +
-                    '</button>\n' +
-                    '</section>\n' +
-                    '</section>';
-
-                $('.toast-wrapper').append(successToastTag);
-                $('.toast').toast('show').delay(5500).queue(function() {
-                    $(this).remove();
-                })
-            }
-
-            function errorToast(message) {
-
-                var errorToastTag = '<section class="toast" data-delay="5000">\n' +
-                    '<section class="toast-body py-3 d-flex bg-danger text-white">\n' +
-                    '<strong class="ml-auto">' + message + '</strong>\n' +
-                    '<button type="button" class="mr-2 close" data-dismiss="toast" aria-label="Close">\n' +
-                    '<span aria-hidden="true">&times;</span>\n' +
-                    '</button>\n' +
-                    '</section>\n' +
-                    '</section>';
-
-                $('.toast-wrapper').append(errorToastTag);
-                $('.toast').toast('show').delay(5500).queue(function() {
-                    $(this).remove();
-                })
-            }
+            $('.toast-wrapper').append(toastTag);
+            $('.toast').toast('show').delay(5500).queue(function() {
+                $(this).remove();
+            });
         }
     </script>
 
