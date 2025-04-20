@@ -48,4 +48,11 @@ class UserRequest extends FormRequest
             ];
         }
     }
+
+    public function attributes()
+    {
+        return [
+            'industrial_id' => 'شهرک صنعتی'
+        ];
+    }
 }

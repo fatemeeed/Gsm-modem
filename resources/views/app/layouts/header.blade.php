@@ -11,7 +11,9 @@
         </div>
     </div>
     <div class="header-action">
-        <a class="btn btn-primary btn-sm" href="{{ route('app.read-message') }}">بروزرسانی</a>
+
+        @livewire('UpdateLoggerButtom')
+
     </div>
 
 

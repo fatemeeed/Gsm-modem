@@ -28,7 +28,7 @@
 
                 <section class="d-flex justify-content-between align-items-center mt-4 mb-3 border-bottom pb-2">
 
-                    <a class="btn btn-info btn-sm" href="{{ route('app.user.index') }}">بازگشت </a>
+                    <a class="btn btn-info btn-sm text-light" href="{{ route('app.user.index') }}">بازگشت </a>
 
 
                 </section>
@@ -54,12 +54,12 @@
                                 </select>
                                 </div>
                                 @error('industrial_id')
-                                    <span class="alert-danger rounded" role="alert">
-                                        <strong>
-                                            {{ $message }}
-                                        </strong>
-                                    </span>
-                                @enderror
+                                <span class="alert-danger text-white bg-danger rounded" role="alert">
+                                    <strong>
+                                        {{ $message }}
+                                    </strong>
+                                </span>
+                            @enderror
                             </section>
 
                             <section class="col-12 col-md-6 mb-3">

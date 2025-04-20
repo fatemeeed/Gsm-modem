@@ -26,15 +26,16 @@
                         <a href="{{ route('admin.Message.create-message') }}" class=" btn btn-info btn-sm text-light">
                             ارسال پیام</a>
                         <div class="max-width-16-rem">
-                            <input type="text" class="form-control form-control-sm form-text" placeholder="جستجو">
+                            {{-- <input type="text" class="form-control form-control-sm form-text" placeholder="جستجو"> --}}
                         </div>
                     </section>
 
                     <section class="table-responsive">
-                        <table class="table table-striped table-hover font-size-14 table-bordered">
+                        <table class="table stripe row-border order-column display" id="datatable">
                             <thead>
                                 <tr>
                                     <th>#</th>
+                                    <th>شهرک صنعتی</th>
                                     <th>شماره سرخط </th>
                                     <th>تاریخ </th>
                                     <th>نام تجهیز </th>
@@ -47,9 +48,10 @@
                                 @foreach ($messages as $message)
                                     <tr>
                                         <th>{{ $loop->iteration }}</th>
+                                        <td>{{ $message->datalogger->industrialCity->name }}</td>
                                         <td>{{ $message->from }}</td>
                                         <td>{{ jalaliDate($message->time, 'Y/m/d H:i:s') }}</td>
-                                        <td>{{ $message->datalogger->name ?? '' }}</td>
+                                        <td>{{ $message->datalogger->dataloggerable->name ?? '' }}</td>
                                         <td>
                                             @if ($message->type == 1)
                                                 @foreach ($message->content as $key => $item)
@@ -88,6 +90,19 @@
     </main>
 @endsection
 @section('script')
+    <script>
+        $(document).ready(function() {
+            
+
+            new DataTable('#datatable', {
+                fixedColumns: true,
+                paging: false,
+                scrollCollapse: true,
+                scrollX: true,
+                scrollY: 400
+            });
+        });
+    </script>
 @endsection
 
 

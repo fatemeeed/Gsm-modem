@@ -1,5 +1,0 @@
-<section class="pit" >
-
-    
-
-</section>

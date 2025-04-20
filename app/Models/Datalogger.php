@@ -9,6 +9,7 @@ use PhpParser\Node\Stmt\Switch_;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\Scopes\ForUserIndustrialCityScope;
 
 class Datalogger extends Model
 {
@@ -19,8 +20,16 @@ class Datalogger extends Model
     protected $guarded = ['id'];
 
     // protected $casts = ['content' => array()];
+    protected $casts = [
+        'lastCheckStatus' => 'array',
+    ];
 
 
+    
+    protected static function booted()
+    {
+        static::addGlobalScope(new ForUserIndustrialCityScope);
+    }
 
     public function dataloggerable()
     {
@@ -58,20 +67,21 @@ class Datalogger extends Model
 
     public function getDeviceSahpeAttribute()
     {
-        switch ($this->type) {
-            case '0':
-                $resualt = 'pump';
+        switch ($this->dataloggerable_type) {
+            case 'App\Models\Well':
+                $type = 'well';
                 break;
-            case '1':
-                $resualt = 'pit';
+            case 'App\Models\Pump':
+                $type = 'pump';
                 break;
-            case '2':
-                $resualt = 'source';
+            case 'App\Models\Source':
+                $type = 'source';
                 break;
+            default:
         }
-
-        return $resualt;
+        return $type;
     }
+
 
     public function messages()
     {
@@ -90,11 +100,11 @@ class Datalogger extends Model
 
     public function dataloggerLastStatus()
     {
-        $lastMessage = $this->lastRecieveMessage();
+        //$lastMessage = $this->lastRecieveMessage();
         $powerCheckCodeName = $this->powerCheckCode->name ?? null;
 
-        if ($lastMessage && $powerCheckCodeName) {
-            return $lastMessage->content[$powerCheckCodeName] ?? 'NoConnect';
+        if ($powerCheckCodeName) {
+            return $this->lastCheckStatus[$powerCheckCodeName] ?? 'NoConnect';
         }
 
         return 'NoConnect';
@@ -112,13 +122,22 @@ class Datalogger extends Model
         //     $persent = 0;
         // }
         //dd(  $this->lastRecieveMessage());
-        $currentHeight = $this->lastRecieveMessage()->content['Level'];
+
+
+        //$lastMessage = $this->lastRecieveMessage();
+
+
+
+        return $this->lastCheckStatus['level']  ??  'NnConnect';
+
+
+        //return 'NoConnect';
 
         // $baseHeight = $this->fount_height ?? '';
 
         // $persent = (($currentHeight / $baseHeight) * 100);
 
-        return $currentHeight;
+        //return $currentHeight;
     }
 
 
@@ -126,20 +145,16 @@ class Datalogger extends Model
 
     public function order_codes()
     {
-        return $this->belongsToMany(OrderCode::class)->withPivot('time', 'last_sent_at');
+        return $this->belongsToMany(OrderCode::class)->withPivot(['time', 'last_sent_at','status']);
     }
 
 
     public function parseMessage($message)
     {
 
-        switch ($this->type) {
-            case '1':
-                $delimiter = '/[\s]+/'; // فقط برای نوع 1
-                $unitRemovals = [];
-                break;
+        switch (class_basename($this->dataloggerable_type)) {
 
-            case '2':
+            case 'Source':
                 $pattern = '/^(.+?)[\s\-:]+(.+)$/'; // برای نوع 2
                 $unitRemovals = ['bar', 'meter', '%', 'm3/s'];
                 break;
@@ -161,10 +176,10 @@ class Datalogger extends Model
 
             if ($line === '') continue; // عبور از خطوط خالی
 
-            if ($this->type == 2) {
+            if (class_basename($this->dataloggerable_type) == 'Source') {
                 // استفاده از preg_match برای نوع 2
                 if (preg_match($pattern, $line, $matches)) {
-                    $key = trim($matches[1]);
+                    $key = strtolower(trim($matches[1]));
                     $value = trim($matches[2]);
 
                     // حذف واحدهای اضافی از مقدار
@@ -178,7 +193,7 @@ class Datalogger extends Model
                 // استفاده از preg_split برای سایر انواع
                 $strtoarray = preg_split($delimiter, $line);
                 if (count($strtoarray) >= 2) {
-                    $key = trim($strtoarray[0]);
+                    $key = strtolower(trim($strtoarray[0]));
                     $value = trim($strtoarray[1]);
 
                     // حذف واحدها (در صورت وجود)

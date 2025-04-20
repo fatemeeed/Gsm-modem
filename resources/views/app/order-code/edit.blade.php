@@ -43,6 +43,21 @@
                         @method('put')
 
                         <section class="row">
+                            <section class="col-12 col-md-5">
+                                <div class="form-group">
+                                    <label for="">order </label>
+                                    <input class="form-control form-control-sm" type="text" name="order" id="order"
+                                        value="{{ old('order',$orderCode->order) }}">
+                                </div>
+                                @error('order')
+                                    <span class="alert-danger text-white bg-danger rounded" role="alert">
+                                        <strong>
+                                            {{ $message }}
+                                        </strong>
+                                    </span>
+                                @enderror
+                            </section>
+
 
                             <section class="col-12 col-md-5">
                                 <div class="form-group">

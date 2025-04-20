@@ -36,7 +36,7 @@ class OrderCodeHourly implements ShouldQueue
         $now = Carbon::now();
         $dataloggers = Datalogger::whereHas('order_codes', function ($query) use ($now) {
 
-            $query->where('datalogger_order_code.time', '60')->where('datalogger_order_code.last_sent_at', '<=', $now->subMinutes(60))->orWhereNull('datalogger_order_code.last_sent_at');
+            $query->where('datalogger_order_code.time', '60')->where('datalogger_order_code.last_sent_at', '<=', $now->subMinutes(60))->orWhereNull('datalogger_order_code.last_sent_at')->where('status','1');
         })->get();
 
         foreach ($dataloggers as $datalogger) {

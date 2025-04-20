@@ -27,11 +27,11 @@
 
                 <section class="d-flex justify-content-between align-items-center mt-4 mb-3 border-bottom pb-2">
 
-                    <a class="btn btn-info btn-sm" href="{{ route('app.role.create') }}">ایجاد نقش جدید</a>
+                    <a class="btn btn-info btn-sm text-light" href="{{ route('app.role.create') }}">ایجاد نقش جدید</a>
 
                     <div class="max-width-16-rem">
 
-                        <input type="text" placeholder="جستجو" class="form-control form-control-sm form-text">
+                        {{-- <input type="text" placeholder="جستجو" class="form-control form-control-sm form-text"> --}}
 
 
                     </div>
@@ -40,7 +40,7 @@
 
                 <section class="table-responsive">
 
-                    <table class="table table-striped table-hover">
+                    <table class="table table-striped table-hover" id="datatable">
                         <thead>
                             <tr>
                                 <th>#</th>
@@ -93,4 +93,20 @@
 
 
     </section>
+@endsection
+@section('script')
+<script>
+    $(document).ready(function() {
+        
+
+        new DataTable('#datatable', {
+            fixedColumns: true,
+            paging: false,
+            scrollCollapse: true,
+            scrollX: true,
+            scrollY: 400
+        });
+    });
+</script>
+    
 @endsection

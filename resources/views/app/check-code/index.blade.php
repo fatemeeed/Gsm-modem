@@ -32,7 +32,7 @@
 
                     <div class="max-width-16-rem">
 
-                        <input type="text" placeholder="جستجو" class="form-control form-control-sm form-text">
+                        {{-- <input type="text" placeholder="جستجو" class="form-control form-control-sm form-text"> --}}
 
 
                     </div>
@@ -41,12 +41,13 @@
 
                 <section class="table-responsive">
 
-                    <table class="table table-striped font-size-12 table-bordered table-hover text-center">
+                    <table class="table table-striped table-bordered table-hover text-center" id="datatable">
                         <thead>
                             <tr>
                                 <th>#</th>
                                 <th>نام کد</th>
                                 <th> دیتالاگر ها </th>
+                                <th> توضیحات </th>
                                 <th class="width-16-rem text-center"><i class="fa fa-cogs"></i> تنظیمات</th>
                             </tr>
                         </thead>
@@ -55,20 +56,23 @@
                                 <tr>
                                     <th>{{ $loop->iteration }}</th>
                                     <th>{{ $checkCode->name }}</th>
+
                                     <th>
                                         @if (empty($checkCode->dataLoggers()->get()->toArray()))
                                             <span class="text-danger"> دیتالاگر تعریف نشده</span>
                                         @else
                                             @foreach ($checkCode->dataLoggers as $dataLogger)
-                                                {{ $dataLogger->name }}</br>
+                                                {{ $dataLogger->dataloggerable->name }}</br>
                                             @endforeach
                                         @endif
                                     </th>
+                                    <th>{{ $checkCode->description }}</th>
                                     <td class="width-22-rem text-left">
 
                                         <a href="{{ route('app.check-code.edit', $checkCode->id) }}"
                                             class="btn btn-primary btn-sm"><i class="fa fa-edit"></i> ویرایش</a>
-                                        <form action="{{ route('app.check-code.destroy', $checkCode->id) }}" method="POST"  class="d-inline">
+                                        <form action="{{ route('app.check-code.destroy', $checkCode->id) }}" method="POST"
+                                            class="d-inline">
                                             @csrf
                                             @method('delete')
 
@@ -89,16 +93,26 @@
                 </section>
 
 
-
-
-
-
             </section>
 
         </section>
 
 
-
-
     </section>
+@endsection
+
+@section('script')
+    <script>
+        $(document).ready(function() {
+
+
+            new DataTable('#datatable', {
+                fixedColumns: true,
+                paging: false,
+                scrollCollapse: true,
+                scrollX: true,
+                scrollY: 400
+            });
+        });
+    </script>
 @endsection

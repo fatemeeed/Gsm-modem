@@ -28,7 +28,7 @@
 
                 <section class="d-flex justify-content-between align-items-center mt-4 mb-3 border-bottom pb-2">
 
-                    <a class="btn btn-info btn-sm" href="{{ route('app.industrial.index') }}">بازگشت </a>
+                    <a class="btn btn-info btn-sm text-light" href="{{ route('app.industrial.index') }}">بازگشت </a>
 
 
                 </section>
@@ -44,10 +44,10 @@
                                 <div class="form-group">
                                     <label for="">نام شهرک </label>
                                     <input class="form-control form-control-sm" name="name" type="text"
-                                        value="{{ old('first_name') }}">
+                                        value="{{ old('name') }}">
                                 </div>
-                                @error('first_name')
-                                    <span class="alert-danger text-white bg-danger rounded" role="alert">
+                                @error('name')
+                                    <span class="alert alert-danger p-0" role="alert">
                                         <strong>
                                             {{ $message }}
                                         </strong>
@@ -72,7 +72,7 @@
                                     </select>
                                 </div>
                                 @error('province')
-                                    <span class="alert alert-danger p-0" role="alert">
+                                    <span class="alert alert-danger p-0  text-white bg-danger rounded " role="alert">
                                         <strong>
                                             {{ $message }}
                                         </strong>

@@ -7,7 +7,7 @@
 <script src="{{ asset('assets/fontawesome/js/all.min.js') }}"></script>
 <script src="{{ asset('assets/sweetalert/sweetalert2.min.js') }}"></script>
 <script src="{{ asset('assets/select2/js/select2.min.js') }}"></script>
-<script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/2.2.1/js/dataTables.min.js"></script>
 <script src="{{ asset('assets/js/grid.js') }} "></script>
 <script src="{{ asset('assets/js/main.js') }} "></script>
 

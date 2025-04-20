@@ -81,12 +81,13 @@
 
                                 <!-- Conditional fields based on dataloggerable_type -->
                                 @if (class_basename($device->dataloggerable_type) == 'Pump')
-                                    <input type="text" name="entity_type" value="pump">
+
+                                    <input type="hidden" name="entity_type" value="pump">
                                     <section class="col-12 col-md-6 my-2">
                                         <div class="form-group">
                                             <label for="name">نام تجهیز</label>
                                             <input type="text" class="form-control form-control-sm" name="name"
-                                                id="name" value="{{ old('name', $device->pump->name) }}">
+                                                id="name" value="{{ old('name', $device->dataloggerable->name) }}">
                                         </div>
                                         @error('name')
                                             <span class="alert_required bg-danger text-white p-1 rounded" role="alert">
@@ -102,10 +103,10 @@
                                             <select name="datalogger_model" id=""
                                                 class="form-control form-control-sm">
                                                 <option value="">مدل را انتخاب کنید</option>
-                                                <option value="Ps100" @if (old('datalogger_model', $device->pump->datalogger_model) == 'Ps100') selected @endif>
+                                                <option value="Ps100" @if (old('datalogger_model', $device->dataloggerable->datalogger_model) == 'Ps100') selected @endif>
                                                     Ps100
                                                 </option>
-                                                <option value="Lm412" @if (old('datalogger_model', $device->pump->datalogger_model) == 'Lm412') selected @endif>
+                                                <option value="Lm412" @if (old('datalogger_model', $device->dataloggerable->datalogger_model) == 'Lm412') selected @endif>
                                                     Lm412
                                                 </option>
 
@@ -121,13 +122,13 @@
 
                                     </section>
                                 @elseif (class_basename($device->dataloggerable_type) == 'Well')
-                                    <input type="text" name="entity_type" value="well">
+                                    <input type="hidden" name="entity_type" value="well">
 
                                     <section class="col-12 col-md-6 my-2">
                                         <div class="form-group">
                                             <label for="name">نام تجهیز</label>
                                             <input type="text" class="form-control form-control-sm" name="name"
-                                                id="name" value="{{ old('name', $device->well->name) }}">
+                                                id="name" value="{{ old('name',$device->dataloggerable->name) }}">
                                         </div>
                                         @error('name')
                                             <span class="alert_required bg-danger text-white p-1 rounded" role="alert">
@@ -143,10 +144,10 @@
                                             <select name="datalogger_model" id=""
                                                 class="form-control form-control-sm">
                                                 <option value="">مدل را انتخاب کنید</option>
-                                                <option value="Ps100" @if (old('datalogger_model', $device->well->datalogger_model) == 'Ps100') selected @endif>
+                                                <option value="Ps100" @if (old('datalogger_model', $device->dataloggerable->datalogger_model) == 'Ps100') selected @endif>
                                                     Ps100
                                                 </option>
-                                                <option value="Lm412" @if (old('datalogger_model', $device->well->datalogger_model) == 'Lm412') selected @endif>
+                                                <option value="Lm412" @if (old('datalogger_model', $device->dataloggerable->datalogger_model) == 'Lm412') selected @endif>
                                                     Lm412
                                                 </option>
 
@@ -165,7 +166,7 @@
                                         <div class="form-group">
                                             <label for="flow_rate">دبی</label>
                                             <input type="text" class="form-control form-control-sm" name="flow_rate"
-                                                id="flow_rate" value="{{ old('flow_rate', $device->well->flow_rate) }}">
+                                                id="flow_rate" value="{{ old('flow_rate', $device->dataloggerable->flow_rate) }}">
                                         </div>
                                         @error('flow_rate')
                                             <span class="alert_required bg-danger text-white p-1 rounded" role="alert">
@@ -180,7 +181,7 @@
                                             <label for="yearly_bulk">حجم برداشت سالانه </label>
                                             <input type="text" class="form-control form-control-sm" name="yearly_bulk"
                                                 id="yearly_bulk"
-                                                value="{{ old('yearly_bulk', $device->well->yearly_bulk) }}">
+                                                value="{{ old('yearly_bulk', $device->dataloggerable->yearly_bulk) }}">
                                         </div>
                                         @error('yearly_bulk')
                                             <span class="alert_required bg-danger text-white p-1 rounded" role="alert">
@@ -346,7 +347,7 @@
 
                                 <section class="col-12 col-md-6">
                                     <div class="form-group">
-                                        <label for="tags">چک کد ها </label>
+                                        <label for="select_checkCode"> چک کد ها </label>
 
                                         <select class="select2 form-control form-control-sm" name="checkCode[]"
                                             id="select_checkCode" multiple>
@@ -372,6 +373,8 @@
                                         </span>
                                     @enderror
                                 </section>
+
+                             
 
                                 <section class="col-12 col-md-6">
                                     <div class="form-group">

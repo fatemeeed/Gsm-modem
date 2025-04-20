@@ -22,8 +22,15 @@ class SMSRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'datalogger_id' => 'required|exists:dataloggers,id',
+            'datalogger_id' => 'required|exists:dataloggers,dataloggerable_id',
             'content' =>'required|min:2'
+        ];
+    }
+
+    public function attributes()
+    {
+        return [
+            'content' => 'پیام'
         ];
     }
 }

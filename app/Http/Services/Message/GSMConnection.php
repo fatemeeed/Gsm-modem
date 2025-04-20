@@ -21,9 +21,11 @@ class GSMConnection
 
     private function __construct()
     {
-        $setting = Setting::first();
+        $setting = Setting::where('status', '1')->first();
 
-        if(!$setting){
+
+        if (!$setting) {
+
             throw new GSMConnectionNotFoundException('تنظیمات پورت یا باند مشخص نشده است.');
         }
 
@@ -47,9 +49,19 @@ class GSMConnection
 
         try {
             exec("MODE {$this->port}: BAUD={$this->baud} PARITY=N DATA=8 STOP=1", $output, $retval);
+
             if ($retval != 0) {
                 throw new GSMConnectionNotFoundException('امکان اتصال به مودم فراهم نیست ، لطفا پورت را چک کنید');
             }
+
+            // تلاش برای باز کردن پورت
+            $this->fp = fopen($this->port, "r+");
+            if (!$this->fp) {
+                error_log("Failed to open port: " . $this->port);
+                throw new GSMConnectionNotFoundException("اتصال به پورت امکان پذیر نیست", 500);
+            }
+
+            stream_set_timeout($this->fp, 2);
         } catch (GSMConnectionNotFoundException $e) {
             throw $e;
             return back()->withError('امکان اتصال به مودم فراهم نیست ، لطفا پورت را چک کنید');
@@ -57,120 +69,122 @@ class GSMConnection
     }
 
     public function sendATCommand($command, $delay = 2000000)
-    {
-
-        try {
-
-            $this->fp = fopen($this->port, "r+");
-
-
-            if (!$this->fp) {
-                throw new GSMConnectionNotFoundException("اتصال به پورت امکان پذیر نیست", 500);
-            }
-        } catch (GSMConnectionNotFoundException $e) {
-            error_log("GSM Connection Error: " . $e->getMessage());
-            throw $e;
-            //    return back()->withError('امکان اتصال به مودم فراهم نیست ، لطفا پورت را چک کنید');
-        }
-
-
-        fputs($this->fp, "$command\r");
-        usleep($delay * 2);
-
-        $response = '';
-        usleep(500000); // Give some additional time before reading response
-        while ($buffer = fgets($this->fp, 128)) {
-            $response .= $buffer;
-            if (strpos($buffer, "OK") !== false || strpos($buffer, "ERROR") !== false) {
-                break;
-            }
-        }
-
-        fclose($this->fp);
-        return $response;
+{
+    if (!$this->fp || !is_resource($this->fp)) {
+        $this->gsmConnection();
     }
+
+    if (!$this->fp) {
+        throw new GSMConnectionNotFoundException("اتصال به پورت امکان پذیر نیست");
+    }
+
+    fputs($this->fp, "$command\r");
+    usleep($delay); // تأخیر اولیه
+
+    $response = '';
+    $timeout = time() + 5; // حداکثر 5 ثانیه منتظر پاسخ می‌مانیم
+    while (time() < $timeout) {
+        $buffer = fgets($this->fp, 128);
+        if ($buffer === false) break;
+        
+        $response .= $buffer;
+        if (strpos($buffer, "OK") !== false || strpos($buffer, "ERROR") !== false) {
+            break;
+        }
+
+        usleep(500000); // نیم ثانیه وقفه قبل از خواندن مجدد
+    }
+
+    fclose($this->fp);
+    return trim($response);
+}
+
 
     public function read()
     {
+        
         //$this->strReply = $this->sendATCommand("AT+CMGL=\"REC UNREAD\"");
         $this->strReply = $this->sendATCommand("AT+CMGL=\"ALL\"");
 
 
         $arrMessages = explode("+CMGL:", $this->strReply);
 
+
+
         return $arrMessages;
     }
 
     public function send($tel, $message)
-    {
+{
+    $tel = preg_replace("%[^0-9\+]%", '', $tel);
+    $message = preg_replace("%[^\040-\176\r\n\t]%", '', $message);
 
-        //Filter tel
-        $tel = preg_replace("%[^0-9\+]%", '', $tel);
+    error_log("Setting text mode...");
+    $status = $this->sendATCommand("AT+CMGF=1", 1000000);
+    error_log("Text mode response: " . $status);
 
-        //Filter message text
-        $message = preg_replace("%[^\040-\176\r\n\t]%", '', $message);
-
-        $status = $this->sendATCommand("AT+CMGF=1", 1000000); // Set to text mode before sending SMS
-
-        if (!$status) {
-            throw new Exception('Unable to set text mode');
-        }
-        $response = $this->sendATCommand("AT+CMGS=\"{$tel}\"", 1000000);  // 1 second delay
-
-
-        echo "CMGS Command Response: $response\n";
-
-        // If the response contains '>', it's ready to accept the message text
-        if (strpos($response, '>') !== false) {
-            // Send the message text
-            $response = $this->sendATCommand($message, 2000000);  // 2 second delay for sending the message
-            echo "Message Send Response: $response\n";
-
-            // End message by sending CTRL+Z (ASCII code 26)
-            $response = $this->sendATCommand(chr(26));  // Wait 5 seconds after sending CTRL+Z
-            echo "End Message Response: $response\n";
-
-            // Check if the message was sent successfully
-            if (strpos($response, 'OK') !== false) {
-                return true;  // Message sent successfully
-            }
-        }
-
-        return false;  // Message sending failed
-
-
+    if (!$status || strpos($status, 'OK') === false) {
+        throw new Exception('Unable to set text mode');
     }
+
+    error_log("Sending CMGS command...");
+    $response = $this->sendATCommand("AT+CMGS=\"{$tel}\"", 1000000);
+    error_log("CMGS Response: " . $response);
+
+    if (strpos($response, '>') === false) {
+        error_log("Error: Did not receive '>' prompt");
+        return false;
+    }
+
+    error_log("Sending message content...");
+    $response = $this->sendATCommand($message, 2000000);
+    error_log("Message Sent Response: " . $response);
+
+    error_log("Sending CTRL+Z...");
+    $response = $this->sendATCommand(chr(26), 5000000);
+    error_log("Final Send Response: " . $response);
+
+    if (strpos($response, 'OK') !== false) {
+        return true;
+    }
+
+    error_log("Message sending failed. Response: " . $response);
+    return false;
+}
+
+
 
 
     public function deleteMessage($index = null)
     {
+        usleep(100000);
+
         try {
+
             $this->sendATCommand("AT+CMGF=1", 1000000); // تنظیم به حالت متنی
 
-            if ($index !== null) {
-                // حذف پیام خاص
-                $command = "AT+CMGD={$index}";
-            } else {
-                // حذف تمامی پیام‌ها
-                $command = "AT+CMGD=1,4";
-            }
+            // تست دستورات مختلف برای حافظه پیامک
+            $memoryResponse = $this->sendATCommand("AT+CPMS?");
+            error_log("Memory Check Response: " . $memoryResponse);
 
 
-            $this->sendATCommand("AT+CPMS=\"SM\"");
+            // ادامه حذف پیام حتی اگر حافظه قابل شناسایی نباشد
+            usleep(500000);
 
-            // ارسال دستور
-            $response = $this->sendATCommand($command, 1000000);
+            $command = "AT+CMGD=1,4";  // حذف همه پیام‌ها
+            $response = $this->sendATCommand($command, 2000000);
+            usleep(500000);
+
             error_log("Delete Response: " . $response);
 
-            // بررسی موفقیت‌آمیز بودن عملیات
             if (strpos($response, 'OK') !== false) {
                 return true;
             } else {
-                throw new Exception('خطا در حذف پیام: ' . $response);
+                throw new GSMConnectionNotFoundException('خطا در حذف پیام');
             }
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             error_log("Delete Message Error: " . $e->getMessage());
-            throw $e;
+            return false; // ادامه برنامه حتی اگر حذف پیام خطا داشته باشد
         }
     }
 

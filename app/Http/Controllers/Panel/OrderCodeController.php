@@ -75,4 +75,25 @@ class OrderCodeController extends Controller
     {
         //
     }
+
+    public function status(OrderCode $orderCode)
+    {
+        $orderCode->status =$orderCode->status==0 ?  '1' : '0';
+        $result=$orderCode->save();
+
+        if($result){
+
+            if($orderCode->status ==0){
+                return response()->json(['status' => true, 'checked' => false]);
+            }
+            else{
+                return response()->json(['status' => true, 'checked' => true]);
+            }
+        }
+        else{
+            return response()->json(['status' => false]);
+        }
+
+
+    }
 }

@@ -38,4 +38,5 @@ class DataloggerOrderCode extends Model
     {
         return self::$timeCycle[$this->pivot->time] ?? 'نامشخص';
     }
+
 }

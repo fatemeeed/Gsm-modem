@@ -32,6 +32,10 @@ body {
     background: var(--bg);
 }
 
+a{
+    text-decoration: none;
+}
+
 /*
  ********************************custom font size**********************************
 */

@@ -2,9 +2,10 @@
 
 namespace App\Http\Requests;
 
+use App\Rules\uniqueDataloggerOrderCode;
 use Illuminate\Foundation\Http\FormRequest;
 
-class OrderCodeRequest extends FormRequest
+class DataloggerOrdercodeRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -21,17 +22,11 @@ class OrderCodeRequest extends FormRequest
      */
     public function rules(): array
     {
+        $device=$this->route('device');
         return [
-            'order' =>'min:2|regex:/^[A-Z]+$/u',
-            'name' => 'required|max:120|min:2',
-            'description' => 'required|max:200|min:2'
+            'order_code_id'   => ['required', 'exists:order_codes,id', new uniqueDataloggerOrderCode($device->id) ],
+            'time'   => ['required','in:60,15,30,10,0'],
+
         ];
     }
-
-    public function messages()
-    {
-       return [ 'order.regex' => 'فقط استفاده از حروف بزرگ مجاز است'];
-    }
-
-   
 }
